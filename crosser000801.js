@@ -201,6 +201,8 @@ function setup() {
 	laMigra.add(migraHelo2);
 
 	//carlosmoreno.changeImage('facedown');
+	noCursor(); // testing cursor manipulation
+	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
 } // end setup
 
 function draw() {
@@ -286,10 +288,11 @@ function draw() {
 		gato1.velocity.x = 0;
 		gato2.velocity.x = 0;
 		llanta.velocity.x = 0;
+		// laMigra.velocity.x = 0; // this doesn't work
 		carlosmoreno.changeAnimation ('surprise');
 		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
 		carlosmoreno.position.y = 64*6+32;
-		carlosmoreno.changeAnimation ('walkdown');
+/*		carlosmoreno.changeAnimation ('walkdown'); // this happens too fast
 		migraMan1.setVelocity(0.5,0);
 		migraMan2.setVelocity(0.5,0);
 		migraMan3.setVelocity(0.5,0);
@@ -300,7 +303,7 @@ function draw() {
 		waterLog.setVelocity(0.25,0);
 		gato1.setVelocity(0.3,0);
 		gato2.setVelocity(0.3,0);
-		llanta.setVelocity(0.3,0);
+		llanta.setVelocity(0.3,0); */
 
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
@@ -335,32 +338,62 @@ function draw() {
 	spriteCounter = spriteCounter + 1;
 	// end experimental code
 	*/
+
+	// experimental code for gamepad
+	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
+	let pad0 = pads[0]; // limit to first pad connected
+	if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
+		updateStatus(pad0); // will need an updateStatus() function
+	} else { // what to do if pad0 is null, which is to say there is no gamepad connected
+		// use keyboard
+		// or use touches
+
+	}
+
+
+
 	drawSprites();
 } // end draw loop
 
-function keyTyped(){
-	if        (keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+function updateStatus(pad){ // tested once per frame
+	if (pad.axes[0] === -1){ moveLeft = true;} else { moveLeft = false; }
+	if (pad.axes[0] ===  1){ moveRight = true;} else { moveRight = false; }
+	if (pad.axes[1] === -1){ moveUp = true;} else { moveUp = false; }
+	if (pad.axes[1] ===  1){ moveDown = true;} else { moveDown = false; }
+	if (pad.buttons[0].values > 0){}
+	if (pad.buttons[0].values < 1){ console.log(pad.buttons); print('NES B button pressed'); }
+	if (pad.buttons[1].values > 0){}
+	if (pad.buttons[1].values < 1){ print('NES A button pressed'); }
+	if (pad.buttons[8].values > 0){}
+	if (pad.buttons[8].values < 1){ print('NES Select pressed'); }
+	if (pad.buttons[9].values > 0){}
+	if (pad.buttons[9].values < 1){ print('NES Start pressed'); }
+	return;
+}
+
+function keyTyped(){ // tested once per frame, triggered on keystroke
+	if        (keyCode === '38' || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
 		         key === 'w'          ||
 		         key === 'W'          ||
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
 		moveUp = true;
-	} else if (keyCode === 'ArrowDown'  ||
+	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
 		         key === 's'            ||
 		         key === 'S'            ||
 		         key === 'k'            ||
 		         key === 'K') {
     print('key down');
 		moveDown = true;
-	} else if (key === 'ArrowLeft'  ||
+	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
 	           key === 'a'            ||
 		         key === 'A'            ||
 		         key === 'j'            ||
 		         key === 'J') {
 		print('key left');
 		moveLeft = true;
-	} else if (key === 'ArrowRight'  ||
+	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
 		         key === 'd'             ||
 		         key === 'D'             ||
 		         key === 'l'             ||

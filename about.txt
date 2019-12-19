@@ -229,4 +229,57 @@ Yesterday I had a scare. The computer froze and became unresponsive. It also too
 Once rebooted the git functionality in Atom was working again and so I staged and committed a week worth of changes.
 
 Today I changed some art and the commit messages reflect those changes.
+
+======
+2019 12 18
+In the time since last note I bought a backup hard drive, made a backup on a thumb drive, and uploaded project so far to gitHub as border diptych remaster.
+
+I have received the backup hard drive and yesterday I made the first backup using time machine.
+
+Today so far I have made some unit tests to see if I can figure out how to use keyCode for arrow keys. I  cannot.
+
+I looked at the PS3 controller example that I downloaded last month to see if I can understand it. I will need to add it to the dependencies. It uses the DOM library.
+
+Atom was updated today. 1.42.0 x64
+Mac OS updated some security updates.
+
+https://html5gamepad.com/
+
+my generic USB NES gamepad:
+usb gamepad (Vendor: 0810 Product: e501)
+Axis 0 (x axis)  values -1 -0.00392 1 so digital
+Axis 1 (y axis)  values -1 up  -0.00392 1 down
+B0 is the B button values 0 1
+B1 is the A button values 0 1
+B8 is the SELECT button values 0 1
+B9 is the START button values 0 1
+
+Exlene USB SNES gamepad:
+Axis 0 (x axis) unresponsive lists a value as -0.99216
+Axis 1 (y axis) values -1 up -0.00392 1 down
+B0 is the A button values 0 1
+B1 is the B button values 0 1
+B2 is the X button values 0 1
+B3 is the Y button values 0 1
+
+B4 is the left shoulder
+B5 is the right shoulder
+
+B8 is the SELECT
+B9 is the START
+
+======
+2019 12 19
+I spent some time studying the API for the html5gamepad.
+I had found some sample code on the web that was repeated in editor.p5js.org
+and in OpenProcessing.org.
+I copied and pasted some of this sample code into Crosser.
+I was able to get the sample code to move carlosmoreno around the screen.
+I was not able to get the sample code to respond to A, B, Select, & Start buttons.
+That may have go wait until after Xmas. My sons arrive tomorrow and the day after.
+
+I'll upload this file and the modified Crosser file to gitHub and backup the project to the USB stick.
+
+
+
 */
