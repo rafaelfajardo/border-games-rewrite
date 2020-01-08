@@ -280,6 +280,21 @@ That may have go wait until after Xmas. My sons arrive tomorrow and the day afte
 
 I'll upload this file and the modified Crosser file to gitHub and backup the project to the USB stick.
 
+======
+2020 01 08
+I haven't been in the studio to work on games for ~three weeks. I made a very quick visit to San Antonio to visit my brother and parents. My children visited us in Denver and we shared Christmas celebrations. I then fell down and hit my head on the 27th of December and suffered a concussion. I have been taking it easy since. I think I will need help to finish.
 
+Yesterday I began teaching again, and so my time is compromised going forward.
+
+Today I puzzled through the buttons on the SNES and the NES controllers.
+I managed to solve the issue with reading the buttons. In the entry above, and in the unchanged code for crosser000801.js, I test for 'values' of each button. This is incorrect but did not cause a syntax error, hence the mystery. The correct test is for 'value' of each button. I had to reread the webpage 'https://html5gamepad.com/for-developers' to notice this very small and powerful error.
+
+I am now able to read all of the buttons on both the NES and the SNES.
+
+I still cannot read the x-axis on the SNES. I have ordered two new controllers manufactured by Buffalo (or iBuffalo) that are reputed to be made with higher standards. I ordered these from CanaKit.com. Buffalo also makes a NES controller, but it is very expensive on Amazon.com -- ~100USD. Also it doesn't retain the traditional aesthetics.
+
+I am fatiguing quickly during this period of brain/mind recovery and so I think I have to call today successful and move on.
+
+I have the new, functioning code in main.js which has been committed locally and will be committed to gitHub.
 
 */
