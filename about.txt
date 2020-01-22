@@ -361,6 +361,8 @@ I have opened gitKraken and as a reflex allowed it to update. This seems to have
 
 npm says there is new minor version. I will ignore it for now.
 
+I have restarted the npm live-server on the new local directory.
+
 I have to orient Scott Leutenegger to the project and try to organize the work.
 
 
