@@ -348,4 +348,20 @@ It creates a "newPress" boolean variable to execute new presses instead of press
 
 NOTE: I have updated Atom.app to 1.43
 
+======
+2020 01 22
+
+On Saturday 2020 01 18 ChrisGD and I met to orient him to the state of the project.
+
+Today: I uploaded the changes I made on Saturday to crosser000801.js to gitHub.
+
+I have closed the existing project in Atom and opened it from gitHub using the gitHub Desktop App for Mac OS and linked it to Atom. This means that I cloned the repository from gitHub and created a new folder with that name locally on my hard drive "border-games-remaster" still in the "P5xJS" directory locally. If this works then I will abandon the other folder moving forward. I can continue to edit my code using Atom with both git and gitHub tabs working for me.
+
+I have opened gitKraken and as a reflex allowed it to update. This seems to have changed the terms of use and so it now has a time-limited availability for free. This is why I looked to the gitHub Desktop App.
+
+npm says there is new minor version. I will ignore it for now.
+
+I have to orient Scott Leutenegger to the project and try to organize the work.
+
+
 */
