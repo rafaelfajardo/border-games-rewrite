@@ -360,14 +360,14 @@ function updateStatus(pad){ // tested once per frame
 	if (pad.axes[0] ===  1){ moveRight = true;} else { moveRight = false; }
 	if (pad.axes[1] === -1){ moveUp = true;} else { moveUp = false; }
 	if (pad.axes[1] ===  1){ moveDown = true;} else { moveDown = false; }
-	if (pad.buttons[0].values > 0){}
-	if (pad.buttons[0].values < 1){ console.log(pad.buttons); print('NES B button pressed'); }
-	if (pad.buttons[1].values > 0){}
-	if (pad.buttons[1].values < 1){ print('NES A button pressed'); }
-	if (pad.buttons[8].values > 0){}
-	if (pad.buttons[8].values < 1){ print('NES Select pressed'); }
-	if (pad.buttons[9].values > 0){}
-	if (pad.buttons[9].values < 1){ print('NES Start pressed'); }
+	if (pad.buttons[0].value > 0){}
+	if (pad.buttons[0].value < 1){ console.log(pad.buttons); print('NES B button pressed'); }
+	if (pad.buttons[1].value > 0){}
+	if (pad.buttons[1].value < 1){ print('NES A button pressed'); }
+	if (pad.buttons[8].value > 0){}
+	if (pad.buttons[8].value < 1){ print('NES Select pressed'); }
+	if (pad.buttons[9].value > 0){}
+	if (pad.buttons[9].value < 1){ print('NES Start pressed'); }
 	return;
 }
 
