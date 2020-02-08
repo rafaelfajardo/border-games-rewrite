@@ -42,7 +42,7 @@ function preload(){
   let img1 = loadImage ('img-lamigra/frontera02.png'); // this is the game play field and is 512 x 544 pixels
   let img2 = loadImage ('img-lamigra/la-migra_cold_one_017.png');
   let img3 = loadImage ('img-lamigra/la-migra_cold_one_018.png');
-  tierra = createSprite (256,272); // 256,256 presumes a 512 x 512 background. this is not true. fixed to 256 x 272 
+  tierra = createSprite (256,272); // 256,256 presumes a 512 x 512 background. this is not true. fixed to 256 x 272
   tierra.addImage ('masthead',img0);
   tierra.addImage ('mapa', img1);
   tierra.addImage ('pierdes', img2);
