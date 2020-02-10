@@ -1,0 +1,26 @@
+{
+  "name": "border-games-remaster",
+  "version": "1.0.0",
+  "description": "Rewrite of Crosser(TM)(2000) and La Migra(TM)(2001) in P5.JS and P5.Play.JS",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafaelfajardo/border-games-remaster.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rafaelfajardo/border-games-remaster/issues"
+  },
+  "homepage": "https://github.com/rafaelfajardo/border-games-remaster#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
