@@ -8,6 +8,13 @@
  //
  // global variables
  //
+
+// defines one unit of movement, which is 32 pixels
+const ONE_UNIT = 32;
+// width and height of screen in pixels
+const WIDTH = 448;
+const HEIGHT = 548;
+
 var tierra; // sprite, will need 3 images each 448 x 448
 var carlosmoreno; // sprite, player character, minimum of 9 images
 var waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
@@ -48,7 +55,96 @@ var start; // sprite, container for start button image
 
 var gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 
+// queue to render things, they'll be drawn in this order so it's important
+// to have the order we want. This order will be handled in preload
+let renderQueue = [];
+
+// this defines the time to spend on changing the animation and rendering for 
+// each character, the fast this is, the faster the game will move
+let renderTime = .25; 
+
+// indicates where we are in the render queue
+let currentIndex = null; 
+
+// timestamp for our indexing into the queue
+let timeStamp = 0;
+
+/**
+ * Calculates the new index from the current one
+ * @param {The current index} idx 
+ */
+function getNextIndex(queue, idx, timing) {
+	// get the time in seconds, with subsecond accuracy
+	const seconds = millis() / 1000;
+	const len = queue.length;
+	
+	if (seconds > timeStamp)
+	{
+		// first, update our timeStamp to be in the future
+		timeStamp = seconds + timing; 
+		if (len > 0) {
+			return (idx + 1) % len;
+		} else {
+			console.error('queue length is 0, you probably forgot to add things to it');
+			return idx;
+		}
+	} else {
+		return idx;
+	}
+}
+
+// this takes a rendering queue and updates positions based on how much
+// time has elapsed at this point in the game
+function updateRendering(queue, timing) {
+	// calculate the next index
+	const nextIdx = getNextIndex(queue, currentIndex, timing);
+
+	// if the index hasn't changed, then we're really done at this point
+	if (nextIdx !== currentIndex)
+	{
+		// update our index
+		currentIndex = nextIdx;
+		// now update the sprite
+		updateSprite(queue[currentIndex])
+	}
+}
+
+/**
+ * updateSprite figures out which way a sprite is moving and where to draw it
+ */
+function updateSprite(sprite) {
+	console.log('updating ' + sprite.name);
+
+	switch (sprite.movementDir) {
+		case 'left':
+			sprite.position.x = sprite.position.x - sprite.speed;
+			// wrap around on the x-axis
+			if (sprite.position.x < 0) {
+				sprite.position.x = WIDTH;
+			}
+			break;
+		case 'right':
+			// wrap on the x-axis
+			sprite.position.x = sprite.position.x + sprite.speed;
+			if (sprite.position.x > WIDTH) {
+				sprite.position.x = 0;
+			}
+			break;
+		case 'up':
+			sprite.position.y = sprite.position.y - sprite.speed;
+			break;
+		case 'down':
+			sprite.position.y = sprite.position.y + sprite.speed;
+			break;
+		default:
+			console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
+			break;
+	}
+}
+
 function preload() {
+	timeStamp = millis() / 1000 + renderTime;
+
 	if (BUGGY){
 	  img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
 	} else {
@@ -60,6 +156,7 @@ function preload() {
 	tierra.addImage('frontera',img);
 	tierra.addImage('asarco',img1);
 	tierra.addImage('end',img2);
+	
 
 	img = loadImage('img/snes.png');
 	dPad = createSprite(128,480); // dPad holds the image(s) that represent the game controller, used for mobile devices
@@ -72,6 +169,8 @@ function preload() {
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(224+16,64*6+32); // carlosmoreno is the player character
 	carlosmoreno.addImage('surprise',img);
+	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
+	carlosmoreno.name = 'carlosmoreno';
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
@@ -98,39 +197,82 @@ function preload() {
 	cadaver = createSprite(32*4, 16*22);
 	cadaver.addAnimation('float',img1,img1,img1,img2,img1,img2);
 	cadaver.setDefaultCollider();
+	cadaver.movementDir = 'right';
+	cadaver.speed = 32;
+	// add the cadaver to the queue
+	renderQueue.push(cadaver);
+	cadaver.name = 'cadaver';
 
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
 	waterLog = createSprite(384,16*20+8);
 	waterLog.addAnimation('float',img1,img1,img2,img2);
 	waterLog.setCollider('rectangle',0,16,64,32);
+	waterLog.movementDir = 'right';
+	waterLog.speed = 32;
+	// add waterlog to the queue
+	renderQueue.push(waterLog);
+	waterLog.name = 'waterlog';
 
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
 	gato1 = createSprite(448+16,16*18);
 	gato1.addAnimation('float',img1,img1,img2);
 	gato1.setDefaultCollider();
+	gato1.movementDir = 'right';
+	gato1.speed = 32;
+	// add gato1 to the queue
+	renderQueue.push(gato1);
+	gato1.name = 'gato1';
+
 	gato2 = createSprite(16*19,16*18);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.setDefaultCollider();
+	gato2.movementDir = 'right';
+	gato2.speed = 32;
+	// add gato1 to the queue
+	renderQueue.push(gato2);
+	gato2.name = 'gato2';
 
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
 	llanta = createSprite(64*3,16*18);
 	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
+	llanta.movementDir = 'right';
+	llanta.speed = 32;
 	llanta.setDefaultCollider();
+	// added the tire to the queue
+	renderQueue.push(llanta);
+	llanta.name = 'llanta';
 
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
 	migraMan1 = createSprite(16,16*14);
 	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
 	migraMan1.setDefaultCollider();
+	migraMan1.movementDir = 'right';
+	migraMan1.speed = 32;
+	// migra hombre 1
+	renderQueue.push(migraMan1);
+	migraMan1.name = 'migraHombre1';
+
 	migraMan2 = createSprite(16*9,16*14);
 	migraMan2.addAnimation('marchright',img1,img1,img2,img2);
 	migraMan2.setDefaultCollider();
+	migraMan2.movementDir = 'right';
+	migraMan2.speed = 32;
+	// migra hombre 2
+	renderQueue.push(migraMan2);
+	migraMan2.name = 'migraHombre2';
+
 	migraMan3 = createSprite(16*18,16*14);
 	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
 	migraMan3.setDefaultCollider();
+	migraMan3.movementDir = 'right';
+	migraMan3.speed = 32;
+	// migra hombre 3
+	renderQueue.push(migraMan3);
+	migraMan3.name = 'migraHombre3';
 
 	img1 = loadImage('img/migra_car-1.png');
 	img2 = loadImage('img/migra_car-2.png');
@@ -138,16 +280,32 @@ function preload() {
 	migraSUV.addAnimation('drive',img1,img2,img1);
 	migraSUV.mirrorX(-1);
 	migraSUV.setDefaultCollider();
+	migraSUV.movementDir = 'left';
+	migraSUV.speed = 32;
+	// added migra SUV to the queue
+	renderQueue.push(migraSUV);
+	migraSUV.name = 'migraSUV';
 
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
 	migraHelo1 = createSprite(196,32*3);
 	migraHelo1.addAnimation('fly',img1,img2,img2,img1,img2);
 	migraHelo1.setDefaultCollider();
+	migraHelo1.movementDir = 'left';
+	migraHelo1.speed = 32;
+	// added migra heli 1 to the queue
+	renderQueue.push(migraHelo1);
+	migraHelo1.name = 'migraHeli1';
+
 	migraHelo2 = createSprite(416,32*3);
 	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
 	migraHelo2.setDefaultCollider();
-
+	migraHelo2.movementDir = 'left';
+	migraHelo2.speed = 32;
+	// added migra heli 2 to the queue
+	renderQueue.push(migraHelo2);
+	migraHelo2.name = 'migraHeli2';
+	
 	img = loadImage('img/visa.png');
 	visa = createSprite(32*5+16,16);
 	visa.addImage('visa',img);
@@ -175,6 +333,8 @@ function setup() {
 	migraHelo2.debug = BUGGY;
 	visa.debug = BUGGY;
 
+	/* 
+	// Don't need velocity so we can implement chunky movement
 	cadaver.setVelocity(0.25,0);
 	waterLog.setVelocity(0.25,0);
 	gato1.setVelocity(0.3,0);
@@ -186,6 +346,7 @@ function setup() {
 	migraSUV.setVelocity(-0.5,0);
 	migraHelo1.setVelocity(-0.75,0);
 	migraHelo2.setVelocity(-0.75,0);
+	*/
 
 	laMigra = new Group();
 	laMigra.add(cadaver);
@@ -208,6 +369,7 @@ function setup() {
 function draw() {
 	background(255);
 
+	/*
 	if (cadaver.position.x > 448){ // using absolute width of 448. will be good to change to abstract "width" for remastering at higher resolutions
 		cadaver.position.x = 0;
 	}
@@ -241,6 +403,7 @@ function draw() {
 	if (migraHelo2.position.x < 0){
 		migraHelo2.position.x = 448;
 	}
+	*/
 
 	if (moveUp){
 		carlosmoreno.changeAnimation ('walkup');
@@ -350,8 +513,8 @@ function draw() {
 
 	}
 
-
-
+	// update what we're rendering and how frequently
+	updateRendering(renderQueue, renderTime);
 	drawSprites();
 } // end draw loop
 
