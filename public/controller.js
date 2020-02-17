@@ -96,10 +96,8 @@
 
 
 // key or controller interface
-function updateStatus(pad){ // tested once per frame
-
-
-if (pad.id === "USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)"){
+function updateStatus(pad){ // tested once per frame, should be called from draw() in p5.js, or a function that updates with that frequency in JavaScript
+//if (pad.id === "USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)"){ // this line would test which controller ID is connected
     if (pad.buttons[0].value === 1){ print('SNES B-button pressed');}
     if (pad.buttons[1].value === 1){ print('SNES A-button pressed');}
     if (pad.buttons[2].value === 1){ print('SNES Y-button pressed');}
@@ -110,14 +108,14 @@ if (pad.id === "USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Produ
     if (pad.buttons[7].value === 1){ print('SNES R-button pressed');} // redundant mapping
     if (pad.buttons[8].value === 1){ print('SNES SELECT button pressed');}
     if (pad.buttons[9].value === 1){ print('SNES START button pressed');}
-    if (pad.buttons[10].value === 1){ print('unmapped button 10');}
-    if (pad.buttons[11].value === 1){ print('unmapped button 11');}
+    if (pad.buttons[10].value === 1){ print('unmapped button 10');} // I haven't found a signal on this button[index]
+    if (pad.buttons[11].value === 1){ print('unmapped button 11');} // I haven't found a signal on this button[index]
     if (pad.buttons[12].value === 1){ print('SNES D-pad up pressed');} // redundant with axes 1 (Y-value)
     if (pad.buttons[13].value === 1){ print('SNES D-pad down pressed');} // redundant with axes 1 (Y-value)
     if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
     if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
-
-} /*elseif (pad.id === ""){
+/*
+}  elseif (pad.id === ""){ // the following is a mapping for the NES USB controller in the studio
     if (pad.axes[0] === -1){ print('NES dpad left');}//{ moveLeft = true;} else { moveLeft = false; }
     if (pad.axes[0] ===  1){ print('NES dpad right');}//{ moveRight = true;} else { moveRight = false; }
     if (pad.axes[1] === -1){print('NES dpad up');}//{ moveUp = true;} else { moveUp = false; }
@@ -135,6 +133,8 @@ return;
 }
 
 // keyTyped was copied from crosser.js
+// keyboard mapping W,A,S,D; I,J,K,L; T,Y; as actionable
+// will likely have to pass the values of moveUp, moveDown, moveLeft, moveRight for this to work.
 function keyTyped(){ // tested once per frame, triggered on keystroke
 	if        (keyCode === '38' || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
 		         key === 'w'          ||
