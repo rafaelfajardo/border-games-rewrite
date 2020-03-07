@@ -13,7 +13,7 @@
 const ONE_UNIT = 32;
 // width and height of screen in pixels
 const WIDTH = 448;
-const HEIGHT = 548;
+const HEIGHT = 448;
 
 var tierra; // sprite, will need 3 images each 448 x 448
 var carlosmoreno; // sprite, player character, minimum of 9 images
@@ -120,14 +120,20 @@ function updateSprite(sprite) {
 			sprite.position.x = sprite.position.x - sprite.speed;
 			// wrap around on the x-axis
 			if (sprite.position.x < 0) {
-				sprite.position.x = WIDTH;
+				// we calculate the new position as such so that
+				// the sprite wraps around the screen correctly, 
+				// in essence doing a modulo on its position
+				sprite.position.x = WIDTH + sprite.position.x;
 			}
 			break;
 		case 'right':
 			// wrap on the x-axis
 			sprite.position.x = sprite.position.x + sprite.speed;
 			if (sprite.position.x > WIDTH) {
-				sprite.position.x = 0;
+				// we calculate the new position as such so that
+				// the sprite wraps around the screen correctly, 
+				// in essence doing a modulo on its position
+				sprite.position.x = sprite.position.x - WIDTH;
 			}
 			break;
 		case 'up':
