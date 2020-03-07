@@ -17,10 +17,10 @@ const HEIGHT = 548;
 
 var tierra; // sprite, will need 3 images each 448 x 448
 var carlosmoreno; // sprite, player character, minimum of 9 images
-var waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
-var gato1; // sprite, will need 2 on US side
-var gato2; // sprite
 var cadaver; // sprite will need 1 mexico side
+var gato1; // sprite, will need 2 on US side
+var gato2; // sprite, will need 2 on US side
+var waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
 var llanta; // sprite will need 1 top edge touches bank on US side
 var migraMan1; // sprite will need 3 [tom, dick, harry,] walking on banks
 var migraMan2; // sprite
@@ -39,7 +39,7 @@ var spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 												// will give background image it's own turn since it is a sprite indexed 0
 												//will potentiall cause draw loop to speed up as sprites are removed from list
 
-var BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
+var BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
 
 var START = false; // to use for button SNES maybe need a reSTART
 //var SELECT = false; // use button for SNES
@@ -167,7 +167,7 @@ function preload() {
 	start.addImage(img);
 */
 	img = loadImage('img/carlos-moreno-3_09.png');
-	carlosmoreno = createSprite(224+16,64*6+32); // carlosmoreno is the player character
+	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	carlosmoreno.addImage('surprise',img);
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
@@ -194,7 +194,7 @@ function preload() {
 
 	img1 = loadImage('img/cadaverA.png');
 	img2 = loadImage('img/cadaverB.png');
-	cadaver = createSprite(32*4, 16*22);
+	cadaver = createSprite(32*1, 16*22);
 	cadaver.addAnimation('float',img1,img1,img1,img2,img1,img2);
 	cadaver.setDefaultCollider();
 	cadaver.movementDir = 'right';
@@ -202,6 +202,7 @@ function preload() {
 	// add the cadaver to the queue
 	renderQueue.push(cadaver);
 	cadaver.name = 'cadaver';
+
 
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
@@ -216,16 +217,17 @@ function preload() {
 
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato1 = createSprite(448+16,16*18);
+	gato1 = createSprite(32*2+16,16*18);
 	gato1.addAnimation('float',img1,img1,img2);
 	gato1.setDefaultCollider();
+
 	gato1.movementDir = 'right';
 	gato1.speed = 32;
 	// add gato1 to the queue
 	renderQueue.push(gato1);
 	gato1.name = 'gato1';
 
-	gato2 = createSprite(16*19,16*18);
+	gato2 = createSprite(32*7+16,16*18);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.setDefaultCollider();
 	gato2.movementDir = 'right';
@@ -233,6 +235,12 @@ function preload() {
 	// add gato1 to the queue
 	renderQueue.push(gato2);
 	gato2.name = 'gato2';
+
+	img1 = loadImage('img/waterlogA.png');
+	img2 = loadImage('img/waterlogB.png');
+	waterLog = createSprite(32*8,16*20+8);
+	waterLog.addAnimation('float',img1,img1,img2,img2);
+	waterLog.setCollider('rectangle',0,16,64,32);
 
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
@@ -247,17 +255,18 @@ function preload() {
 
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
-	migraMan1 = createSprite(16,16*14);
+	migraMan1 = createSprite(32*2+16,16*14);
 	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
 	migraMan1.setDefaultCollider();
+
 	migraMan1.movementDir = 'right';
 	migraMan1.speed = 32;
 	// migra hombre 1
 	renderQueue.push(migraMan1);
 	migraMan1.name = 'migraHombre1';
 
-	migraMan2 = createSprite(16*9,16*14);
-	migraMan2.addAnimation('marchright',img1,img1,img2,img2);
+  migraMan2 = createSprite(32*7+16,16*14);  
+  migraMan2.addAnimation('marchright',img1,img1,img2,img2);
 	migraMan2.setDefaultCollider();
 	migraMan2.movementDir = 'right';
 	migraMan2.speed = 32;
@@ -265,7 +274,7 @@ function preload() {
 	renderQueue.push(migraMan2);
 	migraMan2.name = 'migraHombre2';
 
-	migraMan3 = createSprite(16*18,16*14);
+	migraMan3 = createSprite(32*9,16*14)
 	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
 	migraMan3.setDefaultCollider();
 	migraMan3.movementDir = 'right';
@@ -288,16 +297,17 @@ function preload() {
 
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
-	migraHelo1 = createSprite(196,32*3);
+	migraHelo1 = createSprite(32*5,32*3);
 	migraHelo1.addAnimation('fly',img1,img2,img2,img1,img2);
 	migraHelo1.setDefaultCollider();
+
 	migraHelo1.movementDir = 'left';
 	migraHelo1.speed = 32;
 	// added migra heli 1 to the queue
 	renderQueue.push(migraHelo1);
 	migraHelo1.name = 'migraHeli1';
 
-	migraHelo2 = createSprite(416,32*3);
+	migraHelo2 = createSprite(32*9,32*3);
 	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
 	migraHelo2.setDefaultCollider();
 	migraHelo2.movementDir = 'left';
