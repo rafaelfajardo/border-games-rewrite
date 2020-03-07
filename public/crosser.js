@@ -10,10 +10,10 @@
  //
 var tierra; // sprite, will need 3 images each 448 x 448
 var carlosmoreno; // sprite, player character, minimum of 9 images
-var waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
-var gato1; // sprite, will need 2 on US side
-var gato2; // sprite
 var cadaver; // sprite will need 1 mexico side
+var gato1; // sprite, will need 2 on US side
+var gato2; // sprite, will need 2 on US side
+var waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
 var llanta; // sprite will need 1 top edge touches bank on US side
 var migraMan1; // sprite will need 3 [tom, dick, harry,] walking on banks
 var migraMan2; // sprite
@@ -32,7 +32,7 @@ var spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 												// will give background image it's own turn since it is a sprite indexed 0
 												//will potentiall cause draw loop to speed up as sprites are removed from list
 
-var BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
+var BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
 
 var START = false; // to use for button SNES maybe need a reSTART
 //var SELECT = false; // use button for SNES
@@ -70,7 +70,7 @@ function preload() {
 	start.addImage(img);
 */
 	img = loadImage('img/carlos-moreno-3_09.png');
-	carlosmoreno = createSprite(224+16,64*6+32); // carlosmoreno is the player character
+	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	carlosmoreno.addImage('surprise',img);
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
@@ -95,24 +95,24 @@ function preload() {
 
 	img1 = loadImage('img/cadaverA.png');
 	img2 = loadImage('img/cadaverB.png');
-	cadaver = createSprite(32*4, 16*22);
+	cadaver = createSprite(32*1, 16*22);
 	cadaver.addAnimation('float',img1,img1,img1,img2,img1,img2);
 	cadaver.setDefaultCollider();
 
-	img1 = loadImage('img/waterlogA.png');
-	img2 = loadImage('img/waterlogB.png');
-	waterLog = createSprite(384,16*20+8);
-	waterLog.addAnimation('float',img1,img1,img2,img2);
-	waterLog.setCollider('rectangle',0,16,64,32);
-
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato1 = createSprite(448+16,16*18);
+	gato1 = createSprite(32*2+16,16*18);
 	gato1.addAnimation('float',img1,img1,img2);
 	gato1.setDefaultCollider();
-	gato2 = createSprite(16*19,16*18);
+	gato2 = createSprite(32*7+16,16*18);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.setDefaultCollider();
+
+	img1 = loadImage('img/waterlogA.png');
+	img2 = loadImage('img/waterlogB.png');
+	waterLog = createSprite(32*8,16*20+8);
+	waterLog.addAnimation('float',img1,img1,img2,img2);
+	waterLog.setCollider('rectangle',0,16,64,32);
 
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
@@ -122,13 +122,13 @@ function preload() {
 
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
-	migraMan1 = createSprite(16,16*14);
+	migraMan1 = createSprite(32*2+16,16*14);
 	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
 	migraMan1.setDefaultCollider();
-	migraMan2 = createSprite(16*9,16*14);
+	migraMan2 = createSprite(32*7+16,16*14);
 	migraMan2.addAnimation('marchright',img1,img1,img2,img2);
 	migraMan2.setDefaultCollider();
-	migraMan3 = createSprite(16*18,16*14);
+	migraMan3 = createSprite(32*9,16*14);
 	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
 	migraMan3.setDefaultCollider();
 
@@ -141,10 +141,10 @@ function preload() {
 
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
-	migraHelo1 = createSprite(196,32*3);
+	migraHelo1 = createSprite(32*5,32*3);
 	migraHelo1.addAnimation('fly',img1,img2,img2,img1,img2);
 	migraHelo1.setDefaultCollider();
-	migraHelo2 = createSprite(416,32*3);
+	migraHelo2 = createSprite(32*9,32*3);
 	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
 	migraHelo2.setDefaultCollider();
 
