@@ -1,0 +1,25 @@
+La Migra
+
+This document was created on 2020 03 06 by studying the Stagecast version of La Migra as sent to Screen It Triennial in Hasselt & Genk, Belgium in 2019.
+
+La Migra Canvas is 512 x 544+32 pixels, created for an environment that had a 32 x 32 pixel base grid unit. Any other spatial relationships will constitute a change in game feel and, hence, gameplay.
+
+The chrome that Stagecast Creator added for the web player brought it to... We don't need to keep this chrome.
+
+Animations occur before movement, except for SUV which changes frame then moves then changes frame again. Sometimes there is no movement besides an animation, such as a turn. The cacahuates never overlap. 
+
+Below are comma separated values.
+
+Sprite (listed in turn order), initial X (center of sprite in pixels), Y (center of sprite in pixels zero at top), distance traveled per turn (in pixels):
+
+Sign deportees (lower right), 14*32+16, 16*32+16, 0
+Sign crossers (lower left), 32*0+16, 14*32+16, 0
+Migra SUV, 8*32+0, 13*32+16, 32
+MariaLucia, 4*32+16, 2*32+0, 32
+Nita, 8*32+16, 2*32+0, 32
+Lino, 2*32+16, 2*32+0, 32
+Carlos, 0*32+16, 2*32+0, 32
+Marcia, 6*32+16, 2*32+0, 32
+Patricia, 10*32+16, 2*32+0, 32
+Puercoespin, 12*32+16, 2*32+0, 32
+X-rodar, 14*32+16, 2*32+0, 32
