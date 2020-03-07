@@ -70,8 +70,12 @@ let currentIndex = null;
 let timeStamp = 0;
 
 /**
- * Calculates the new index from the current one
- * @param {The current index} idx 
+ * Calculates the new index from the current one, based on 
+ * what our current index is, how many elements are in the queue
+ * and how long each sprite gets to move
+ * @param {The queue of sprites we'll be drawing} queue 
+ * @param {The current index we are testing} idx 
+ * @param {How long each sprite has to move} timing 
  */
 function getNextIndex(queue, idx, timing) {
 	// get the time in seconds, with subsecond accuracy
@@ -93,8 +97,27 @@ function getNextIndex(queue, idx, timing) {
 	}
 }
 
-// this takes a rendering queue and updates positions based on how much
-// time has elapsed at this point in the game
+/**
+ * Calculates how long we have at each ONE_UNIT distance to hang
+ * out before animating to a new spot, which is based really on
+ * the speed of the sprite. If a sprite moves 4 units, for example,
+ * we have timing/4 seconds to hang out before moving again
+ * @param {The sprite that's moving} sprite 
+ * @param {The length of time each sprite has to move} timing 
+ */
+function calculateSubtiming(sprite, timing)
+{
+	const total_units = sprite.speed / ONE_UNIT;
+	return timing / total_units; 
+}
+
+
+/**
+ * this takes a rendering queue and updates positions based on how much
+ * time has elapsed at this point in the game
+ * @param {A queue of sprites to render} queue 
+ * @param {How long we spend at each sprite drawing} timing 
+ */
 function updateRendering(queue, timing) {
 	// calculate the next index
 	const nextIdx = getNextIndex(queue, currentIndex, timing);
@@ -104,7 +127,8 @@ function updateRendering(queue, timing) {
 	{
 		// update our index
 		currentIndex = nextIdx;
-		// now update the sprite
+		// now update the sprite, which will cause it to move if its movement
+		// speed is something > 0
 		updateSprite(queue[currentIndex])
 	}
 }
@@ -145,6 +169,27 @@ function updateSprite(sprite) {
 		default:
 			console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
 			break;
+	}
+}
+
+/**
+ * This function animates the sprite to move from its current position
+ * to the next position, so that we "smoothly" jump between UNITS of 32 pixels
+ * until it gets to its next destination. It also allows us to control which
+ * animation frame is being used. 
+ * @param {The sprite we're animating} sprite 
+ */
+function animateSprite(sprite, timing, distance)
+{
+	// get the subtiming of this sprite
+	const subtiming = calculateSubtiming(sprite, timing);
+	// grab elapsed time
+	const seconds = millis() / 1000;
+	
+	if (seconds > subTimestamp) {
+		// slap a new subtimestamp down
+		subTimestamp = seconds + subtiming;
+		return sprite.position.x + distance;
 	}
 }
 
@@ -384,42 +429,6 @@ function setup() {
 
 function draw() {
 	background(255);
-
-	/*
-	if (cadaver.position.x > 448){ // using absolute width of 448. will be good to change to abstract "width" for remastering at higher resolutions
-		cadaver.position.x = 0;
-	}
-	if (waterLog.position.x > 448){
-		waterLog.position.x = 0;
-	}
-	if (gato1.position.x > 448){
-		gato1.position.x = 0;
-	}
-	if (gato2.position.x > 448){
-		gato2.position.x = 0;
-	}
-	if (llanta.position.x > 448){
-		llanta.position.x = 0;
-	}
-	if (migraMan1.position.x > 448){
-		migraMan1.position.x = 0;
-	}
-	if (migraMan2.position.x > 448){
-		migraMan2.position.x = 0;
-	}
-	if (migraMan3.position.x > 448){
-		migraMan3.position.x = 0;
-	}
-	if (migraSUV.position.x  < 0){
-		migraSUV.position.x = 448;
-	}
-	if (migraHelo1.position.x < 0){
-		migraHelo1.position.x = 448;
-	}
-	if (migraHelo2.position.x < 0){
-		migraHelo2.position.x = 448;
-	}
-	*/
 
 	if (moveUp){
 		carlosmoreno.changeAnimation ('walkup');
