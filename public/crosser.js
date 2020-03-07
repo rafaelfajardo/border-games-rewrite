@@ -71,17 +71,12 @@ let currentIndex = null;
 let timeStamp = 0;
 
 /**
-<<<<<<< HEAD
  * Calculates the new index from the current one, based on 
  * what our current index is, how many elements are in the queue
  * and how long each sprite gets to move
  * @param {The queue of sprites we'll be drawing} queue 
  * @param {The current index we are testing} idx 
  * @param {How long each sprite has to move} timing 
-=======
- * Calculates the new index from the current one
- * @param {The current index} idx
->>>>>>> 18f72a5feb7ea3aa117e5c909a719cf43e755ab7
  */
 function getNextIndex(queue, idx, timing) {
 	// get the time in seconds, with subsecond accuracy
