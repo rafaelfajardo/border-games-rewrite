@@ -1,0 +1,27 @@
+Crosser
+
+This document was created on 2020 02 28 by studying the Stagecast version of Crosser as sent to Screen It Triennial in Hasselt & Genk, Belgium in 2019.
+
+Crosser canvas is 448 x 448 pixels, created for an environment that had a 32 x 32 pixel base grid unit. Any other spatial relationships will constitute a change in gamefeel and, hence, gameplay.
+
+The chrome that Stagecast Creator added for the web player brought it to 481 x 523 pixels. We don’t need to keep this chrome.
+
+Animations occur before movement.
+
+Below are comma separated values.
+
+Sprite (listed in turn order), initial X (center of sprite in pixels), Y (center of sprite in pixels zero at top), distance traveled per turn (in pixels), direction (pos or neg x):
+
+cadaver, 32, 32*11, 32, +1
+gato1, 32*2+16, 32*9, 64, +1
+gato2, 32*7+16, 32*9, 64, +1
+waterlog, 32*8, 32*11, 32, +1
+llanta, 32*12, 32*9, 64, +1
+migraman2, 32*7+16, 32*7, 32, +1
+migraman1, 32*2+16, 32*7, 32, +1
+migraSUV, 32*5, 32*5, 32*3, -1
+migrahelo1, 32*5, 32*3, 32*4, -1
+visa, 32*5+16, 16, 0, 0
+migrahelo2, 32*10, 32*3, 32*4, -1
+migraman3, 32*12+16, 32*7, 32, +1 
+CarlosMoreno, 32*7+16, 32*13, 32, ±1
