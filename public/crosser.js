@@ -419,6 +419,10 @@ function draw() {
 		carlosmoreno.changeAnimation ('walkup');
 		//carlosmoreno.velocity.y = -1;
 		carlosmoreno.position.y = carlosmoreno.position.y - 32;
+		if (carlosmoreno.position.y - 32 < 0) {
+			// bound the mvoement of carlos
+			carlosmoreno.position.y += 32;
+		}
 		moveUp = false;
 		//carlosmoreno.changeImage ('faceup');
 	}
@@ -426,6 +430,10 @@ function draw() {
 		carlosmoreno.changeAnimation ('walkdown');
 		//carlosmoreno.velocity.y = 1;
 		carlosmoreno.position.y = carlosmoreno.position.y + 32;
+		if (carlosmoreno.position.y + 32 > HEIGHT) {
+			// bound the mvoement of carlos
+			carlosmoreno.position.y -= 32;
+		}
 		moveDown = false;
 		//carlosmoreno.changeImage ('facedown');
 	}
@@ -433,6 +441,10 @@ function draw() {
 		carlosmoreno.changeAnimation ('walkleft');
 		//carlosmoreno.velocity.x = -1;
 		carlosmoreno.position.x = carlosmoreno.position.x - 32;
+		// bound the movement of carlos
+		if (carlosmoreno.position.x < 0) {
+			carlosmoreno.position.x += 32;
+		}
 		moveLeft = false;
 		//carlosmoreno.changeImage ('faceleft');
 	}
@@ -440,6 +452,10 @@ function draw() {
 		carlosmoreno.changeAnimation ('walkright');
 		//carlosmoreno.velocity.x = 1;
 		carlosmoreno.position.x = carlosmoreno.position.x + 32;
+		// bound the movement of carlos
+		if (carlosmoreno.position.x > WIDTH) {
+			carlosmoreno.position.x -= 32;
+		}
 		moveRight = false;
 		//carlosmoreno.changeImage ('faceright');
 	}
