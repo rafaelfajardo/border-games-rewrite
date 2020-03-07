@@ -22,14 +22,15 @@ var gato1; // sprite, will need 2 on US side
 var gato2; // sprite, will need 2 on US side
 var waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
 var llanta; // sprite will need 1 top edge touches bank on US side
-var migraMan1; // sprite will need 3 [tom, dick, harry,] walking on banks
-var migraMan2; // sprite
-var migraMan3; // sprite
+var migraMan2; // sprite will need 3 [tom, dick, harry,] walking on banks
+var migraMan1; // sprite
 var migraSUV; // sprite, will need 1 on center of lane [xlt, gto, exp] currently have wrong art. facing wrong direction. may not have art
 var migraHelo1; // sprite, will need 2 [huey, bell, airwolf]
-var migraHelo2; // sprite
-var laMigra; // group, it may be better to call this opponents or hazards because they include flotsam
 var visa; // sprite, goal
+var migraHelo2; // sprite
+var migraMan3; // sprite
+
+var laMigra; // group, it may be better to call this opponents or hazards because they include flotsam
 
 var img; // a temporary placeholder to preload images for sprites
 var img1; // temp placeholder to preload images for sprites
@@ -50,8 +51,8 @@ var moveLeft = false; // boolean, used for player character interaction map to d
 var moveRight = false; // boolean
 var moveUp = false; // boolean
 var moveDown = false; // boolean
-var dPad; // sprite, container for d pad image, used for touch interaction
-var start; // sprite, container for start button image
+//var dPad; // sprite, container for d pad image, used for touch interaction
+//var start; // sprite, container for start button image
 
 var gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 
@@ -59,33 +60,38 @@ var gamestate = "startup"; // string variable should only contain 'startup','pla
 // to have the order we want. This order will be handled in preload
 let renderQueue = [];
 
-// this defines the time to spend on changing the animation and rendering for 
+// this defines the time to spend on changing the animation and rendering for
 // each character, the fast this is, the faster the game will move
-let renderTime = .25; 
+let renderTime = .25;
 
 // indicates where we are in the render queue
-let currentIndex = null; 
+let currentIndex = null;
 
 // timestamp for our indexing into the queue
 let timeStamp = 0;
 
 /**
+<<<<<<< HEAD
  * Calculates the new index from the current one, based on 
  * what our current index is, how many elements are in the queue
  * and how long each sprite gets to move
  * @param {The queue of sprites we'll be drawing} queue 
  * @param {The current index we are testing} idx 
  * @param {How long each sprite has to move} timing 
+=======
+ * Calculates the new index from the current one
+ * @param {The current index} idx
+>>>>>>> 18f72a5feb7ea3aa117e5c909a719cf43e755ab7
  */
 function getNextIndex(queue, idx, timing) {
 	// get the time in seconds, with subsecond accuracy
 	const seconds = millis() / 1000;
 	const len = queue.length;
-	
+
 	if (seconds > timeStamp)
 	{
 		// first, update our timeStamp to be in the future
-		timeStamp = seconds + timing; 
+		timeStamp = seconds + timing;
 		if (len > 0) {
 			return (idx + 1) % len;
 		} else {
@@ -207,16 +213,18 @@ function preload() {
 	tierra.addImage('frontera',img);
 	tierra.addImage('asarco',img1);
 	tierra.addImage('end',img2);
-	
 
+/*  // sprite for touch controls and virtual SNES controller
 	img = loadImage('img/snes.png');
 	dPad = createSprite(128,480); // dPad holds the image(s) that represent the game controller, used for mobile devices
 	dPad.addImage(img);
-/*
+*/
+/*  // sprite for start button -- deprecated this button which would appear on startup screen
 	img = loadImage ('img/start1.png');
 	start = createSprite(180,500);
 	start.addImage(img);
 */
+	// load images and create sprite for player character Carlos Moreno
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	carlosmoreno.addImage('surprise',img);
@@ -242,10 +250,12 @@ function preload() {
 	img2 = loadImage('img/carlos-moreno-3_08.png');
 	carlosmoreno.addAnimation('walkleft',img1,img2);
 	//carlosmoreno.addImage('faceleft',img1);
+	// end load images for player character Carlos Moreno
 
+	// load and create cadaver
 	img1 = loadImage('img/cadaverA.png');
 	img2 = loadImage('img/cadaverB.png');
-	cadaver = createSprite(32*1, 16*22);
+	cadaver = createSprite(32*1, 32*11);
 	cadaver.addAnimation('float',img1,img1,img1,img2,img1,img2);
 	cadaver.setDefaultCollider();
 	cadaver.movementDir = 'right';
@@ -253,11 +263,38 @@ function preload() {
 	// add the cadaver to the queue
 	renderQueue.push(cadaver);
 	cadaver.name = 'cadaver';
+	// end load and create cadaver
 
+	// load and create gato1
+	img1 = loadImage('img/gatoA.png');
+	img2 = loadImage('img/gatoB.png');
+	gato1 = createSprite(32*2+16,32*9);
+	gato1.addAnimation('float',img1,img1,img2);
+	gato1.setDefaultCollider();
+	gato1.movementDir = 'right';
+	gato1.speed = 32*2;
+	// add gato1 to the queue
+	renderQueue.push(gato1);
+	gato1.name = 'gato1';
+	// end load and create gato1
 
+	// load and create gato2
+	img1 = loadImage('img/gatoA.png');
+	img2 = loadImage('img/gatoB.png');
+	gato2 = createSprite(32*7+16,32*9);
+	gato2.addAnimation('float',img2,img2,img1);
+	gato2.setDefaultCollider();
+	gato2.movementDir = 'right';
+	gato2.speed = 32*3;
+	// add gato1 to the queue
+	renderQueue.push(gato2);
+	gato2.name = 'gato2';
+	// end load and create gato2
+
+	// load and create waterLog
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
-	waterLog = createSprite(384,16*20+8);
+	waterLog = createSprite(32*8,32*11);
 	waterLog.addAnimation('float',img1,img1,img2,img2);
 	waterLog.setCollider('rectangle',0,16,64,32);
 	waterLog.movementDir = 'right';
@@ -265,58 +302,25 @@ function preload() {
 	// add waterlog to the queue
 	renderQueue.push(waterLog);
 	waterLog.name = 'waterlog';
+	// end load and create waterLog
 
-	img1 = loadImage('img/gatoA.png');
-	img2 = loadImage('img/gatoB.png');
-	gato1 = createSprite(32*2+16,16*18);
-	gato1.addAnimation('float',img1,img1,img2);
-	gato1.setDefaultCollider();
-
-	gato1.movementDir = 'right';
-	gato1.speed = 32;
-	// add gato1 to the queue
-	renderQueue.push(gato1);
-	gato1.name = 'gato1';
-
-	gato2 = createSprite(32*7+16,16*18);
-	gato2.addAnimation('float',img2,img2,img1);
-	gato2.setDefaultCollider();
-	gato2.movementDir = 'right';
-	gato2.speed = 32;
-	// add gato1 to the queue
-	renderQueue.push(gato2);
-	gato2.name = 'gato2';
-
-	img1 = loadImage('img/waterlogA.png');
-	img2 = loadImage('img/waterlogB.png');
-	waterLog = createSprite(32*8,16*20+8);
-	waterLog.addAnimation('float',img1,img1,img2,img2);
-	waterLog.setCollider('rectangle',0,16,64,32);
-
+	// load and create llanta
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
-	llanta = createSprite(64*3,16*18);
+	llanta = createSprite(32*12,32*9);
 	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
 	llanta.movementDir = 'right';
-	llanta.speed = 32;
+	llanta.speed = 32*2;
 	llanta.setDefaultCollider();
 	// added the tire to the queue
 	renderQueue.push(llanta);
 	llanta.name = 'llanta';
+	// end load and create llanta
 
+	// load and create migraMan2
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
-	migraMan1 = createSprite(32*2+16,16*14);
-	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
-	migraMan1.setDefaultCollider();
-
-	migraMan1.movementDir = 'right';
-	migraMan1.speed = 32;
-	// migra hombre 1
-	renderQueue.push(migraMan1);
-	migraMan1.name = 'migraHombre1';
-
-  migraMan2 = createSprite(32*7+16,16*14);  
+	migraMan2 = createSprite(32*7+16,32*7);
   migraMan2.addAnimation('marchright',img1,img1,img2,img2);
 	migraMan2.setDefaultCollider();
 	migraMan2.movementDir = 'right';
@@ -324,16 +328,22 @@ function preload() {
 	// migra hombre 2
 	renderQueue.push(migraMan2);
 	migraMan2.name = 'migraHombre2';
+	// end load and create migraman2
 
-	migraMan3 = createSprite(32*9,16*14)
-	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
-	migraMan3.setDefaultCollider();
-	migraMan3.movementDir = 'right';
-	migraMan3.speed = 32;
-	// migra hombre 3
-	renderQueue.push(migraMan3);
-	migraMan3.name = 'migraHombre3';
+	// load and create migraMan1
+	img1 = loadImage('img/migraman_1.png');
+	img2 = loadImage('img/migraman_2.png');
+	migraMan1 = createSprite(32*2+16,32*7);
+	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
+	migraMan1.setDefaultCollider();
+	migraMan1.movementDir = 'right';
+	migraMan1.speed = 32;
+	// migra hombre 1
+	renderQueue.push(migraMan1);
+	migraMan1.name = 'migraHombre1';
+	// end load and create migraMan1
 
+	// load and create migraSUV
 	img1 = loadImage('img/migra_car-1.png');
 	img2 = loadImage('img/migra_car-2.png');
 	migraSUV = createSprite(64,32*5);
@@ -341,36 +351,60 @@ function preload() {
 	migraSUV.mirrorX(-1);
 	migraSUV.setDefaultCollider();
 	migraSUV.movementDir = 'left';
-	migraSUV.speed = 32;
+	migraSUV.speed = 32*3;
 	// added migra SUV to the queue
 	renderQueue.push(migraSUV);
 	migraSUV.name = 'migraSUV';
+	// end load and create migraSUV
 
+	// load and create migraHelo1
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
 	migraHelo1 = createSprite(32*5,32*3);
 	migraHelo1.addAnimation('fly',img1,img2,img2,img1,img2);
 	migraHelo1.setDefaultCollider();
-
 	migraHelo1.movementDir = 'left';
-	migraHelo1.speed = 32;
+	migraHelo1.speed = 32*4;
 	// added migra heli 1 to the queue
 	renderQueue.push(migraHelo1);
 	migraHelo1.name = 'migraHeli1';
+	// end load and create migraHelo1
 
-	migraHelo2 = createSprite(32*9,32*3);
-	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
-	migraHelo2.setDefaultCollider();
-	migraHelo2.movementDir = 'left';
-	migraHelo2.speed = 32;
-	// added migra heli 2 to the queue
-	renderQueue.push(migraHelo2);
-	migraHelo2.name = 'migraHeli2';
-	
+	// load and create visa
 	img = loadImage('img/visa.png');
 	visa = createSprite(32*5+16,16);
 	visa.addImage('visa',img);
 	visa.setDefaultCollider();
+	// end load and create visa
+
+	// load and create migraHelo2
+	img1 = loadImage('img/migra_helo-1.png');
+	img2 = loadImage('img/migra_helo-2.png');
+	migraHelo2 = createSprite(32*10,32*3);
+	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
+	migraHelo2.setDefaultCollider();
+	migraHelo2.movementDir = 'left';
+	migraHelo2.speed = 32*4;
+	// added migra heli 2 to the queue
+	renderQueue.push(migraHelo2);
+	migraHelo2.name = 'migraHeli2';
+	// end load and create migraHelo2
+
+	// load and create migraMan3
+	img1 = loadImage('img/migraman_1.png');
+	img2 = loadImage('img/migraman_2.png');
+	migraMan3 = createSprite(32*12+16,32*7)
+	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
+	migraMan3.setDefaultCollider();
+	migraMan3.movementDir = 'right';
+	migraMan3.speed = 32;
+	// migra hombre 3
+	renderQueue.push(migraMan3);
+	migraMan3.name = 'migraHombre3';
+	// end load and create migraMan3
+
+	// carlosmoreno should go here, will it feel different if he doesn't?
+
 } // end preload
 
 function setup() {
@@ -394,7 +428,7 @@ function setup() {
 	migraHelo2.debug = BUGGY;
 	visa.debug = BUGGY;
 
-	/* 
+	/*
 	// Don't need velocity so we can implement chunky movement
 	cadaver.setVelocity(0.25,0);
 	waterLog.setVelocity(0.25,0);
@@ -409,22 +443,24 @@ function setup() {
 	migraHelo2.setVelocity(-0.75,0);
 	*/
 
+	// I've reordered the adds to match the render queue order
 	laMigra = new Group();
 	laMigra.add(cadaver);
-	laMigra.add(waterLog);
 	laMigra.add(gato1);
 	laMigra.add(gato2);
+	laMigra.add(waterLog);
 	laMigra.add(llanta);
-	laMigra.add(migraMan1);
 	laMigra.add(migraMan2);
-	laMigra.add(migraMan3);
+	laMigra.add(migraMan1);
 	laMigra.add(migraSUV);
 	laMigra.add(migraHelo1);
 	laMigra.add(migraHelo2);
+	laMigra.add(migraMan3);
 
 	//carlosmoreno.changeImage('facedown');
 	noCursor(); // testing cursor manipulation
 	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
+	
 } // end setup
 
 function draw() {
