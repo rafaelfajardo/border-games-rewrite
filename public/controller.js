@@ -16,55 +16,60 @@
  * as the Buffalo Classic USB Gamepad
  * Model: BSGP810GY
  * S/N:A70911
-
- I have used the https://html5gamepad.com/ website
- to test and map the buttons for the
- Buffalo Classic USB Gamepad.
-
- The mapping is:
- USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
- NB. The axes are also mapped to buttons,
- and the "Turbo" and "Clear" buttons are not recognized by -- or mapped by -- the html5 library
-
- The mapping of this device is considered STANDARD
- d-pad
- Axis-0: 0.00392 to -1.00000 (x-axis leftward)
-         also, mapped to button-14, 0 1
- Axis-0: 0.00392 to 1.00000 (x-axis in rightward)
-         also, mapped to button-15, 0 1
- Axis-1: 0.00392 to -1.00000 (y-axis downward)
-         also, mapped to button-13, 0 1
- Axis-1: 0.00392 to 1.00000 (y-axis upward)
-         also, mapped to button-12, 0 1
-
- B0: SNES B button 0 1
- B1: SNES A button 0 1
- B2: SNES Y button 0 1
- B3: SNES X button 0 1
- B4: SNES Left Shoulder button 0 1
- B5: SNES Right Shoulder button 0 1
- B6: SNES Left Shoulder button 0 1 (this is redundant circuit?)
- B7: SNES Right Shoulder button 0 1 (redundant circuit?)
- B8: SNES Select button 0 1
- B9: SNES Start Button 0 1
- B10: no mapping detected
- B11: no mapping detected
- B12: Axis-1, y-axis upward 0 1 (redundant? but useful)
- B13: Axis-1, y-axis downward 0 1 (redundant? but useful)
- B14: Axis-0, x-axis leftward 0 1 (redundant? but useful)
- B15: Axis-0, x-axis rightward 0 1 (redundant? but useful)
-
- The d-pad is digital, not analog, on this device. (NB verify?)
- The redundant mapping of the d-pad to buttons is useful Crosser and La Migra because the gamepad object value is simple 0 or 1 rather than a floating point.
-
- There is logic available to isolate a single button push rather than return true for multiple frames because the cycles are so fast:
- https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API
- It creates a "newPress" boolean variable to execute new presses instead of press-and-hold situations.
-
- There is logic available for TURBO, also on:
- https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API
- which may let us disable this feature in software rather than hardware
-
+ *
+ * I have used the https://html5gamepad.com/ website
+ * to test and map the buttons for the
+ * Buffalo Classic USB Gamepad.
+ *
+ * The mapping is:
+ * USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
+ * NB. The axes are also mapped to buttons,
+ * and the "Turbo" and "Clear" buttons are not recognized by -- or mapped by -- the html5 library
+ *
+ * The mapping of this device is considered STANDARD
+ *
+ *   d-pad
+ *   Axis-0: 0.00392 to -1.00000 (x-axis leftward)
+ *         also, mapped to button-14, 0 1
+ *   Axis-0: 0.00392 to 1.00000 (x-axis in rightward)
+ *         also, mapped to button-15, 0 1
+ *   Axis-1: 0.00392 to -1.00000 (y-axis downward)
+ *         also, mapped to button-13, 0 1
+ *   Axis-1: 0.00392 to 1.00000 (y-axis upward)
+ *         also, mapped to button-12, 0 1
+ *
+ *   buttons
+ * B0: SNES B button 0 1
+ * B1: SNES A button 0 1
+ * B2: SNES Y button 0 1
+ * B3: SNES X button 0 1
+ * B4: SNES Left Shoulder button 0 1
+ * B5: SNES Right Shoulder button 0 1
+ * B6: SNES Left Shoulder button 0 1 (this is redundant circuit?)
+ * B7: SNES Right Shoulder button 0 1 (redundant circuit?)
+ * B8: SNES Select button 0 1
+ * B9: SNES Start Button 0 1
+ * B10: no mapping detected
+ * B11: no mapping detected
+ * B12: Axis-1, y-axis upward 0 1 (redundant? but useful)
+ * B13: Axis-1, y-axis downward 0 1 (redundant? but useful)
+ * B14: Axis-0, x-axis leftward 0 1 (redundant? but useful)
+ * B15: Axis-0, x-axis rightward 0 1 (redundant? but useful)
+ *
+ * The d-pad is digital, not analog, on this device. (NB verify?)
+ * The redundant mapping of the d-pad to buttons is useful for Crosser and La Migra 
+ * because the gamepad object value is simple 0 or 1 rather than a floating point.
+ *
+ * There is logic available to isolate a single button push 
+ * rather than return true for multiple frames because the cycles are so fast:
+ * https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API
+ * It creates a "newPress" boolean variable to execute new presses instead of press-and-hold situations.
+ *
+ * There is logic available for TURBO, also on:
+ * https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API
+ * which may let us disable this feature in software rather than hardware
+ *
+ // turbo code ***********
  if(gamepadAPI.turbo) {
   if(gamepadAPI.buttonPressed('A','hold')) {
     this.turbo_fire();
@@ -73,6 +78,7 @@
     this.managePause();
   }
 }
+ // end turbo code ***********
  */
 
 /*
@@ -188,6 +194,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 
 } // end keyTyped
 
+/* commented out touch UI which may be revisited at a later time
 // touchStarted was copied from crosser.js
 function touchStarted(){
 	// touch controller
@@ -195,12 +202,12 @@ function touchStarted(){
 	// buried in a github page, not the friendly public facing p5js.org
 	// test on openprocessing yields an error treating touchX and touchY as undefined variables
 	// touch functionality seems to have broken on 2019 06 04 after adding cadaver and other assets
-	/*
+	// /*
 	d pad sprite is currently 96 x 96 pixels. 3 x 32 X 3 x 32
 	sprite center will be 48 x 48
 	controller origin top left corner (conX,conY)
 	d pad button edges can be a multiple of the offsets offX and offY
-	*/
+	// */
 	let conX = 0;
 	let conY = 448;
 	let offX = 32;
@@ -229,7 +236,7 @@ function touchStarted(){
 	}
 	return false;
 } // end touchStarted
-
+*/ 
 
 
 
