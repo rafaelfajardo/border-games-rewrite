@@ -43,14 +43,28 @@ function preload(){
   /*
    *  load images for tierra and set default background
    */
-  let img0 = loadImage ('img-lamigra/la-migra_masthead.png'); // img0 - img9 will be placeholders that only exist within preload function
+  let img0; // img0 - img9 will be placeholders that only exist within preload function
+  let img1;
+  let img2;
+  let img3;
+  let img4;
+  let img5;
+  let img6;
+  let img7;
+  let img8;
+  let img9;
+
+  /*
+   * load and create tierra
+   */
+  img0 = loadImage ('img-lamigra/la-migra_masthead.png');
   if (BUGGY){
-    let img1 = loadImage ('img-lamigra/frontera02_grid.png');  // this is the game play field and is 512 x 544 pixels with a grid
+    img1 = loadImage ('img-lamigra/frontera02_grid.png');  // this is the game play field and is 512 x 544 pixels with a grid
   } else {
-    let img1 = loadImage ('img-lamigra/frontera02.png');  // this is the game play field and is 512 x 544 pixels without a grid
+    img1 = loadImage ('img-lamigra/frontera02.png');  // this is the game play field and is 512 x 544 pixels without a grid
   }
-  let img2 = loadImage ('img-lamigra/la-migra_cold_one_017.png');
-  let img3 = loadImage ('img-lamigra/la-migra_cold_one_018.png');
+  img2 = loadImage ('img-lamigra/la-migra_cold_one_017.png');
+  img3 = loadImage ('img-lamigra/la-migra_cold_one_018.png');
   tierra = createSprite (256,272); // 256,256 presumes a 512 x 512 background. this is not true, actually 512 x 544. fixed to 256 x 272
   tierra.addImage ('masthead',img0); // title screen
   tierra.addImage ('mapa', img1); // gameplay screen
@@ -120,12 +134,12 @@ function preload(){
    img1 = loadImage('img-lamigra/counter 2 1.png');
    img2 = loadImage('img-lamigra/counter 2 2.png');
    img3 = loadImage('img-lamigra/counter 2 3.png');
-   let img4 = loadImage('img-lamigra/counter 2 4.png');
-   let img5 = loadImage('img-lamigra/counter 2 5.png');
-   let img6 = loadImage('img-lamigra/counter 2 6.png');
-   let img7 = loadImage('img-lamigra/counter 2 7.png');
-   let img8 = loadImage('img-lamigra/counter 2 8.png');
-   let img9 = loadImage('img-lamigra/counter 2 9.png');
+   img4 = loadImage('img-lamigra/counter 2 4.png');
+   img5 = loadImage('img-lamigra/counter 2 5.png');
+   img6 = loadImage('img-lamigra/counter 2 6.png');
+   img7 = loadImage('img-lamigra/counter 2 7.png');
+   img8 = loadImage('img-lamigra/counter 2 8.png');
+   img9 = loadImage('img-lamigra/counter 2 9.png');
    avisocontador = createSprite (16, 32*14+16, 32, 32);
    avisocontador.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
 
