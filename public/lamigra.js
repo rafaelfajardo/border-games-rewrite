@@ -44,19 +44,18 @@ function preload(){
    *  load images for tierra and set default background
    */
   let img0 = loadImage ('img-lamigra/la-migra_masthead.png'); // img0 - img9 will be placeholders that only exist within preload function
-  let img1 = loadImage ('img-lamigra/frontera02_grid.png'); // this is the game play field and is 512 x 544 pixels
-  let img2 = loadImage ('img-lamigra/frontera02.png');
-  let img3 = loadImage ('img-lamigra/la-migra_cold_one_017.png');
-  let img4 = loadImage ('img-lamigra/la-migra_cold_one_018.png');
-  tierra = createSprite (256,272); // 256,256 presumes a 512 x 512 background. this is not true, actually 512 x 544. fixed to 256 x 272
-  tierra.addImage ('masthead',img0);
-  If (BUGGY) {
-    tierra.addImage ('mapa', img1); // if we are debugging then show gridded background
+  if (BUGGY){
+    let img1 = loadImage ('img-lamigra/frontera02_grid.png');  // this is the game play field and is 512 x 544 pixels with a grid
   } else {
-    tierra.addImage ('mapa', img2); // otherwise we show the image without grid
+    let img1 = loadImage ('img-lamigra/frontera02.png');  // this is the game play field and is 512 x 544 pixels without a grid
   }
-  tierra.addImage ('pierdes', img3); // loss screen
-  tierra.addImage ('ganas',img4); // victory screen
+  let img2 = loadImage ('img-lamigra/la-migra_cold_one_017.png');
+  let img3 = loadImage ('img-lamigra/la-migra_cold_one_018.png');
+  tierra = createSprite (256,272); // 256,256 presumes a 512 x 512 background. this is not true, actually 512 x 544. fixed to 256 x 272
+  tierra.addImage ('masthead',img0); // title screen
+  tierra.addImage ('mapa', img1); // gameplay screen
+  tierra.addImage ('pierdes', img2); // loss screen
+  tierra.addImage ('ganas',img3); // victory screen
   tierra.changeImage('mapa'); // set the background to mapa while we develop, will need to change later
 
   /*
