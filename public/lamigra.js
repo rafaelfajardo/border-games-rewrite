@@ -156,7 +156,7 @@ function preload(){
   img7 = loadImage('img-lamigra/counter 3 7.png');
   img8 = loadImage('img-lamigra/counter 3 8.png');
   img9 = loadImage('img-lamigra/counter 3 9.png');
-  avisocounter = createSprite (14*32+16, 16+32+16, 32, 32);
+  avisocounter = createSprite (14*32+16, 16*32+16, 32, 32);
   avisocounter.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
 
   /*
@@ -394,7 +394,7 @@ function preload(){
   /*
    *  load image for deportation center
    */
-  deportacioncenter = createSprite (15+32+16, 15*32+16, 32, 96);
+  deportacioncenter = createSprite (15*32+16, 15*32+16, 32, 96);
   img0 = loadImage('img-lamigra/gates3A.png');
   img1 = loadImage('img-lamigra/gates3B.png');
   deportacioncenter.addImage('gate', img0);
