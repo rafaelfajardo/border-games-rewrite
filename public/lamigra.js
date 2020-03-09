@@ -117,6 +117,7 @@ function preload(){
   migra.addAnimation('move', img0,img0,img0,img0,img1,img1,img0,img0);
   migra.addAnimation('stay',img0,img0);
   migra.changeAnimation ('stay');
+  migra.debug = BUGGY; // set the debug flag
 
   /*
    * load images for esposas sprite
@@ -125,8 +126,9 @@ function preload(){
   img1 = loadImage('img-lamigra/esposas_1.png');
   img2 = loadImage('img-lamigra/esposas_2.png');
   img3 = loadImage('img-lamigra/esposas_3.png');
-  esposas = createSprite (9*32+16, 12*32+16, 32, 32,); // the esposas launch from the front of the vehicle, and so will need to refer to migra.x-position.
+  esposas = createSprite (8*32+16, 12*32+16, 32, 32,); // the esposas launch from the front of the vehicle, and so will need to refer to migra.x-position.
   esposas.addAnimation('lanzar',img0,img0,img1,img1,img2,img2,img3,img3); // this will change later, here for testing purposes
+  esposas.debug = BUGGY; // set the debug flag
 
   /*
    *  to do: load images for bala(s) (or not)
@@ -147,6 +149,7 @@ function preload(){
    img9 = loadImage('img-lamigra/counter 2 9.png');
    avisocontador = createSprite (16, 32*14+16, 32, 32);
    avisocontador.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
+   avisocontador.debug = BUGGY; // set the debug flag
 
   /*
    * load images for avisocounter sprite, should be pale blue sign
@@ -163,6 +166,7 @@ function preload(){
   img9 = loadImage('img-lamigra/counter 3 9.png');
   avisocounter = createSprite (14*32+16, 16*32+16, 32, 32);
   avisocounter.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
+  avisocounter.debug = BUGGY; // set the debug flag
 
   /*
    *  load images for MariaLucia De Pieles non-player character sprite
@@ -191,6 +195,7 @@ function preload(){
   img1 = loadImage('img-lamigra/marialucia-2_10.png');
   maluciadepieles.addAnimation('muerto', img1,img1,img1,img1);
   maluciadepieles.changeAnimation('down');
+  maluciadepieles.debug = BUGGY; // set the debug flag
 
   /*
    * load images for Nita Moreno non-player character
@@ -218,6 +223,7 @@ function preload(){
   img1 = loadImage('img-lamigra/nita-2_10.png');
   nitamoreno.addAnimation('muerto', img1,img1,img1,img1);
   nitamoreno.changeAnimation('down');
+  nitamoreno.debug = BUGGY; // set the debug flag
 
   /*
    *  load images for Lino De Pieles non-player character sprite
@@ -246,6 +252,7 @@ function preload(){
   img1 = loadImage('img-lamigra/lino-2_10.png');
   linodepieles.addAnimation('muerto', img1,img1,img1,img1);
   linodepieles.changeAnimation('down');
+  linodepieles.debug = BUGGY; // set the debug flag
 
   /*
    * add imgages for Carlos Moreno non-player character
@@ -273,6 +280,7 @@ function preload(){
   img1 = loadImage('img-lamigra/Carlos-Moreno-3_15.png');
   carlosmoreno.addAnimation('muerto', img1,img1,img1,img1);
   carlosmoreno.changeAnimation('down');
+  carlosmoreno.debug = BUGGY; // set the debug flag
 
   /*
    *  load images for Marcia non-player character sprite
@@ -301,6 +309,7 @@ function preload(){
   img1 = loadImage('img-lamigra/marcia-3_10.png');
   marcia.addAnimation('muerto',img1,img1,img1,img1);
   marcia.changeAnimation('down');
+  marcia.debug = BUGGY; // set the debug flag
 
   /*
    * load images for Patricia La Machona non-player character sprite
@@ -329,6 +338,7 @@ function preload(){
   img1 = loadImage('img-lamigra/patricia-2_10.png');
   patricialamachona.addAnimation('muerto',img1,img1,img1,img1);
   patricialamachona.changeAnimation('down');
+  patricialamachona.debug = BUGGY; // set the debug flag
 
   /*
    *  load imgaes for Puercoespin non-player character sprite
@@ -357,6 +367,7 @@ function preload(){
   img1 = loadImage('img-lamigra/porcupine_14.png');
   puercoespin.addAnimation('muerto',img1,img1,img1,img1);
   puercoespin.changeAnimation('down');
+  puercoespin.debug = BUGGY; // set the debug flag
 
   /*
    *  load images for X-rodar non-player character sprite
@@ -385,7 +396,11 @@ function preload(){
   img1 = loadImage('img-lamigra/X-rodar-3_10-copy-b.png');
   xrodar.addAnimation('muerto',img1,img1,img1,img1); // resolved - image is not transparent
   xrodar.changeAnimation('down');
+  xrodar.debug = BUGGY; // set the debug flag
 
+  /*
+   *  create a group for non-player characters
+   */
   cacahuates = new Group();
   cacahuates.add(maluciadepieles);
   cacahuates.add(nitamoreno);
@@ -405,6 +420,7 @@ function preload(){
   deportacioncenter.addImage('gate', img0);
   deportacioncenter.addAnimation('gate activated', img0, img1,img1,img1,img1, img0);
   deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
+  deportacioncenter.debug = BUGGY; // set the debug flag
 
   /*
    *  load image for repatriation center
@@ -415,30 +431,31 @@ function preload(){
    repatriationcenter.addImage('gate', img0);
    repatriationcenter.addAnimation('gate activated', img0, img1,img1,img1,img1, img0);
    repatriationcenter.changeAnimation('gate activated'); // will change,
+   repatriationcenter.debug = BUGGY; // set the debug flag
 
    /*
     * load image for shadows along right hand side of screen
     */
-    img0 = loadImage('img-lamigra/shadowC.png'); // used twice, mid right, lower right
-    img1 = loadImage('img-lamigra/shadowB.png'); // used once, upper right
     sombra0 = createSprite (15*32+16, 4*32+16, 32, 96); // will contain shadowB.png
     sombra1 = createSprite (15*32+16, 8*32, 32, 128); // will contain shadowC.png
     sombra2 = createSprite (15*32+16, 12*32, 32, 128); // will contain shadowC.png
+    img0 = loadImage('img-lamigra/shadowC.png'); // used twice, mid right, lower right
+    img1 = loadImage('img-lamigra/shadowB.png'); // used once, upper right
     sombra0.addImage('sombra', img1);
     sombra1.addImage('sombra', img0);
     sombra2.addImage('sombra', img0);
+    sombra0.debug = BUGGY; // set the debug flag
+    sombra1.debug = BUGGY; // set the debug flag
+    sombra2.debug = BUGGY; // set the debug flag
 
+} // end preload()
 
-
-}
 
 function setup() {
   // put setup code here
   createCanvas(512,544);
   background(128);
 
-  // set debug flag
-  migra.debug = BUGGY;
 }
 
 function draw() {
