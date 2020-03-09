@@ -411,17 +411,17 @@ function setup() {
 
 	carlosmoreno.debug = BUGGY;
 	cadaver.debug = BUGGY;
-	waterLog.debug = BUGGY;
 	gato1.debug = BUGGY;
 	gato2.debug = BUGGY;
+	waterLog.debug = BUGGY;
 	llanta.debug = BUGGY;
-	migraMan1.debug = BUGGY;
 	migraMan2.debug = BUGGY;
-	migraMan3.debug = BUGGY;
+	migraMan1.debug = BUGGY;
 	migraSUV.debug = BUGGY;
 	migraHelo1.debug = BUGGY;
-	migraHelo2.debug = BUGGY;
 	visa.debug = BUGGY;
+	migraHelo2.debug = BUGGY;
+	migraMan3.debug = BUGGY;
 
 	/*
 	// Don't need velocity so we can implement chunky movement

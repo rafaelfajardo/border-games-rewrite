@@ -71,6 +71,7 @@ function preload(){
   tierra.addImage ('pierdes', img2); // loss screen
   tierra.addImage ('ganas',img3); // victory screen
   tierra.changeImage('mapa'); // set the background to mapa while we develop, will need to change later
+  tierra.debug = BUGGY; // set the debug flag
 
   /*
    *  load images for drain pipe along bottom of screen
@@ -81,21 +82,25 @@ function preload(){
   pipa0.addImage ('pipa', img0);
   pipa0.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa0.changeAnimation('pipa activated'); // will need to change this state later
+  pipa0.debug = BUGGY; // set the debug flag
 
   pipa1 = createSprite (32*5+16, 16*32+16, 32, 32);
   pipa1.addImage ('pipa', img0);
   pipa1.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa1.changeAnimation('pipa activated'); // will need to change this state later
+  pipa1.debug = BUGGY; // set the debug flag
 
   pipa2 = createSprite (32*8+16, 16*32+16, 32, 32);
   pipa2.addImage ('pipa', img0);
   pipa2.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa2.changeAnimation('pipa activated'); // will need to change this state later
+  pipa2.debug = BUGGY; // set the debug flag
 
   pipa3 = createSprite (32*11+16, 16*32+16, 32, 32);
   pipa3.addImage ('pipa', img0);
   pipa3.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa3.changeAnimation('pipa activated'); // will need to change this state later
+  pipa3.debug = BUGGY; // set the debug flag
 
   pipas = new Group(); // the group of drain pipes, should allow for testing collision with group
   pipas.add (pipa0);
@@ -431,6 +436,9 @@ function setup() {
   // put setup code here
   createCanvas(512,544);
   background(128);
+
+  // set debug flag
+  migra.debug = BUGGY;
 }
 
 function draw() {
