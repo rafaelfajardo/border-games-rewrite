@@ -57,12 +57,14 @@ var moveDown = false; // boolean
 var gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 
 // queue to render things, they'll be drawn in this order so it's important
-// to have the order we want. This order will be handled in preload
+// to have the order we want. This order will be handled in preload. To deal
+// with an object moving more than ONE_UNIT, we simply add the object multiple
+// times to the queue
 let renderQueue = [];
 
 // this defines the time to spend on changing the animation and rendering for
 // each character, the fast this is, the faster the game will move
-let renderTime = .25;
+let renderTime = .20;
 
 // indicates where we are in the render queue
 let currentIndex = null;
@@ -266,9 +268,13 @@ function preload() {
 	gato1 = createSprite(32*2+16,32*9);
 	gato1.addAnimation('float',img1,img1,img2);
 	gato1.setDefaultCollider();
+	gato1.looping = false;
+	gato1.playing = false;
 	gato1.movementDir = 'right';
-	gato1.speed = 32*2;
+	//gato1.speed = 32*2;
+	gato1.speed = ONE_UNIT;
 	// add gato1 to the queue
+	renderQueue.push(gato1);
 	renderQueue.push(gato1);
 	gato1.name = 'gato1';
 	// end load and create gato1
@@ -280,8 +286,10 @@ function preload() {
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.setDefaultCollider();
 	gato2.movementDir = 'right';
-	gato2.speed = 32*3;
+	//gato2.speed = 32*2;
+	gato2.speed = ONE_UNIT;
 	// add gato1 to the queue
+	renderQueue.push(gato2);
 	renderQueue.push(gato2);
 	gato2.name = 'gato2';
 	// end load and create gato2
@@ -305,9 +313,11 @@ function preload() {
 	llanta = createSprite(32*12,32*9);
 	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
 	llanta.movementDir = 'right';
-	llanta.speed = 32*2;
+	//llanta.speed = 32*2;
+	llanta.speed = ONE_UNIT;
 	llanta.setDefaultCollider();
 	// added the tire to the queue
+	renderQueue.push(llanta);
 	renderQueue.push(llanta);
 	llanta.name = 'llanta';
 	// end load and create llanta
@@ -316,7 +326,7 @@ function preload() {
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
 	migraMan2 = createSprite(32*7+16,32*7);
-  migraMan2.addAnimation('marchright',img1,img1,img2,img2);
+    migraMan2.addAnimation('marchright',img1,img1,img2,img2);
 	migraMan2.setDefaultCollider();
 	migraMan2.movementDir = 'right';
 	migraMan2.speed = 32;
@@ -346,8 +356,11 @@ function preload() {
 	migraSUV.mirrorX(-1);
 	migraSUV.setDefaultCollider();
 	migraSUV.movementDir = 'left';
-	migraSUV.speed = 32*3;
+	//migraSUV.speed = 32*3;
+	migraSUV.speed = ONE_UNIT;
 	// added migra SUV to the queue
+	renderQueue.push(migraSUV);
+	renderQueue.push(migraSUV);
 	renderQueue.push(migraSUV);
 	migraSUV.name = 'migraSUV';
 	// end load and create migraSUV
@@ -359,8 +372,12 @@ function preload() {
 	migraHelo1.addAnimation('fly',img1,img2,img2,img1,img2);
 	migraHelo1.setDefaultCollider();
 	migraHelo1.movementDir = 'left';
-	migraHelo1.speed = 32*4;
+	//migraHelo1.speed = 32*4;
+	migraHelo1.speed = ONE_UNIT;
 	// added migra heli 1 to the queue
+	renderQueue.push(migraHelo1);
+	renderQueue.push(migraHelo1);
+	renderQueue.push(migraHelo1);
 	renderQueue.push(migraHelo1);
 	migraHelo1.name = 'migraHeli1';
 	// end load and create migraHelo1
@@ -379,8 +396,12 @@ function preload() {
 	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
 	migraHelo2.setDefaultCollider();
 	migraHelo2.movementDir = 'left';
-	migraHelo2.speed = 32*4;
+	//migraHelo2.speed = 32*4;
+	migraHelo2.speed = ONE_UNIT;
 	// added migra heli 2 to the queue
+	renderQueue.push(migraHelo2);
+	renderQueue.push(migraHelo2);
+	renderQueue.push(migraHelo2);
 	renderQueue.push(migraHelo2);
 	migraHelo2.name = 'migraHeli2';
 	// end load and create migraHelo2
