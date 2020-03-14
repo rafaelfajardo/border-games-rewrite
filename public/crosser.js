@@ -73,12 +73,12 @@ let currentIndex = 0;
 let timeStamp = 0;
 
 /**
- * Calculates the new index from the current one, based on 
+ * Calculates the new index from the current one, based on
  * what our current index is, how many elements are in the queue
  * and how long each sprite gets to move
- * @param {The queue of sprites we'll be drawing} queue 
- * @param {The current index we are testing} idx 
- * @param {How long each sprite has to move} timing 
+ * @param {The queue of sprites we'll be drawing} queue
+ * @param {The current index we are testing} idx
+ * @param {How long each sprite has to move} timing
  */
 function getNextIndex(queue, idx, timing) {
 	// get the time in seconds, with subsecond accuracy
@@ -105,21 +105,21 @@ function getNextIndex(queue, idx, timing) {
  * out before animating to a new spot, which is based really on
  * the speed of the sprite. If a sprite moves 4 units, for example,
  * we have timing/4 seconds to hang out before moving again
- * @param {The sprite that's moving} sprite 
- * @param {The length of time each sprite has to move} timing 
+ * @param {The sprite that's moving} sprite
+ * @param {The length of time each sprite has to move} timing
  */
 function calculateSubtiming(sprite, timing)
 {
 	const total_units = sprite.speed / ONE_UNIT;
-	return timing / total_units; 
+	return timing / total_units;
 }
 
 
 /**
  * this takes a rendering queue and updates positions based on how much
  * time has elapsed at this point in the game
- * @param {A queue of sprites to render} queue 
- * @param {How long we spend at each sprite drawing} timing 
+ * @param {A queue of sprites to render} queue
+ * @param {How long we spend at each sprite drawing} timing
  */
 function updateRendering(queue, timing) {
 	// calculate the next index
@@ -162,7 +162,7 @@ function updateSprite(sprite) {
 			// wrap around on the x-axis
 			if (sprite.position.x < 0) {
 				// we calculate the new position as such so that
-				// the sprite wraps around the screen correctly, 
+				// the sprite wraps around the screen correctly,
 				// in essence doing a modulo on its position
 				sprite.position.x = WIDTH + sprite.position.x;
 			}
@@ -172,7 +172,7 @@ function updateSprite(sprite) {
 			sprite.position.x = sprite.position.x + sprite.speed;
 			if (sprite.position.x > WIDTH) {
 				// we calculate the new position as such so that
-				// the sprite wraps around the screen correctly, 
+				// the sprite wraps around the screen correctly,
 				// in essence doing a modulo on its position
 				sprite.position.x = sprite.position.x - WIDTH;
 			}
@@ -193,8 +193,8 @@ function updateSprite(sprite) {
  * This function animates the sprite to move from its current position
  * to the next position, so that we "smoothly" jump between UNITS of 32 pixels
  * until it gets to its next destination. It also allows us to control which
- * animation frame is being used. 
- * @param {The sprite we're animating} sprite 
+ * animation frame is being used.
+ * @param {The sprite we're animating} sprite
  */
 function animateSprite(sprite, timing, distance)
 {
@@ -202,7 +202,7 @@ function animateSprite(sprite, timing, distance)
 	const subtiming = calculateSubtiming(sprite, timing);
 	// grab elapsed time
 	const seconds = millis() / 1000;
-	
+
 	if (seconds > subTimestamp) {
 		// slap a new subtimestamp down
 		subTimestamp = seconds + subtiming;
@@ -455,17 +455,17 @@ function setup() {
 
 	carlosmoreno.debug = BUGGY;
 	cadaver.debug = BUGGY;
-	waterLog.debug = BUGGY;
 	gato1.debug = BUGGY;
 	gato2.debug = BUGGY;
+	waterLog.debug = BUGGY;
 	llanta.debug = BUGGY;
-	migraMan1.debug = BUGGY;
 	migraMan2.debug = BUGGY;
-	migraMan3.debug = BUGGY;
+	migraMan1.debug = BUGGY;
 	migraSUV.debug = BUGGY;
 	migraHelo1.debug = BUGGY;
-	migraHelo2.debug = BUGGY;
 	visa.debug = BUGGY;
+	migraHelo2.debug = BUGGY;
+	migraMan3.debug = BUGGY;
 
 	/*
 	// Don't need velocity so we can implement chunky movement
@@ -499,7 +499,7 @@ function setup() {
 	//carlosmoreno.changeImage('facedown');
 	noCursor(); // testing cursor manipulation
 	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
-	
+
 } // end setup
 
 function draw() {
