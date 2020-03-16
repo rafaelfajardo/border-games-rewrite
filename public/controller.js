@@ -57,10 +57,10 @@
  * B15: Axis-0, x-axis rightward 0 1 (redundant? but useful)
  *
  * The d-pad is digital, not analog, on this device. (NB verify?)
- * The redundant mapping of the d-pad to buttons is useful for Crosser and La Migra 
+ * The redundant mapping of the d-pad to buttons is useful for Crosser and La Migra
  * because the gamepad object value is simple 0 or 1 rather than a floating point.
  *
- * There is logic available to isolate a single button push 
+ * There is logic available to isolate a single button push
  * rather than return true for multiple frames because the cycles are so fast:
  * https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API
  * It creates a "newPress" boolean variable to execute new presses instead of press-and-hold situations.
@@ -207,7 +207,8 @@ function touchStarted(){
 	sprite center will be 48 x 48
 	controller origin top left corner (conX,conY)
 	d pad button edges can be a multiple of the offsets offX and offY
-	// */
+ */
+  /*
 	let conX = 0;
 	let conY = 448;
 	let offX = 32;
@@ -234,9 +235,9 @@ function touchStarted(){
 		print('touch right');
 		moveRight = true;
 	}
-	return false;
+	//return false; // this statement is being called an illegal return by console on chrome
 } // end touchStarted
-*/ 
+*/
 
 
 
