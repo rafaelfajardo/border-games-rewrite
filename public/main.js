@@ -14,7 +14,9 @@ function preload(){
 
 // setup
 function setup(){
-  createCanvas(448, 548);
+  let canvas = createCanvas(448, 548); // suggested by p5js.org reference for parent()
+  // next line relies on p5.dom.js be added to the dependencies in lib
+  canvas.parent('canvas-column'); // place the sketch canvas within the div named canvas-column within index.html
   frameRate(20); // tried as slow as 1fps
   background(128);
   noCursor(); // testing cursor manipulation
