@@ -138,6 +138,7 @@ function updateStatus(pad){ // tested once per frame, should be called from draw
 return;
 }
 
+/* commenting out keyTyped() becasue ui.js is experimenting with similar use.
 // keyTyped was copied from crosser.js
 // keyboard mapping W,A,S,D; I,J,K,L; T,Y; as actionable
 // will likely have to pass the values of moveUp, moveDown, moveLeft, moveRight for this to work.
@@ -177,22 +178,23 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 	} else if (key === 'y') {  // this bit is a little crufty too
 		print('y');
 	}
-  /*
+//
   // another option for mapping start and select functions
-  if keyCode(71){ // keyCode for 'g' use for 'select' on controller
+//  if keyCode(71){ // keyCode for 'g' use for 'select' on controller
    // toggle between Crosser and La Migra highlight selection
    // can use a counter and modulo and set up an odd or even case
    // counter+=
    // if counter%(2) === 0 then do the following
    // else do the following
-  }
-  if keyCode(72){ // keyCode for 'h' use for 'start' on controller
+//  }
+//  if keyCode(72){ // keyCode for 'h' use for 'start' on controller
    // start the highlighted selection
-  }
-  */
-	return false;
+//  }
+//
+//	return false;
 
 } // end keyTyped
+*/
 
 /* commented out touch UI which may be revisited at a later time
 // touchStarted was copied from crosser.js
