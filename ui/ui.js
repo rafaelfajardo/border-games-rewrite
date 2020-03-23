@@ -46,9 +46,8 @@ function setup(){
   ctr0 = 0; // initialize counter
 }
 
-function draw(){
-  background(200);
-  if (keyIsDown(71)){ // g on most keyboards using here as a select or highlight
+function keyReleased() {
+  if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
     if (ctr0 % 2 === 0){
       btn0.changeAnimation('off');
       btn1.changeAnimation('on');
@@ -58,13 +57,38 @@ function draw(){
     }
     ctr0 = ctr0 +1;
   }
-  if (keyIsDown(72)){ // h on most keyboards using here as start the selected choice
+  if ((key === 'h') || (key === 'H'){ // h on most keyboards using here as start the selected choice
     if (ctr0 % 2 === 0){
+      btn0.changeAnimation('off');
       btn1.changeAnimation('blink');
-
-      httpGet(url);
+      httpGet(url0);
+    }
+    else if (ctr0 % 2 === 1){
+      btn0.changeAnimation('blink');
+      btn1.changeAnimation('off');
+      httpGet(url1)
+    }
   }
-  else { btn1.changeImage("off1");}
+} // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above 
+
+function draw(){
+  background(200);
+
+  // experimental code for gamepad
+  // needs to be called every frame and is in draw loop
+  // sourced from ...
+  // https://editor.p5js.org/rafaelfajardo/sketches/AT6P-Ikrd4
+
+  let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
+  let pad0 = pads[0]; // limit to first pad connected
+  if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
+    updateStatus(pad0); // will need an updateStatus() function
+  } else { // what to do if pad0 is null, which is to say there is no gamepad connected
+    // use keyboard
+    // or use touches
+    //console.log(pads);
+  }
+
 
   drawSprites();
 
