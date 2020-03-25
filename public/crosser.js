@@ -125,19 +125,29 @@ function updateRendering(queue, timing) {
 	// calculate the next index
 	const nextIdx = getNextIndex(queue, currentIndex, timing);
 
-	// if the index hasn't changed, then we're really done at this point
+	// if the index has changed, then we need to update the sprite
 	if (nextIdx !== currentIndex)
 	{
+    // we want to move the sprite at the end of its time frame,
+    // so it animates in place first, then moves
+    updateSprite(queue[currentIndex]);
 		// stop the sprite animations
 		if (currentIndex >= 0) {
-			stopSprite(queue[currentIndex]);
+      // only stop the sprite (animation) if the next index is
+      // not this sprite, since we duplicate them
+      if (queue[currentIndex] !== queue[nextIdx]) {
+			     stopSprite(queue[currentIndex]);
+      }
 		}
+
 		// update our index
 		currentIndex = nextIdx;
-		// now update the sprite, which will cause it to move if its movement
-		// speed is something > 0
-
-		updateSprite(queue[currentIndex])
+    const sprite = queue[currentIndex];
+		// now start the animation of this sprite
+    if (sprite.animation && !sprite.animation.playing) {
+      //sprite.animation.goToFrame(0);
+      sprite.animation.play();
+    }
 	}
 }
 
@@ -145,16 +155,14 @@ function stopSprite(sprite) {
 	console.log('stopping ' + sprite.name);
 	if (sprite.animation) {
 		sprite.animation.stop();
+    sprite.animation.goToFrame(0);
 	}
 }
 /**
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
 function updateSprite(sprite) {
-	console.log('updating ' + sprite.name);
-	if (sprite.animation) {
-		sprite.animation.play();
-	}
+	console.log('updating movement of sprite ' + sprite.name);
 
 	switch (sprite.movementDir) {
 		case 'left':
@@ -184,7 +192,7 @@ function updateSprite(sprite) {
 			sprite.position.y = sprite.position.y + sprite.speed;
 			break;
 		default:
-			console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
+			console.log('movementDir of ' + sprite.name + ' is undefined as \'' + sprite.movementDir + '\'');
 			break;
 	}
 }
@@ -213,11 +221,11 @@ function animateSprite(sprite, timing, distance)
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
 
-	if (BUGGY){
-	  img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
-	} else {
+	//if (BUGGY){
+	//  img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
+	//} else {
 		img = loadImage('img/frontera-2.png');
-	}
+	//}
 	img1 = loadImage('img/asarco.png'); // asarco.png is the splash/startup screen
 	img2 = loadImage('img/the_end_2.png'); // the_end_2.png is the win screen
 	tierra = createSprite(224,224); // tierra holds the background images
@@ -271,7 +279,7 @@ function preload() {
 	cadaver.setDefaultCollider();
 	cadaver.animation.playing = false;
 	cadaver.movementDir = 'right';
-	cadaver.speed = 32;
+	cadaver.speed = ONE_UNIT;
 	// add the cadaver to the queue
 	renderQueue.push(cadaver);
 	cadaver.name = 'cadaver';
@@ -280,7 +288,7 @@ function preload() {
 	// load and create gato1
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato1 = createSprite(32*2+16,32*9);
+	gato1 = createSprite(32*2+16,32*8+24);
 	gato1.addAnimation('float',img1,img1,img2);
 	gato1.setDefaultCollider();
 	gato1.animation.playing = false;
@@ -296,7 +304,7 @@ function preload() {
 	// load and create gato2
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato2 = createSprite(32*7+16,32*9);
+	gato2 = createSprite(32*7+16,32*8+24);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.animation.playing = false;
 	gato2.setDefaultCollider();
@@ -312,12 +320,12 @@ function preload() {
 	// load and create waterLog
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
-	waterLog = createSprite(32*8,32*11);
+	waterLog = createSprite(32*8,32*10+4);
 	waterLog.addAnimation('float',img1,img1,img2,img2);
 	waterLog.setCollider('rectangle',0,16,64,32);
 	waterLog.animation.playing = false;
 	waterLog.movementDir = 'right';
-	waterLog.speed = 32;
+	waterLog.speed = ONE_UNIT;
 	// add waterlog to the queue
 	renderQueue.push(waterLog);
 	waterLog.name = 'waterlog';
@@ -326,7 +334,7 @@ function preload() {
 	// load and create llanta
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
-	llanta = createSprite(32*12,32*9);
+	llanta = createSprite(32*12,32*8+12);
 	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
 	llanta.animation.playing = false;
 	llanta.movementDir = 'right';
@@ -347,7 +355,7 @@ function preload() {
 	migraMan2.animation.playing = false;
 	migraMan2.setDefaultCollider();
 	migraMan2.movementDir = 'right';
-	migraMan2.speed = 32;
+	migraMan2.speed = ONE_UNIT;
 	// migra hombre 2
 	renderQueue.push(migraMan2);
 	migraMan2.name = 'migraHombre2';
@@ -361,7 +369,7 @@ function preload() {
 	migraMan1.animation.playing = false;
 	migraMan1.setDefaultCollider();
 	migraMan1.movementDir = 'right';
-	migraMan1.speed = 32;
+	migraMan1.speed = ONE_UNIT;
 	// migra hombre 1
 	renderQueue.push(migraMan1);
 	migraMan1.name = 'migraHombre1';
@@ -436,7 +444,7 @@ function preload() {
 	migraMan3.animation.playing = false;
 	migraMan3.setDefaultCollider();
 	migraMan3.movementDir = 'right';
-	migraMan3.speed = 32;
+	migraMan3.speed = ONE_UNIT;
 	// migra hombre 3
 	renderQueue.push(migraMan3);
 	migraMan3.name = 'migraHombre3';
@@ -453,6 +461,7 @@ function setup() {
 
 	tierra.changeImage('frontera'); // this image should change to 'asarco' to default to gamestate='startup'
 
+/*
 	carlosmoreno.debug = BUGGY;
 	cadaver.debug = BUGGY;
 	gato1.debug = BUGGY;
@@ -466,6 +475,7 @@ function setup() {
 	visa.debug = BUGGY;
 	migraHelo2.debug = BUGGY;
 	migraMan3.debug = BUGGY;
+  */
 
 	/*
 	// Don't need velocity so we can implement chunky movement
