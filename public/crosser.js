@@ -40,7 +40,7 @@ var spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 												// will give background image it's own turn since it is a sprite indexed 0
 												//will potentiall cause draw loop to speed up as sprites are removed from list
 
-var BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
+var BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 
 var START = false; // to use for button SNES maybe need a reSTART
 //var SELECT = false; // use button for SNES
