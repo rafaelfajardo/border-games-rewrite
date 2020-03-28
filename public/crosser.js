@@ -373,8 +373,8 @@ function preload() {
 	migraSUV = createSprite(64,32*5);
 	migraSUV.addAnimation('drive',img1,img2,img1);
 	migraSUV.animation.playing = false;
-	migraSUV.mirrorX(-1);
-	migraSUV.setDefaultCollider();
+	// migraSUV.mirrorX(-1); // this line is no longer needed, art has been corrected
+	migraSUV.setDefaultCollider(); // with corrected art this should be 64x64
 	migraSUV.movementDir = 'left';
 	//migraSUV.speed = 32*3;
 	migraSUV.speed = ONE_UNIT;
