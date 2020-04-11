@@ -57,7 +57,7 @@ function keyReleased() {
     }
     ctr0 = ctr0 +1;
   }
-  if ((key === 'h') || (key === 'H'){ // h on most keyboards using here as start the selected choice
+  if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
     if (ctr0 % 2 === 0){
       btn0.changeAnimation('off');
       btn1.changeAnimation('blink');
@@ -69,7 +69,7 @@ function keyReleased() {
       httpGet(url1)
     }
   }
-} // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above 
+} // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 function draw(){
   background(200);
