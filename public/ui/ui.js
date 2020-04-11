@@ -61,12 +61,12 @@ function keyReleased() {
     if (ctr0 % 2 === 1){
       btn1.changeAnimation('off');
       btn2.changeAnimation('blink');
-      loadJSON(url0, draw); // httpGet(url0);
+      window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
     }
     else if (ctr0 % 2 === 0){
       btn1.changeAnimation('blink');
       btn2.changeAnimation('off');
-      loadJSON(url1, draw); // httpGet(url1)
+      window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
     }
   }
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
