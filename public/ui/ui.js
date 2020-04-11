@@ -50,9 +50,9 @@ function keyReleased() {
   if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
     if (ctr0 % 2 === 0){
       btn1.changeAnimation('off');
-      btn2.changeAnimation('on');
+      btn2.changeAnimation('select');
     } else if (ctr0 % 2 === 1) {
-      btn1.changeAnimation('on');
+      btn1.changeAnimation('select');
       btn2.changeAnimation('off');
     }
     ctr0 = ctr0 +1;
