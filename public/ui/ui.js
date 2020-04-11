@@ -27,7 +27,7 @@ function preload(){
 
   img1 = loadImage("img-ui/buttonL1.png"); // load dimmed button image
   img2 = loadImage("img-ui/buttonL2.png"); // load bright button image
-  btn2 = createSprite(224, 300, 64, 32);
+  btn2 = createSprite(224, 248, 64, 32);
   btn2.addImage("off2", img1);
   btn2.addImage("on2", img2);
   btn2.addAnimation('off', img1);
@@ -58,15 +58,15 @@ function keyReleased() {
     ctr0 = ctr0 +1;
   }
   if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-    if (ctr0 % 2 === 0){
+    if (ctr0 % 2 === 1){
       btn1.changeAnimation('off');
       btn2.changeAnimation('blink');
-      httpGet(url0);
+      loadJSON(url0, draw); // httpGet(url0);
     }
-    else if (ctr0 % 2 === 1){
+    else if (ctr0 % 2 === 0){
       btn1.changeAnimation('blink');
       btn2.changeAnimation('off');
-      httpGet(url1)
+      loadJSON(url1, draw); // httpGet(url1)
     }
   }
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
