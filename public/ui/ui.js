@@ -34,9 +34,9 @@ function preload(){
   btn2.addAnimation('select', img2);
   btn2.addAnimation('blink', img1,img2,img2,img1);
 
-  url = "http://localhost:8080/index.html";
-  url0 = "http://localhost:8080/0.html";
-  url1 = "http://localhost:8080/1.html";
+  url = "http://localhost:8080/ui/index.html"; // these urls have to be fixed
+  url0 = "http://localhost:8080/ui/0.html";
+  url1 = "http://localhost:8080/ui/1.html";
 
 }
 
