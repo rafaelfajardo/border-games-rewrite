@@ -49,23 +49,23 @@ function setup(){
 function keyReleased() {
   if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
     if (ctr0 % 2 === 0){
-      btn0.changeAnimation('off');
-      btn1.changeAnimation('on');
-    } else if (ctr0 % 2 === 1) {
-      btn0.changeAnimation('on');
       btn1.changeAnimation('off');
+      btn2.changeAnimation('on');
+    } else if (ctr0 % 2 === 1) {
+      btn1.changeAnimation('on');
+      btn2.changeAnimation('off');
     }
     ctr0 = ctr0 +1;
   }
   if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
     if (ctr0 % 2 === 0){
-      btn0.changeAnimation('off');
-      btn1.changeAnimation('blink');
+      btn1.changeAnimation('off');
+      btn2.changeAnimation('blink');
       httpGet(url0);
     }
     else if (ctr0 % 2 === 1){
-      btn0.changeAnimation('blink');
-      btn1.changeAnimation('off');
+      btn1.changeAnimation('blink');
+      btn2.changeAnimation('off');
       httpGet(url1)
     }
   }
