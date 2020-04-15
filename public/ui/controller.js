@@ -112,8 +112,29 @@ function updateStatus(pad){ // tested once per frame, should be called from draw
     if (pad.buttons[5].value === 1){ print('SNES R-button pressed');}
     if (pad.buttons[6].value === 1){ print('SNES L-button pressed');} // redundant mapping
     if (pad.buttons[7].value === 1){ print('SNES R-button pressed');} // redundant mapping
-    if (pad.buttons[8].value === 1){ print('SNES SELECT button pressed');}
-    if (pad.buttons[9].value === 1){ print('SNES START button pressed');}
+    if (pad.buttons[8].value === 1){ print('SNES SELECT button pressed');
+        print(ctr0);
+        if (ctr0 % 2 === 0){
+          btn1.changeAnimation('off');
+          btn2.changeAnimation('select');
+        } else if (ctr0 % 2 === 1) {
+          btn1.changeAnimation('select');
+          btn2.changeAnimation('off');
+        }
+        ctr0 = ctr0 +1;
+    }
+    if (pad.buttons[9].value === 1){ print('SNES START button pressed');
+        if (ctr0 % 2 === 1){
+          btn1.changeAnimation('off');
+          btn2.changeAnimation('blink');
+          window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+        }
+        else if (ctr0 % 2 === 0){
+          btn1.changeAnimation('blink');
+          btn2.changeAnimation('off');
+          window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+        }
+    }
     if (pad.buttons[10].value === 1){ print('unmapped button 10');} // I haven't found a signal on this button[index]
     if (pad.buttons[11].value === 1){ print('unmapped button 11');} // I haven't found a signal on this button[index]
     if (pad.buttons[12].value === 1){ print('SNES D-pad up pressed');} // redundant with axes 1 (Y-value)
