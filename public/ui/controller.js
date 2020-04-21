@@ -159,6 +159,17 @@ function updateStatus(pad){ // tested once per frame, should be called from draw
 return;
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/ongamepadconnected
+window.ongamepadconnected = function(event) {
+  // All buttons and axes values can be accessed through
+  event.gamepad;
+};
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/ongamepaddisconnected
+window.ongamepaddisconnected = function() {
+  // A gamepad has been disconnected
+};
+
 /* commenting out keyTyped() becasue ui.js is experimenting with similar use.
 // keyTyped was copied from crosser.js
 // keyboard mapping W,A,S,D; I,J,K,L; T,Y; as actionable
