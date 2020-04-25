@@ -558,22 +558,6 @@ function draw() {
 		carlosmoreno.visible = false;
 		tierra.changeImage('end');
 	}
-	/* experimental update single sprite at a time
-	for(var i = 0; i<allSprites.size(); i++)
-  {
-    allSprites.get(i).update();
-		// some delay function here
-		allSprites.get(i).drawSprite;
-  }
-	*/
-	/* // experimental code not working 2019 06 14
-	// experimental code based on surfacing above snippet which is a part of P5JS Play library
-	let i = spriteCounter%allSprites.length
-	allSprites[i].update();
-	allSprites[i].draw();
-	spriteCounter = spriteCounter + 1;
-	// end experimental code
-	*/
 
 	// experimental code for gamepad
 	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
