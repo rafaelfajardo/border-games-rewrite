@@ -87,8 +87,10 @@ function draw(){
     // use keyboard
     // or use touches
     //console.log(pads);
+    console.log('warning, no gamepads connected');
   }
-
+  let browser = navigator.vendor; // window.navigator.vendor may be correct syntax
+  if (browser !== 'Google Inc.'){console.log('warning, wrong browser')}
 
   drawSprites();
 
