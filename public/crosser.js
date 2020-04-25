@@ -236,22 +236,18 @@ function preload() {
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
 	carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
-	//carlosmoreno.addImage('facedown',img1);
 
 	img1 = loadImage('img/carlos-moreno-3_03.png');
 	img2 = loadImage('img/carlos-moreno-3_04.png');
 	carlosmoreno.addAnimation('walkup',img1,img2);
-	//carlosmoreno.addImage('faceup',img1);
 
 	img1 = loadImage('img/carlos-moreno-3_05.png');
 	img2 = loadImage('img/carlos-moreno-3_06.png');
 	carlosmoreno.addAnimation('walkright',img1,img2);
-	//carlosmoreno.addImage('faceright',img1);
 
 	img1 = loadImage('img/carlos-moreno-3_07.png');
 	img2 = loadImage('img/carlos-moreno-3_08.png');
 	carlosmoreno.addAnimation('walkleft',img1,img2);
-	//carlosmoreno.addImage('faceleft',img1);
 	// end load images for player character Carlos Moreno
 
 	// load and create cadaver
