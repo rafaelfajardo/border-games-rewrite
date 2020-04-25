@@ -137,10 +137,14 @@ function updateStatus(pad){ // tested once per frame, should be called from draw
     }
     if (pad.buttons[10].value === 1){ print('unmapped button 10');} // I haven't found a signal on this button[index]
     if (pad.buttons[11].value === 1){ print('unmapped button 11');} // I haven't found a signal on this button[index]
-    if (pad.buttons[12].value === 1){ print('SNES D-pad up pressed');} // redundant with axes 1 (Y-value)
-    if (pad.buttons[13].value === 1){ print('SNES D-pad down pressed');} // redundant with axes 1 (Y-value)
-    if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
-    if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
+    if (pad.buttons[12].value === 1){ print('SNES D-pad up pressed'); // redundant with axes 1 (Y-value)
+                                      moveUp = true;}
+    if (pad.buttons[13].value === 1){ print('SNES D-pad down pressed'); // redundant with axes 1 (Y-value)
+                                      moveDown = true;}
+    if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed'); // redundant with axes 0 (X-value)
+                                      moveLeft = true;}
+    if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed'); // redundant with axes 0 (X-value)
+                                      moveRight = true;}
 /*
 }  elseif (pad.id === ""){ // the following is a mapping for the NES USB controller in the studio
     if (pad.axes[0] === -1){ print('NES dpad left');}//{ moveLeft = true;} else { moveLeft = false; }
