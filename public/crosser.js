@@ -468,20 +468,6 @@ function setup() {
 	migraHelo2.debug = BUGGY;
 	migraMan3.debug = BUGGY;
 
-	/*
-	// Don't need velocity so we can implement chunky movement
-	cadaver.setVelocity(0.25,0);
-	waterLog.setVelocity(0.25,0);
-	gato1.setVelocity(0.3,0);
-	gato2.setVelocity(0.3,0);
-	llanta.setVelocity(0.3,0);
-	migraMan1.setVelocity(0.5,0);
-	migraMan2.setVelocity(0.5,0);
-	migraMan3.setVelocity(0.5,0);
-	migraSUV.setVelocity(-0.5,0);
-	migraHelo1.setVelocity(-0.75,0);
-	migraHelo2.setVelocity(-0.75,0);
-	*/
 
 	// I've reordered the adds to match the render queue order
 	laMigra = new Group();
