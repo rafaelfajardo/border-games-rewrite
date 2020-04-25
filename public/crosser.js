@@ -494,7 +494,6 @@ function draw() {
 
 	if (moveUp){
 		carlosmoreno.changeAnimation ('walkup');
-		//carlosmoreno.velocity.y = -1;
 		carlosmoreno.position.y = carlosmoreno.position.y - 32;
 		if (carlosmoreno.position.y - 32 < 0) {
 			// bound the mvoement of carlos
@@ -505,7 +504,6 @@ function draw() {
 	}
 	else if (moveDown){
 		carlosmoreno.changeAnimation ('walkdown');
-		//carlosmoreno.velocity.y = 1;
 		carlosmoreno.position.y = carlosmoreno.position.y + 32;
 		if (carlosmoreno.position.y + 32 > HEIGHT) {
 			// bound the mvoement of carlos
@@ -516,7 +514,6 @@ function draw() {
 	}
 	else if (moveLeft){
 		carlosmoreno.changeAnimation ('walkleft');
-		//carlosmoreno.velocity.x = -1;
 		carlosmoreno.position.x = carlosmoreno.position.x - 32;
 		// bound the movement of carlos
 		if (carlosmoreno.position.x < 0) {
@@ -527,7 +524,6 @@ function draw() {
 	}
 	else if (moveRight){
 		carlosmoreno.changeAnimation ('walkright');
-		//carlosmoreno.velocity.x = 1;
 		carlosmoreno.position.x = carlosmoreno.position.x + 32;
 		// bound the movement of carlos
 		if (carlosmoreno.position.x > WIDTH) {
@@ -538,23 +534,9 @@ function draw() {
 	}
 	//else {
 		//carlosmoreno.changeAnimation ('facedown');
-		//carlosmoreno.velocity.x = 0;
-		//carlosmoreno.velocity.y = 0;
 	//}
 
 	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
-		migraMan1.velocity.x = 0;
-		migraMan2.velocity.x = 0;
-		migraMan3.velocity.x = 0;
-		migraSUV.velocity.x = 0;
-		migraHelo1.velocity.x = 0;
-		migraHelo2.velocity.x = 0;
-		cadaver.velocity.x = 0;
-		waterLog.velocity.x = 0;
-		gato1.velocity.x = 0;
-		gato2.velocity.x = 0;
-		llanta.velocity.x = 0;
-		// laMigra.velocity.x = 0; // this doesn't work
 		carlosmoreno.changeAnimation ('surprise');
 		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
 		carlosmoreno.position.y = 64*6+32;
