@@ -39,3 +39,16 @@ function touchStarted(){
 	}
 	return false;
 } // end touchStarted
+
+// add the following to preload()
+// or create a function that calls it from preload()
+/*  // sprite for touch controls and virtual SNES controller
+	img = loadImage('img/snes.png');
+	dPad = createSprite(128,480); // dPad holds the image(s) that represent the game controller, used for mobile devices
+	dPad.addImage(img);
+*/
+/*  // sprite for start button -- deprecated this button which would appear on startup screen
+	img = loadImage ('img/start1.png');
+	start = createSprite(180,500);
+	start.addImage(img);
+*/

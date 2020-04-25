@@ -226,16 +226,6 @@ function preload() {
 	tierra.addImage('asarco',img1);
 	tierra.addImage('end',img2);
 
-/*  // sprite for touch controls and virtual SNES controller
-	img = loadImage('img/snes.png');
-	dPad = createSprite(128,480); // dPad holds the image(s) that represent the game controller, used for mobile devices
-	dPad.addImage(img);
-*/
-/*  // sprite for start button -- deprecated this button which would appear on startup screen
-	img = loadImage ('img/start1.png');
-	start = createSprite(180,500);
-	start.addImage(img);
-*/
 	// load images and create sprite for player character Carlos Moreno
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
