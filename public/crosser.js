@@ -558,18 +558,6 @@ function draw() {
 		carlosmoreno.changeAnimation ('surprise');
 		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
 		carlosmoreno.position.y = 64*6+32;
-/*		carlosmoreno.changeAnimation ('walkdown'); // this happens too fast
-		migraMan1.setVelocity(0.5,0);
-		migraMan2.setVelocity(0.5,0);
-		migraMan3.setVelocity(0.5,0);
-		migraSUV.setVelocity(-0.5,0);
-		migraHelo1.setVelocity(-0.75,0);
-		migraHelo2.setVelocity(-0.75,0);
-		cadaver.setVelocity(0.25,0);
-		waterLog.setVelocity(0.25,0);
-		gato1.setVelocity(0.3,0);
-		gato2.setVelocity(0.3,0);
-		llanta.setVelocity(0.3,0); */
 
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
