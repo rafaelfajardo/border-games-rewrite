@@ -51,6 +51,7 @@ var moveLeft = false; // boolean, used for player character interaction map to d
 var moveRight = false; // boolean
 var moveUp = false; // boolean
 var moveDown = false; // boolean
+var moveIdle = true; // boolean, used for player character idle
 //var dPad; // sprite, container for d pad image, used for touch interaction
 //var start; // sprite, container for start button image
 
