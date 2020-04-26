@@ -1,60 +1,26 @@
 <html>
     <head>
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/installationStyle.css">
     <script type="text/javascript" src="http://localhost:8080/lib/p5.js"></script>
     <script type="text/javascript" src="http://localhost:8080/lib/p5.dom.js"></script>
     <script type="text/javascript" src="http://localhost:8080/lib/p5.play.js"></script>
     <script type="text/javascript" src="http://localhost:8080/main.js"></script>
     <script type="text/javascript" src="http://localhost:8080/controller.js"></script>
 
-    <title>Crosser™(2000) and La Migra™(2001)</title>
+    <title>Crosser™(2020) and La Migra™(2020)</title>
 
-    <!-- embedded css style for input -->
-    <style>
-      input[type=submit]{
-          background-color: #4CAF50;
-          border: none;
-          color: white;
-          padding: 16px 32px;
-          text-decoration: none;
-          margin: 4px 2px;
-          cursor: pointer;
-        }
-      #left-column{
-        position: fixed;
-        top: 0;
-        height: 100%;
-        left: 0;
-        width: 25%;
-        padding: 0;
-        margin: 0;
-        border: 1px solid #00FF00;
-      }
-      #canvas-column{
-        position: fixed;
-        top: 0;
-        height: 100%;
-        left: 25%;
-        width: 50%;
-        padding: 0;
-        margin:0;
-        border: 1px solid #FF0000;
-      }
-      #right-column{
-        position: fixed;
-        top: 0;
-        height: 100%;
-        left: 75%;
-        width: 25%;
-        padding: 0;
-        margin: 0;
-        border: 1px solid #0000FF;
-      }
-    </style>
     </head>
+
     <body>
+      <div id = "envelope">
+        <!-- envelope will comprise 3 columns -->
         <div id = "left-column">
           <!-- items for left column will go here -->
-          <p> Crosser and La Migra are a product of SWEAT, a loose collaborative dedicated to the creation of socially conscious games.</p>
+          <p> Help Carlos Moreno in Crosser or take on the role of a border agent in “La Migra"</p>
+          <p>Crosser uses the “d-pad” or directional pad, which is the game jargon for the cross-shaped button on the left with arrow symbols embossed on it. This moves/controls the player character, Carlos Moreno, left, right, up, down to move Carlos across the border into the US. Avoid getting hit by the floating debris, you will have to start over. Avoid getting caught by la migra, you will be sent back. Sometimes la migra won't look, be quick. Get to the green card on the other side to pursue the American dream.</p>
+          <p>La Migra uses the d-pad, and the A-button on the right. The d-pad moves the player character, the Ford Explorer, left and right. The A-button launches hand-cuffs upward. and press the START button on gamepad. <br> Use the Y- and A-buttons to patrol the border. Use the X-button to fling handcuffs at the alien invaders. Catch as many as you can to be named agent of the month.</p>
+          <p>Use the “select” button to call up a menu screen to allow a player to choose between the two games and the start button to start to play.</p>
+          <p>Crosser and La Migra are a product of SWEAT, a loose collaborative dedicated to the creation of socially conscious games.</p>
           <p> The members of SWEAT that have contributed to Crosser and La Migra are: Francisco Ortega-Grimaldo, Carmen Escobar, Miguel Tarango, Marco Ortega, Ryan Molloy, Tomás Márquez-Carmona, Scott Leutenegger, Chris GauthierDickey, and Rafael Fajardo.</p>
         </div>
         <div id = "canvas-column">
@@ -62,18 +28,25 @@
         </div>
         <div id = "right-column">
           <!-- items for right column will go here -->
+
           <!--
               just using a simple button for launching each of these, using
               a form allows us to give a url to go to when clicked
-          -->
+              form has been replaced by window in p5js files
+              form required mouse click
+              window can be invoked by an event in p5js
+
           <form action="_crosser.html">
               <input type="submit" value="Play Crosser™ (2000)"></input>
           </form>
           <form action="_lamigra.html">
               <input type="submit" value="Play La Migra™ (2001)"></input>
-          </form>
-        </div>
 
+          </form>
+          -->
+
+        </div>
+      </div>
     </body>
 
 </html>

@@ -1,0 +1,57 @@
+body {
+  background-color: white;
+}
+p {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 10pt;
+}
+  input[type=submit]{
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-decoration: none;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+  #envelope{
+    position: fixed;
+    top: 0;
+    height: 640px;
+    left: 0;
+    width: 1280px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+  #left-column{
+    position: fixed;
+    top: 0;
+    height: 640px;
+    left: 0;
+    width: 300px;
+    padding: 10px;
+    margin: 0;
+    border: 1px solid #00FF00;
+  }
+  #canvas-column{
+    position: fixed;
+    top: 0;
+    height: 640px;
+    left: 320px;
+    width: 620px;
+    padding: 10px;
+    margin:0;
+    border: 1px solid #FF0000;
+    align-items: center;
+  }
+  #right-column{
+    position: fixed;
+    top: 0;
+    height: 640px;
+    left: 960px;
+    width: 300px;
+    padding: 10px;
+    margin: 0;
+    border: 1px solid #0000FF;
+  }
