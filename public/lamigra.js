@@ -453,7 +453,13 @@ function preload(){
 
 function setup() {
   // put setup code here
-  createCanvas(512,544);
+  //createCanvas(512,544); // La Migra default canvas size
+  //createCanvas(448, 548); // Crosser default canvas size
+  let canvas = createCanvas(448, 548); // suggested by p5js.org reference for parent()
+  canvas.parent('canvas-column'); // place the sketch canvas within the div named canvas-column within index.html
+  noCursor(); // testing cursor manipulation
+	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
+  frameRate(30);
   background(128);
 
 }
