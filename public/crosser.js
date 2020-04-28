@@ -435,7 +435,7 @@ function preload() {
 
 function setup() {
 	//createCanvas(448, 548);
-  let canvas = createCanvas(448, 548); // suggested by p5js.org reference for parent()
+  let canvas = createCanvas(448, 448); // suggested by p5js.org reference for parent()
   canvas.parent('canvas-column'); // place the sketch canvas within the div named canvas-column within index.html
   noCursor(); // testing cursor manipulation
 	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
