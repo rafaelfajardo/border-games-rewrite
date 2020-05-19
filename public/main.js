@@ -41,7 +41,8 @@ function draw(){
   		// or use touches
       //console.log(pads);
   	}
-
+    let browser = navigator.vendor; // window.navigator.vendor may be correct syntax
+    if (browser !== 'Google Inc.'){console.log('warning, wrong browser')}
 }
 // udpdateStatus(pad) has been moved to controller.js
 // keyTyped() has been moved to controller.js
