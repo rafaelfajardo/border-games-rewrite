@@ -371,6 +371,6 @@ I have to orient Scott Leutenegger to the project and try to organize the work.
 the changes have been recorded in the gitHub changelog. I want to know how to export these.
 We have been working from home since 2020 03 18
 Yesterday gitHub desktop had an update that I uploaded.
-Today Atom has an update that I uploaded.
+Today Atom has an update that I uploaded. It is now 1.47.0
 
 */
