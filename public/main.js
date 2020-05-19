@@ -6,6 +6,14 @@
  */
 
 // declare global variables
+let btn1; // sprite container for button art
+let btn2; // sprite container for button art
+let img1; // temporary container to preload an image
+let img2; // temporary container to preload an image
+let url;  // container for a target url
+let url0; // container for a target url
+let url1; // container for a target url
+let ctr0; // container for a counter
 
 // preload
 function preload(){
@@ -27,7 +35,7 @@ function setup(){
 
 // draw
 function draw(){
-  background(128); // overwrite last frame 
+  background(128); // overwrite last frame
   // if not playing then show selection UI
     // if selecting to play Crosser then show Crosser and hide others
     // if selecting to play La Migra then show La Migra and hide others
