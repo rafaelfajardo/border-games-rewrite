@@ -27,6 +27,7 @@ function setup(){
 
 // draw
 function draw(){
+  background(128); // overwrite last frame 
   // if not playing then show selection UI
     // if selecting to play Crosser then show Crosser and hide others
     // if selecting to play La Migra then show La Migra and hide others
