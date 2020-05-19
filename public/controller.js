@@ -206,12 +206,12 @@ function keyReleased() {
     ctr0 = ctr0 +1;
   }
   if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-    if (ctr0 % 2 === 1){
+    if (ctr0 % 2 === 0){
       btn1.changeAnimation('off');
       btn2.changeAnimation('blink');
       window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
     }
-    else if (ctr0 % 2 === 0){
+    else if (ctr0 % 2 === 1){
       btn1.changeAnimation('blink');
       btn2.changeAnimation('off');
       window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
