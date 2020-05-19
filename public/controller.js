@@ -196,6 +196,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 
 function keyReleased() {
   if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
+    // need to add here a test for if gamestate === playing (either) then load index.html 
     if (ctr0 % 2 === 0){
       btn1.changeAnimation('off');
       btn2.changeAnimation('select');
