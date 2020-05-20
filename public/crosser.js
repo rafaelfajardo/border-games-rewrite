@@ -570,6 +570,7 @@ function draw() {
 	drawSprites();
 } // end draw loop
 
+
 function updateStatus(pad){ // tested once per frame
   /**
    *  This bit is specific to an NES style controller,
@@ -577,24 +578,24 @@ function updateStatus(pad){ // tested once per frame
    *  axis default values are -0.00392 so can test for greater and less than that.
    *  need a test to enclose it
    */
-	if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left';} //{ moveLeft = true;} else { moveLeft = false; }
-	if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right';} //{ moveRight = true;} else { moveRight = false; }
-	if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up';} //{ moveUp = true;} else { moveUp = false; }
-	if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down';} //{ moveDown = true;} else { moveDown = false; }
-	if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
-	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
-  // does not have buttons 2-7 inclusive
-	if (pad.buttons[8].value === 1.00){ print('NES Select pressed'); } // NES Select button
-	if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } // NES Start button
-	return;
-
+  if (pad.id === 'usb gamepad (Vendor: 0810 Product: e501)'){
+    	if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left';} //{ moveLeft = true;} else { moveLeft = false; }
+    	if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right';} //{ moveRight = true;} else { moveRight = false; }
+    	if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up';} //{ moveUp = true;} else { moveUp = false; }
+    	if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down';} //{ moveDown = true;} else { moveDown = false; }
+    	if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
+    	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
+      // does not have buttons 2-7 inclusive
+    	if (pad.buttons[8].value === 1.00){ print('NES Select pressed'); } // NES Select button
+    	if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } // NES Start button
+  }
 
   /**
    *  This bit is specific to the Buffalo SNES style controller,
    *  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
    *  need a test to enclose it. Axis defaults are 0.00392 (positive values)
    */
-   //if (pad.id === "USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)"){ // this line would test which controller ID is connected
+   if (pad.id === 'USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)'){ // this line would test which controller ID is connected
        if (pad.buttons[0].value === 1){ print('SNES B-button pressed');}
        if (pad.buttons[1].value === 1){ print('SNES A-button pressed');}
        if (pad.buttons[2].value === 1){ print('SNES Y-button pressed');}
@@ -611,14 +612,19 @@ function updateStatus(pad){ // tested once per frame
        if (pad.buttons[13].value === 1){ print('SNES D-pad down pressed');} // redundant with axes 1 (Y-value)
        if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
        if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
-
+    }
 
    /**
     * This bit is specific to the Sony PS3 contoller,
     * PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)
     * it also uses 8 for select and 9 for start code 054c_0268
     */
+  if (pad.id ==='PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)'){
+
+  }
+  return;
 }
+
 
 /**
  *  keyReleased was tested in /public/ui to afford selecting and changing games
