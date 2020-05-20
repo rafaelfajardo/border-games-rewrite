@@ -57,6 +57,8 @@ var moveIdle = true; // boolean, used for player character idle
 
 var gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 
+let ctr0 = 0; // container for a counter used by controller.js
+
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
 // with an object moving more than ONE_UNIT, we simply add the object multiple
@@ -232,6 +234,9 @@ function preload() {
 	carlosmoreno.addImage('surprise',img);
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
+  carlosmoreno.animation.playing = false;
+  carlosmoreno.movementDir = 'up';
+  carlosmoreno.speed = 32;
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
@@ -566,10 +571,13 @@ function draw() {
 } // end draw loop
 
 function updateStatus(pad){ // tested once per frame
-	if (pad.axes[0] === -1){ moveLeft = true;} else { moveLeft = false; }
-	if (pad.axes[0] ===  1){ moveRight = true;} else { moveRight = false; }
-	if (pad.axes[1] === -1){ moveUp = true;} else { moveUp = false; }
-	if (pad.axes[1] ===  1){ moveDown = true;} else { moveDown = false; }
+  /**
+   *  This bit is specific to an NES style controller, need a test to enclose it
+   */
+	if (pad.axes[0] === -1){carlosmoreno.movementDir = 'left';} //{ moveLeft = true;} else { moveLeft = false; }
+	if (pad.axes[0] ===  1){carlosmoreno.movementDir = 'right';} //{ moveRight = true;} else { moveRight = false; }
+	if (pad.axes[1] === -1){carlosmoreno.movementDir = 'up';} //{ moveUp = true;} else { moveUp = false; }
+	if (pad.axes[1] ===  1){carlosmoreno.movementDir = 'down';} //{ moveDown = true;} else { moveDown = false; }
 	if (pad.buttons[0].value > 0){}
 	if (pad.buttons[0].value < 1){ console.log(pad.buttons); print('NES B button pressed'); }
 	if (pad.buttons[1].value > 0){}
@@ -588,28 +596,28 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
-		moveUp = true;
+		carlosmoreno.movementDir = 'up'; //moveUp = true;
 	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
 		         key === 's'            ||
 		         key === 'S'            ||
 		         key === 'k'            ||
 		         key === 'K') {
     print('key down');
-		moveDown = true;
+		carlosmoreno.movementDir = 'down'; //moveDown = true;
 	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
 	           key === 'a'            ||
 		         key === 'A'            ||
 		         key === 'j'            ||
 		         key === 'J') {
 		print('key left');
-		moveLeft = true;
+		carlosmoreno.movementDir = 'left'; //moveLeft = true;
 	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
 		         key === 'd'             ||
 		         key === 'D'             ||
 		         key === 'l'             ||
 		         key === 'L') {
 		print('key right');
-		moveRight = true;
+		carlosmoreno.movementDir = 'right'; //moveRight = true;
 	} else if (key === 't'  ||
 						 key === 'T') {
 	  print('t');
