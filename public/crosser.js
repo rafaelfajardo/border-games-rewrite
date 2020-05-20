@@ -620,7 +620,7 @@ function updateStatus(pad){ // tested once per frame
     * it also uses 8 for select and 9 for start code 054c_0268
     */
   if (pad.id ==='PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)'){
-
+      // add code for playstation buttons 
   }
   return;
 }
