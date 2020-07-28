@@ -512,22 +512,22 @@ function draw() {
   // sketch to move player character
   if (moveState = 'left'){
     migra.changeAnimation ('move');
-    migra.Animation.play();
+    migra.animation.play();
     migra.position.x = migra.position.x - 32;
     if (migra.position.x-32 < 0){
       migra.position.x += 32; // create bounds on movement
     }
     moveState = 'idle'
-    migra.Animation.stop();
+    migra.animation.stop();
   } else if (moveState = 'right'){
     migra.changeAnimation ('move');
-    migra.Animation.play();
+    migra.animation.play();
     migra.position.x = migra.position.x + 32;
     if (migra.position.x+32 > WIDTH){
       migra.position.x -= 32;
     }
     moveState = 'idle'
-    migra.Animation.stop();
+    migra.animation.stop();
   } else {
     moveState = 'idle';
     migra.position.x = migra.position.x;
