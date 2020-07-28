@@ -21,6 +21,9 @@ let url  = "http://localhost:8080/index.html";
 let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
 
+let moveState = 'idle'; // container for player move states can contain 'idle', 'left', 'right'
+let flingEsposas = false; // a boolean for launching handcuffs maybe this needs to be a function?
+
 var tierra; // sprite container for the background images
 var pipa0; // sprite container for a drain pipe
 var pipa1; // sprite container for a drain pipe
@@ -506,6 +509,30 @@ function draw() {
       // statements that catch and redirect in case none of the above is true
   } */
 
+  // sketch to move player character
+  if (moveState = 'left'){
+    migra.changeAnimation ('move');
+    migra.Animation.play();
+    migra.position.x = migra.position.x - 32;
+    if (migra.position.x-32 < 0){
+      migra.position.x += 32; // create bounds on movement
+    }
+    moveState = 'idle'
+    migra.Animation.stop();
+  } else if (moveState = 'right'){
+    migra.changeAnimation ('move');
+    migra.Animation.play();
+    migra.position.x = migra.position.x + 32;
+    if (migra.position.x+32 > WIDTH){
+      migra.position.x -= 32;
+    }
+    moveState = 'idle'
+    migra.Animation.stop();
+  } else {
+    moveState = 'idle';
+    migra.position.x = migra.position.x;
+  }
+
   drawSprites();
 }
 
@@ -537,6 +564,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'i'          ||
 		         key === 'I') {
 		print('upward key pressed');
+    flingEsposas = true;
 
 	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
 		         key === 's'            ||
@@ -551,6 +579,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'j'            ||
 		         key === 'J') {
 		print('leftward key pressed');
+    moveState = 'left';
 
 	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
 		         key === 'd'             ||
@@ -558,13 +587,16 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'l'             ||
 		         key === 'L') {
 		print('rightward key pressed');
+    moveState = 'right';
 
 	} else if (key === 't'  ||
 						 key === 'T') {
 	  print('t key pressed');
 		//START = true;
-	} else if (key === 'y') {
+	} else if (key === 'y'   ||
+             key === 'Y') {
 		print('y key pressed');
+
   } else if (key === 'g'  ||
              key === 'G'){
     print('g key pressed');
@@ -573,7 +605,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
              key === 'H'){
     print('h key pressed');
   } else {
-     // create an idle state for player character
+    moveState = 'idle'; // create an idle state for player character
   }
 	return false;
 
