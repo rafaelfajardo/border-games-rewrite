@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rafaelfajardo/border-games-remaster.git"
+    "url": "git+https://github.com/rafaelfajardo/border-games-rewrite.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rafaelfajardo/border-games-remaster/issues"
+    "url": "https://github.com/rafaelfajardo/border-games-rewrite/issues"
   },
-  "homepage": "https://github.com/rafaelfajardo/border-games-remaster#readme",
+  "homepage": "https://github.com/rafaelfajardo/border-games-rewrite#readme",
   "dependencies": {
     "express": "^4.17.1"
   }
