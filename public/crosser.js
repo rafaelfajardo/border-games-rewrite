@@ -192,7 +192,11 @@ function updateSprite(sprite) {
 		case 'down':
 			sprite.position.y = sprite.position.y + sprite.speed;
 			break;
-		default:
+    case 'idle':
+      sprite.position.x = sprite.position.x;
+      sprite.position.y = sprite.position.y;
+      break;
+    default:
 			console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
 			break;
 	}
