@@ -1,11 +1,26 @@
 /*
  *
- *		This is a rewriting/remastering/remediation of La Migra (circa 2001 a.c.e.)
+ *		This is a rewriting/remediation of La Migra (circa 2001 a.c.e.)
  *		there is an accompanying file called "about.js" that contains a dev log
  *
  */
 
+//
 // global variables
+//
+
+// defines one unit of movement, which is 32 pixels
+const ONE_UNIT = 32;
+// width and height of screen in pixels
+const WIDTH = 512;
+const HEIGHT = 544;
+// counter to toggle between _crosser.html and _lamigra.html
+let ctr0 = 1;
+// url targets for invoking _crosser.html or _lamigra.html
+let url  = "http://localhost:8080/index.html";
+let url0 = "http://localhost:8080/_crosser.html";
+let url1 = "http://localhost:8080/_lamigra.html";
+
 var tierra; // sprite container for the background images
 var pipa0; // sprite container for a drain pipe
 var pipa1; // sprite container for a drain pipe

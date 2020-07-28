@@ -1,6 +1,6 @@
 /*
  *
- *		This is a rewriting/remastering/remediation of Crosser (2000 a.c.e.)
+ *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
  *		there is an accompanying file called "about.js" that contains a dev log
  *
  */
@@ -14,6 +14,12 @@ const ONE_UNIT = 32;
 // width and height of screen in pixels
 const WIDTH = 448;
 const HEIGHT = 448;
+// counter to toggle between _crosser.html and _lamigra.html
+let ctr0 = 0;
+// url targets for invoking _crosser.html or _lamigra.html
+let url  = "http://localhost:8080/index.html";
+let url0 = "http://localhost:8080/_crosser.html";
+let url1 = "http://localhost:8080/_lamigra.html";
 
 var tierra; // sprite, will need 3 images each 448 x 448
 var carlosmoreno; // sprite, player character, minimum of 9 images
@@ -626,8 +632,8 @@ function updateStatus(pad){ // tested once per frame
 
 /**
  *  keyReleased was tested in /public/ui to afford selecting and changing games
- *
- *
+ *  depends on global var ctr0 which is a counter
+ *  depends on global var url0 and url1 which are targets
  */
 
 function keyReleased() {
