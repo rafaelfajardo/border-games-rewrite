@@ -373,4 +373,8 @@ We have been working from home since 2020 03 18
 Yesterday gitHub desktop had an update that I uploaded.
 Today Atom has an update that I uploaded. It is now 1.47.0
 
+2020 07 28
+last month we were invited to add Crosser & La Migra to an online component of Ars Electronica 2020. Ars Electronica will only need browser-based and keyboard+mouse UI.
+In the last couple of weeks I have had communication with DAM who have realized that we will need to provide a touchless interface for Crosser & La Migra when they are exhibited. The new target exhibition date is 2021 03. For this we are looking at the Leap Motion Controller. I wonder if the clumsiness of the interface can survive in a touchless environment.
+
 */
