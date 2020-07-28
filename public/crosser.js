@@ -195,7 +195,6 @@ function updateSprite(sprite) {
     case 'idle':
       sprite.position.x = sprite.position.x;
       sprite.position.y = sprite.position.y;
-      stopSprite(sprite);
       break;
     default:
 			console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
