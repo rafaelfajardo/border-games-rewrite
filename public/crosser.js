@@ -704,7 +704,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 	} else if (key === 'y') {
 		print('y');
 	} else {
-    carlosmoreno.movementir = 'idle'; // create an idle state for carlos
+    carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
   }
 	return false;
 
