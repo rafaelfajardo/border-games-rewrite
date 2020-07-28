@@ -378,5 +378,5 @@ last month we were invited to add Crosser & La Migra to an online component of A
 In the last couple of weeks I have had communication with DAM who have realized that we will need to provide a touchless interface for Crosser & La Migra when they are exhibited. The new target exhibition date is 2021 03. For this we are looking at the Leap Motion Controller. I wonder if the clumsiness of the interface can survive in a touchless environment.
 
 I have renamed the repository on gitHub to Border-Games-rewrite
-
+I have rebased the repository on gitHub to default to main branch
 */
