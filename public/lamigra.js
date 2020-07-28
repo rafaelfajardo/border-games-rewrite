@@ -38,6 +38,8 @@ var sombra2; // sprite container for environment set piece
 var gamestate = "startup"; // variable container should hold string lables "startup", "play", "win", "lose"
 var BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
 
+let ctr0 = 1; // container for a counter used by controller.js
+
 
 function preload(){
   /*

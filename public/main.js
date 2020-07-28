@@ -17,27 +17,27 @@ let ctr0; // container for a counter
 
 // preload
 function preload(){
-  img1 = loadImage("img-ui/buttonC1.png"); // load dimmed crosser button image
-  img2 = loadImage("img-ui/buttonC2.png"); // load bright crosser button image
+  img1 = loadImage('img-ui/buttonC1.png'); // load dimmed crosser button image
+  img2 = loadImage('img-ui/buttonC2.png'); // load bright crosser button image
   btn1 = createSprite(224, 200, 64, 32);
-  btn1.addImage("off1", img1);
-  btn1.addImage("on1", img2);
+  btn1.addImage('off1', img1);
+  btn1.addImage('on1', img2);
   btn1.addAnimation('off', img1);
   btn1.addAnimation('select', img2);
   btn1.addAnimation('blink', img1,img2,img2,img1);
 
-  img1 = loadImage("img-ui/buttonL1.png"); // load dimmed la migra button image
-  img2 = loadImage("img-ui/buttonL2.png"); // load bright la migra button image
+  img1 = loadImage('img-ui/buttonL1.png'); // load dimmed la migra button image
+  img2 = loadImage('img-ui/buttonL2.png'); // load bright la migra button image
   btn2 = createSprite(224, 248, 64, 32);
-  btn2.addImage("off2", img1);
-  btn2.addImage("on2", img2);
+  btn2.addImage('off2', img1);
+  btn2.addImage('on2', img2);
   btn2.addAnimation('off', img1);
   btn2.addAnimation('select', img2);
   btn2.addAnimation('blink', img1,img2,img2,img1);
 
-  url = "http://localhost:8080/index.html"; // these urls have to reflect the files in /public
-  url0 = "http://localhost:8080/_crosser.html";
-  url1 = "http://localhost:8080/_lamigra.html";
+  url = 'http://localhost:8080/index.html'; // these urls have to reflect the files in /public
+  url0 = 'http://localhost:8080/_crosser.html';
+  url1 = 'http://localhost:8080/_lamigra.html';
 }
 
 // setup
@@ -72,8 +72,12 @@ function draw(){
       console.log('warning, no gamepads connected');
   	}
     let browser = navigator.vendor; // window.navigator.vendor may be correct syntax
-    if (browser !== 'Google Inc.'){console.log('warning, wrong browser')}
-}
+    if (browser !== 'Google Inc.'){
+      console.log('warning, wrong browser')
+    }
+    drawSprites();
+} // end draw 
+
 // udpdateStatus(pad) has been moved to controller.js
 // keyTyped() has been moved to controller.js
 // function play( game ){}

@@ -57,6 +57,8 @@ var moveIdle = true; // boolean, used for player character idle
 
 var gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 
+let ctr0 = 0; // container for a counter used by controller.js
+
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
 // with an object moving more than ONE_UNIT, we simply add the object multiple
@@ -232,6 +234,9 @@ function preload() {
 	carlosmoreno.addImage('surprise',img);
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
+  carlosmoreno.animation.playing = false;
+  carlosmoreno.movementDir = 'up';
+  carlosmoreno.speed = 32;
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
@@ -474,8 +479,6 @@ function setup() {
 	laMigra.add(migraMan3);
 
 	//carlosmoreno.changeImage('facedown');
-	noCursor(); // testing cursor manipulation
-	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
 
 } // end setup
 
@@ -565,21 +568,94 @@ function draw() {
 	drawSprites();
 } // end draw loop
 
+
 function updateStatus(pad){ // tested once per frame
-	if (pad.axes[0] === -1){ moveLeft = true;} else { moveLeft = false; }
-	if (pad.axes[0] ===  1){ moveRight = true;} else { moveRight = false; }
-	if (pad.axes[1] === -1){ moveUp = true;} else { moveUp = false; }
-	if (pad.axes[1] ===  1){ moveDown = true;} else { moveDown = false; }
-	if (pad.buttons[0].value > 0){}
-	if (pad.buttons[0].value < 1){ console.log(pad.buttons); print('NES B button pressed'); }
-	if (pad.buttons[1].value > 0){}
-	if (pad.buttons[1].value < 1){ print('NES A button pressed'); }
-	if (pad.buttons[8].value > 0){}
-	if (pad.buttons[8].value < 1){ print('NES Select pressed'); }
-	if (pad.buttons[9].value > 0){}
-	if (pad.buttons[9].value < 1){ print('NES Start pressed'); }
-	return;
+  /**
+   *  This bit is specific to an NES style controller,
+   *  usb gamepad (Vendor: 0810 Product: e501)
+   *  axis default values are -0.00392 so can test for greater and less than that.
+   *  need a test to enclose it
+   */
+  if (pad.id === 'usb gamepad (Vendor: 0810 Product: e501)'){
+    	if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left';} //{ moveLeft = true;} else { moveLeft = false; }
+    	if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right';} //{ moveRight = true;} else { moveRight = false; }
+    	if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up';} //{ moveUp = true;} else { moveUp = false; }
+    	if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down';} //{ moveDown = true;} else { moveDown = false; }
+    	if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
+    	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
+      // does not have buttons 2-7 inclusive
+    	if (pad.buttons[8].value === 1.00){ print('NES Select pressed'); } // NES Select button
+    	if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } // NES Start button
+  }
+
+  /**
+   *  This bit is specific to the Buffalo SNES style controller,
+   *  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
+   *  need a test to enclose it. Axis defaults are 0.00392 (positive values)
+   */
+   if (pad.id === 'USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)'){ // this line would test which controller ID is connected
+       if (pad.buttons[0].value === 1){ print('SNES B-button pressed');}
+       if (pad.buttons[1].value === 1){ print('SNES A-button pressed');}
+       if (pad.buttons[2].value === 1){ print('SNES Y-button pressed');}
+       if (pad.buttons[3].value === 1){ print('SNES X-button pressed');}
+       if (pad.buttons[4].value === 1){ print('SNES L-button pressed');}
+       if (pad.buttons[5].value === 1){ print('SNES R-button pressed');}
+       if (pad.buttons[6].value === 1){ print('SNES L-button pressed');} // redundant mapping
+       if (pad.buttons[7].value === 1){ print('SNES R-button pressed');} // redundant mapping
+       if (pad.buttons[8].value === 1){ print('SNES SELECT button pressed');}
+       if (pad.buttons[9].value === 1){ print('SNES START button pressed');}
+       if (pad.buttons[10].value === 1){ print('unmapped button 10');} // I haven't found a signal on this button[index]
+       if (pad.buttons[11].value === 1){ print('unmapped button 11');} // I haven't found a signal on this button[index]
+       if (pad.buttons[12].value === 1){ print('SNES D-pad up pressed');} // redundant with axes 1 (Y-value)
+       if (pad.buttons[13].value === 1){ print('SNES D-pad down pressed');} // redundant with axes 1 (Y-value)
+       if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
+       if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
+    }
+
+   /**
+    * This bit is specific to the Sony PS3 contoller,
+    * PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)
+    * it also uses 8 for select and 9 for start code 054c_0268
+    */
+  if (pad.id ==='PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)'){
+      // add code for playstation buttons
+  }
+  return;
 }
+
+
+/**
+ *  keyReleased was tested in /public/ui to afford selecting and changing games
+ *
+ *
+ */
+
+function keyReleased() {
+  if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
+    // need to add here a test for if gamestate === playing (either) then load index.html
+    if (ctr0 % 2 === 0){
+      btn1.changeAnimation('off');
+      btn2.changeAnimation('select');
+    } else if (ctr0 % 2 === 1) {
+      btn1.changeAnimation('select');
+      btn2.changeAnimation('off');
+    }
+    ctr0 = ctr0 +1;
+  }
+  if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
+    if (ctr0 % 2 === 0){
+      btn1.changeAnimation('off');
+      btn2.changeAnimation('blink');
+      window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+    }
+    else if (ctr0 % 2 === 1){
+      btn1.changeAnimation('blink');
+      btn2.changeAnimation('off');
+      window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+    }
+  }
+} // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
+
 
 function keyTyped(){ // tested once per frame, triggered on keystroke
 	if        (keyCode === '38' || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
@@ -588,28 +664,28 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
-		moveUp = true;
+		carlosmoreno.movementDir = 'up'; //moveUp = true;
 	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
 		         key === 's'            ||
 		         key === 'S'            ||
 		         key === 'k'            ||
 		         key === 'K') {
     print('key down');
-		moveDown = true;
+		carlosmoreno.movementDir = 'down'; //moveDown = true;
 	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
 	           key === 'a'            ||
 		         key === 'A'            ||
 		         key === 'j'            ||
 		         key === 'J') {
 		print('key left');
-		moveLeft = true;
+		carlosmoreno.movementDir = 'left'; //moveLeft = true;
 	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
 		         key === 'd'             ||
 		         key === 'D'             ||
 		         key === 'l'             ||
 		         key === 'L') {
 		print('key right');
-		moveRight = true;
+		carlosmoreno.movementDir = 'right'; //moveRight = true;
 	} else if (key === 't'  ||
 						 key === 'T') {
 	  print('t');
