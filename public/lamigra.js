@@ -509,6 +509,13 @@ function draw() {
   drawSprites();
 }
 
+
+/*
+ *
+ *  keyboard player/user input
+ *
+ */
+
 function keyPressed (){
   if (keyCode === 68){
     migra.changeAnimation('move');
@@ -522,3 +529,52 @@ function keyReleased (){
   }
   return false;
 }
+
+function keyTyped(){ // tested once per frame, triggered on keystroke
+	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+		         key === 'w'          ||
+		         key === 'W'          ||
+		         key === 'i'          ||
+		         key === 'I') {
+		print('upward key pressed');
+
+	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
+		         key === 's'            ||
+		         key === 'S'            ||
+		         key === 'k'            ||
+		         key === 'K') {
+    print('downward key pressed');
+
+	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
+	           key === 'a'            ||
+		         key === 'A'            ||
+		         key === 'j'            ||
+		         key === 'J') {
+		print('leftward key pressed');
+
+	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
+		         key === 'd'             ||
+		         key === 'D'             ||
+		         key === 'l'             ||
+		         key === 'L') {
+		print('rightward key pressed');
+
+	} else if (key === 't'  ||
+						 key === 'T') {
+	  print('t key pressed');
+		//START = true;
+	} else if (key === 'y') {
+		print('y key pressed');
+  } else if (key === 'g'  ||
+             key === 'G'){
+    print('g key pressed');
+
+	} else if (key === 'h'  ||
+             key === 'H'){
+    print('h key pressed');
+  } else {
+     // create an idle state for player character
+  }
+	return false;
+
+} // end keyTyped
