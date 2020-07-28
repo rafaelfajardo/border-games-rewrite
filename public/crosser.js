@@ -497,6 +497,7 @@ function draw() {
 
 	if (moveUp){
 		carlosmoreno.changeAnimation ('walkup');
+    carlosmoreno.animation.play();
 		carlosmoreno.position.y = carlosmoreno.position.y - 32;
 		if (carlosmoreno.position.y - 32 < 0) {
 			// bound the mvoement of carlos
@@ -507,7 +508,8 @@ function draw() {
 	}
 	else if (moveDown){
 		carlosmoreno.changeAnimation ('walkdown');
-		carlosmoreno.position.y = carlosmoreno.position.y + 32;
+		carlosmoreno.animation.play();
+    carlosmoreno.position.y = carlosmoreno.position.y + 32;
 		if (carlosmoreno.position.y + 32 > HEIGHT) {
 			// bound the mvoement of carlos
 			carlosmoreno.position.y -= 32;
@@ -517,7 +519,8 @@ function draw() {
 	}
 	else if (moveLeft){
 		carlosmoreno.changeAnimation ('walkleft');
-		carlosmoreno.position.x = carlosmoreno.position.x - 32;
+		carlosmoreno.animation.play();
+    carlosmoreno.position.x = carlosmoreno.position.x - 32;
 		// bound the movement of carlos
 		if (carlosmoreno.position.x < 0) {
 			carlosmoreno.position.x += 32;
@@ -527,7 +530,8 @@ function draw() {
 	}
 	else if (moveRight){
 		carlosmoreno.changeAnimation ('walkright');
-		carlosmoreno.position.x = carlosmoreno.position.x + 32;
+		carlosmoreno.animation.play();
+    carlosmoreno.position.x = carlosmoreno.position.x + 32;
 		// bound the movement of carlos
 		if (carlosmoreno.position.x > WIDTH) {
 			carlosmoreno.position.x -= 32;
