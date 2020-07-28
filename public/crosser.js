@@ -63,7 +63,7 @@ var moveIdle = true; // boolean, used for player character idle
 
 var gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 
-let ctr0 = 0; // container for a counter used by controller.js
+// let ctr0 = 0; // container for a counter used by controller.js
 
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
