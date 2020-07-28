@@ -246,7 +246,7 @@ function preload() {
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
   carlosmoreno.animation.playing = false;
-  carlosmoreno.movementDir = 'up';
+  carlosmoreno.movementDir = 'idle';
   carlosmoreno.speed = 32;
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
