@@ -4,7 +4,7 @@
  *		there is an accompanying file called "about.js" that contains a dev log
  *
  */
-
+//
 //
 // global variables
 //
@@ -20,23 +20,40 @@ let ctr0 = 1;
 let url  = "http://localhost:8080/index.html";
 let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
-
-let moveState = 'idle'; // container for player move states can contain 'idle', 'left', 'right'
+//
+//
+//  define state variables
+//
+let gamestate = "startup"; // variable container should hold string labels "startup", "play", "win", "lose"
+let moveState = 'idle'; // container for player character move states can contain 'idle', 'left', 'right'
 let flingEsposas = false; // a boolean for launching handcuffs maybe this needs to be a function?
-
+//
+//
+//  define background sprites
+//
 var tierra; // sprite container for the background images
 var pipa0; // sprite container for a drain pipe
 var pipa1; // sprite container for a drain pipe
 var pipa2; // sprite container for a drain pipe
 var pipa3; // sprite container for a drain pipe
 var pipas; // will be a group of drain pipe sprites
-
+//
+//
+//  define player character sprites - migra, esposas, bala
+//
 var migra; // sprite container for player character La Migra SUV
 var esposas; // sprite container for handcuffs that animate like Argentine bolas
 var bala; // sprite container for lethal projectile. existed in original but has been kept quiet.
+//
+//
+//  define score-counter sprites
+//
 var avisocontador; // sprite container for counter UI of folks who have crossed and should be located lower left
 var avisocounter; // sprite container for counter UI of folks sent back and should be located lower right
-
+//
+//
+//  define non-player character sprites
+//
 var maluciadepieles; // sprite container for non-player character
 var nitamoreno; // sprite container for non-player character
 var linodepieles; // sprite container for non-player character
@@ -45,20 +62,29 @@ var marcia; // sprite container for non-player character
 var patricialamachona; // sprite container for non-player character
 var puercoespin; // sprite container for non-player character
 var xrodar; // sprite container for non-player character
+//
+//  define a collection or group identity for non-player character sprites
 var cacahuates; // will be a group of sprites non-player characters
-
+//
+//
+//  define other set pieces that will be in the foreground
+//
 var deportacioncenter; // sprite container for environment set piece
 var repatriationcenter; // sprite container for environment set piece
 var sombra0; // sprite container for environment set piece
 var sombra1; // sprite container for environment set piece
 var sombra2; // sprite container for environment set piece
-
-var gamestate = "startup"; // variable container should hold string lables "startup", "play", "win", "lose"
+//
+//
+//  define a boolean to set play.p5.js library debug function state
+//
 var BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
 
-// let ctr0 = 1; // container for a counter used by controller.js
-
-
+/*********************************************************
+ *
+ *  preload() necessary to load images into sprites
+ *
+ */
 function preload(){
   /*
    *  load images for tierra and set default background
@@ -77,7 +103,7 @@ function preload(){
   /*
    * load and create tierra
    */
-  img0 = loadImage ('img-lamigra/la-migra_masthead.png');
+  img0 = loadImage ('img-lamigra/la-migra_masthead.png'); // title screen image
   if (BUGGY){
     img1 = loadImage ('img-lamigra/frontera02_grid.png');  // this is the game play field and is 512 x 544 pixels with a grid
   } else {
@@ -470,7 +496,11 @@ function preload(){
 
 } // end preload()
 
-
+/***********************************************************
+ *
+ *
+ *
+ */
 function setup() {
   // put setup code here
   //createCanvas(512,544); // La Migra default canvas size
@@ -510,7 +540,7 @@ function draw() {
   } */
 
   // sketch to move player character
-  if (moveState = 'left'){
+  if (moveState === 'left'){
     migra.changeAnimation ('move');
     migra.animation.play();
     migra.position.x = migra.position.x - 32;
@@ -519,7 +549,7 @@ function draw() {
     }
     moveState = 'idle'
     migra.animation.stop();
-  } else if (moveState = 'right'){
+  } else if (moveState === 'right'){
     migra.changeAnimation ('move');
     migra.animation.play();
     migra.position.x = migra.position.x + 32;
@@ -530,19 +560,21 @@ function draw() {
     migra.animation.stop();
   } else {
     moveState = 'idle';
-    migra.position.x = migra.position.x;
+    //migra.position.x = migra.position.x;
   }
 
   drawSprites();
 }
 
 
-/*
+/*******************************************************
  *
  *  keyboard player/user input
  *
  */
 
+/* *******************
+ *  redundant chunk?
 function keyPressed (){
   if (keyCode === 68){
     migra.changeAnimation('move');
@@ -556,6 +588,9 @@ function keyReleased (){
   }
   return false;
 }
+//********************
+*/
+
 
 function keyTyped(){ // tested once per frame, triggered on keystroke
 	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
@@ -573,7 +608,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'K') {
     print('downward key pressed');
 
-	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
+	} else if (//keyCode === '37' || //key === 'ArrowLeft'  ||
 	           key === 'a'            ||
 		         key === 'A'            ||
 		         key === 'j'            ||
