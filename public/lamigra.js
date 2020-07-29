@@ -27,6 +27,7 @@ let url1 = "http://localhost:8080/_lamigra.html";
 let gamestate = "startup"; // variable container should hold string labels "startup", "play", "win", "lose"
 let moveState = 'idle'; // container for player character move states can contain 'idle', 'left', 'right'
 let flingEsposas = false; // a boolean for launching handcuffs maybe this needs to be a function?
+let cuffs; // group container for new esposas which will be newSprites
 //
 //
 //  define background sprites
@@ -120,7 +121,7 @@ function preload(){
   tierra.debug = BUGGY; // set the debug flag
 
   /*
-   *  load images for drain pipe along bottom of screen
+   *  load images for drain pipe set piece along bottom of screen
    */
   img0 = loadImage ('img-lamigra/pipeA.png'); // is the resting state for a pipe sprite
   img1 = loadImage ('img-lamigra/pipeB.png'); // is the illuminated, activated state for a pipe sprite
@@ -511,6 +512,7 @@ function setup() {
 	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
   frameRate(30);
   background(128);
+  cuffs = new Group(); // a group of esposas-like sprites
 
 }
 
@@ -539,6 +541,38 @@ function draw() {
       // statements that catch and redirect in case none of the above is true
   } */
 
+  // sketch to fling cuffs -- esposas in spanish -- upward
+  if (flingEsposas){
+    var newSprite = createSprite(migra.position.x+16, migra.position.y,32,32);
+    newSprite.addAnimation('lanzar', 'img-lamigra/esposas_0.png',
+                                     'img-lamigra/esposas_1.png',
+                                     'img-lamigra/esposas_2.png',
+                                     'img-lamigra/esposas_3.png');
+    cuffs.add(newSprite);
+    flingEsposas = false;
+    /*
+    let cuffsIndex = cuffs.length + 1;
+    cuffs[cuffsIndex] = esposas;
+    cuffs[cuffsIndex].position.x = migra.position.x + 16;
+    cuffs[cuffsIndex].position.y = migra.position.y - 32;
+    cuffs[cuffsIndex].changeAnimation('lanzar');
+    cuffs[cuffsIndex].animation.play();
+    */
+    //createCuff();
+
+  }
+
+  // sketch to move cuffs
+  if (cuffs.length > 0){
+    for (let i = 0; i < cuffs.length; i++){
+      let oldX = cuffs[i].position.x;
+      let oldY = cuffs[i].position.y;
+      cuffs[i].position.y = oldY-32;
+      if (oldY - 32 < 7*32){
+        cuffs[i].remove();
+      }
+    }
+  }
   // sketch to move player character
   if (moveState === 'left'){
     migra.changeAnimation ('move');
