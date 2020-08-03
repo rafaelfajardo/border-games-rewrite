@@ -290,24 +290,44 @@ function preload(){
   pipa0.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa0.changeAnimation('pipa activated'); // will need to change this state later
   pipa0.debug = BUGGY; // set the debug flag
+  renderQueue.push(pipa0); // add pipa0 to renderQueue []
+  pipa0.name = 'pipa0';
+  pipa0.animation.playing = false;
+  pipa0.movementDir = 'idle';
+  pipa0.speed = 0;
 
   pipa1 = createSprite (32*5+16, 16*32+16, 32, 32);
   pipa1.addImage ('pipa', img0);
   pipa1.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa1.changeAnimation('pipa activated'); // will need to change this state later
   pipa1.debug = BUGGY; // set the debug flag
+  renderQueue.push(pipa1); // add pipa1 to renderQueue []
+  pipa1.name = 'pipa1';
+  pipa1.animation.playing = false;
+  pipa1.movementDir = 'idle';
+  pipa1.speed = 0;
 
   pipa2 = createSprite (32*8+16, 16*32+16, 32, 32);
   pipa2.addImage ('pipa', img0);
   pipa2.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa2.changeAnimation('pipa activated'); // will need to change this state later
   pipa2.debug = BUGGY; // set the debug flag
+  renderQueue.push(pipa2); // add pipa2 to renderQueue []
+  pipa2.name = 'pipa2';
+  pipa2.animation.playing = false;
+  pipa2.movementDir = 'idle';
+  pipa2.speed = 0;
 
   pipa3 = createSprite (32*11+16, 16*32+16, 32, 32);
   pipa3.addImage ('pipa', img0);
   pipa3.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa3.changeAnimation('pipa activated'); // will need to change this state later
   pipa3.debug = BUGGY; // set the debug flag
+  renderQueue.push(pipa3); // add pipa3 to renderQueue []
+  pipa3.name ='pipa3';
+  pipa3.animation.playing = false;
+  pipa3.movementDir = 'idle';
+  pipa3.speed = 0;
 
   pipas = new Group(); // the group of drain pipes, should allow for testing collision with group
   pipas.add (pipa0);
@@ -325,6 +345,11 @@ function preload(){
   migra.addAnimation('stay',img0,img0);
   migra.changeAnimation ('stay');
   migra.debug = BUGGY; // set the debug flag
+  renderQueue.push(migra); // add migra to renderQueue []
+  migra.name = 'migra';
+  migra.animation.playing = false;
+  migra.movementDir = 'idle';
+  migra.speed = 32;
 
   /*
    * load images for esposas sprite
@@ -336,6 +361,11 @@ function preload(){
   esposas = createSprite (8*32+16, 12*32+16, 32, 32,); // the esposas launch from the front of the vehicle, and so will need to refer to migra.x-position.
   esposas.addAnimation('lanzar',img0,img0,img1,img1,img2,img2,img3,img3); // this will change later, here for testing purposes
   esposas.debug = BUGGY; // set the debug flag
+  renderQueue.push(esposas); // add esposas to renderQueue []
+  esposas.name = 'esposas';
+  esposas.animation.playing = true;
+  esposas.movementDir = 'up';
+  esposas.speed = 32;
 
   /*
    *  to do: load images for bala(s) (or not)
@@ -708,8 +738,13 @@ function draw() {
                                      'img-lamigra/esposas_1.png',
                                      'img-lamigra/esposas_2.png',
                                      'img-lamigra/esposas_3.png');
-    cuffs.add(newSprite);
+    cuffs.add(newSprite); // add new sprite to group cuffs
     flingEsposas = false;
+    renderQueue.push(newSprite);
+    newSprite.name = 'cuffs['+cuffs.length+']';
+    newSprite.animation.playing = 'true';
+    newSprite.movementDir = 'up';
+    newSprite.speed = 32;
     /*
     let cuffsIndex = cuffs.length + 1;
     cuffs[cuffsIndex] = esposas;
@@ -721,7 +756,7 @@ function draw() {
     //createCuff();
 
   }
-
+/*
   // sketch to move cuffs
   if (cuffs.length > 0){
     for (let i = 0; i < cuffs.length; i++){
@@ -733,6 +768,7 @@ function draw() {
       }
     }
   }
+  */
   // sketch to move player character
   if (moveState === 'left'){
     migra.changeAnimation ('move');
