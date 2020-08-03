@@ -433,6 +433,11 @@ function preload(){
   maluciadepieles.addAnimation('muerto', img1,img1,img1,img1);
   maluciadepieles.changeAnimation('down');
   maluciadepieles.debug = BUGGY; // set the debug flag
+  renderQueue.push(maluciadepieles); // add maluciadepieles to renderQueue []
+  maluciadepieles.name = 'maluciadepieles';
+  maluciadepieles.animation.playing = false;
+  maluciadepieles.movementDir = 'idle';
+  maluciadepieles.speed = 32;
 
   /*
    * load images for Nita Moreno non-player character
@@ -461,6 +466,11 @@ function preload(){
   nitamoreno.addAnimation('muerto', img1,img1,img1,img1);
   nitamoreno.changeAnimation('down');
   nitamoreno.debug = BUGGY; // set the debug flag
+  renderQueue.push(nitamoreno); // add nitamoreno to renderQueue []
+  nitamoreno.name = 'nitamoreno';
+  nitamoreno.animation.playing = false;
+  nitamoreno.movementDir = 'idle';
+  nitamoreno.speed = 32;
 
   /*
    *  load images for Lino De Pieles non-player character sprite
@@ -490,6 +500,11 @@ function preload(){
   linodepieles.addAnimation('muerto', img1,img1,img1,img1);
   linodepieles.changeAnimation('down');
   linodepieles.debug = BUGGY; // set the debug flag
+  renderQueue.push(linodepieles);
+  linodepieles.name = 'linodepieles';
+  linodepieles.animation.playing = false;
+  linodepieles.movementDir = 'idle';
+  linodepieles.speed = 32;
 
   /*
    * add imgages for Carlos Moreno non-player character
@@ -518,6 +533,11 @@ function preload(){
   carlosmoreno.addAnimation('muerto', img1,img1,img1,img1);
   carlosmoreno.changeAnimation('down');
   carlosmoreno.debug = BUGGY; // set the debug flag
+  renderQueue.push(carlosmoreno); // add carlosmoreno to renderQueue []
+  carlosmoreno.name = 'carlosmoreno';
+  carlosmoreno.animation.playing = false;
+  carlosmoreno.movementDir = 'idle';
+  carlosmoreno.speed = 32;
 
   /*
    *  load images for Marcia non-player character sprite
@@ -547,6 +567,11 @@ function preload(){
   marcia.addAnimation('muerto',img1,img1,img1,img1);
   marcia.changeAnimation('down');
   marcia.debug = BUGGY; // set the debug flag
+  renderQueue.push(marcia); // add marcia to renderQueue []
+  marcia.name = 'marcia';
+  marcia.animation.playing = false;
+  marcia.movementDir = 'idle';
+  marcia.speed = 32;
 
   /*
    * load images for Patricia La Machona non-player character sprite
@@ -576,6 +601,11 @@ function preload(){
   patricialamachona.addAnimation('muerto',img1,img1,img1,img1);
   patricialamachona.changeAnimation('down');
   patricialamachona.debug = BUGGY; // set the debug flag
+  renderQueue.push(patricialamachona); // add patricialamachona to renderQueue []
+  patricialamachona.name = 'patricialamachona';
+  patricialamachona.animation.playing = false;
+  patricialamachona.movementDir ='idle';
+  patricialamachona.speed = 32;
 
   /*
    *  load imgaes for Puercoespin non-player character sprite
@@ -605,6 +635,11 @@ function preload(){
   puercoespin.addAnimation('muerto',img1,img1,img1,img1);
   puercoespin.changeAnimation('down');
   puercoespin.debug = BUGGY; // set the debug flag
+  renderQueue.push(puercoespin); // add puercoespin to renderQueue []
+  puercoespin.name = 'puercoespin';
+  puercoespin.animation.playing = false;
+  puercoespin.movementDir = 'idle';
+  puercoespin.speed = 32;
 
   /*
    *  load images for X-rodar non-player character sprite
@@ -634,6 +669,11 @@ function preload(){
   xrodar.addAnimation('muerto',img1,img1,img1,img1); // resolved - image is not transparent
   xrodar.changeAnimation('down');
   xrodar.debug = BUGGY; // set the debug flag
+  renderQueue.push(xrodar); // add xrodar to renderQueue []
+  xrodar.name = 'xrodar';
+  xrodar.animation.playing = false;
+  xrodar.movementDir = 'idle';
+  xrodar.speed = 32;
 
   /*
    *  create a group for non-player characters
