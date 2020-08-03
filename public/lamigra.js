@@ -80,6 +80,164 @@ var sombra2; // sprite container for environment set piece
 //  define a boolean to set play.p5.js library debug function state
 //
 var BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
+//
+// queue to render things, they'll be drawn in this order so it's important
+// to have the order we want. This order will be handled in preload. To deal
+// with an object moving more than ONE_UNIT, we simply add the object multiple
+// times to the queue
+let renderQueue = [];
+
+// this defines the time to spend on changing the animation and rendering for
+// each character, the fast this is, the faster the game will move
+let renderTime = .0909;
+
+// indicates where we are in the render queue
+let currentIndex = 0;
+
+// timestamp for our indexing into the queue
+let timeStamp = 0;
+
+/**
+ * Calculates the new index from the current one, based on
+ * what our current index is, how many elements are in the queue
+ * and how long each sprite gets to move
+ * @param {The queue of sprites we'll be drawing} queue
+ * @param {The current index we are testing} idx
+ * @param {How long each sprite has to move} timing
+ */
+function getNextIndex(queue, idx, timing) {
+	// get the time in seconds, with subsecond accuracy
+	const seconds = millis() / 1000;
+	const len = queue.length;
+
+	if (seconds > timeStamp)
+	{
+		// first, update our timeStamp to be in the future
+		timeStamp = seconds + timing;
+		if (len > 0) {
+			return (idx + 1) % len;
+		} else {
+			console.error('queue length is 0, you probably forgot to add things to it');
+			return idx;
+		}
+	} else {
+		return idx;
+	}
+}
+
+/**
+ * Calculates how long we have at each ONE_UNIT distance to hang
+ * out before animating to a new spot, which is based really on
+ * the speed of the sprite. If a sprite moves 4 units, for example,
+ * we have timing/4 seconds to hang out before moving again
+ * @param {The sprite that's moving} sprite
+ * @param {The length of time each sprite has to move} timing
+ */
+function calculateSubtiming(sprite, timing)
+{
+	const total_units = sprite.speed / ONE_UNIT;
+	return timing / total_units;
+}
+
+
+/**
+ * this takes a rendering queue and updates positions based on how much
+ * time has elapsed at this point in the game
+ * @param {A queue of sprites to render} queue
+ * @param {How long we spend at each sprite drawing} timing
+ */
+function updateRendering(queue, timing) {
+	// calculate the next index
+	const nextIdx = getNextIndex(queue, currentIndex, timing);
+
+	// if the index hasn't changed, then we're really done at this point
+	if (nextIdx !== currentIndex)
+	{
+		// stop the sprite animations
+		if (currentIndex >= 0) {
+			stopSprite(queue[currentIndex]);
+		}
+		// update our index
+		currentIndex = nextIdx;
+		// now update the sprite, which will cause it to move if its movement
+		// speed is something > 0
+
+		updateSprite(queue[currentIndex])
+	}
+}
+
+function stopSprite(sprite) {
+	console.log('stopping ' + sprite.name);
+	if (sprite.animation) {
+		sprite.animation.stop();
+	}
+}
+/**
+ * updateSprite figures out which way a sprite is moving and where to draw it
+ */
+function updateSprite(sprite) {
+	console.log('updating ' + sprite.name);
+	if (sprite.animation) {
+		sprite.animation.play();
+	}
+
+	switch (sprite.movementDir) {
+		case 'left':
+			sprite.position.x = sprite.position.x - sprite.speed;
+			// wrap around on the x-axis
+			if (sprite.position.x < 0) {
+				// we calculate the new position as such so that
+				// the sprite wraps around the screen correctly,
+				// in essence doing a modulo on its position
+				sprite.position.x = WIDTH + sprite.position.x;
+			}
+			break;
+		case 'right':
+			// wrap on the x-axis
+			sprite.position.x = sprite.position.x + sprite.speed;
+			if (sprite.position.x > WIDTH) {
+				// we calculate the new position as such so that
+				// the sprite wraps around the screen correctly,
+				// in essence doing a modulo on its position
+				sprite.position.x = sprite.position.x - WIDTH;
+			}
+			break;
+		case 'up':
+			sprite.position.y = sprite.position.y - sprite.speed;
+			break;
+		case 'down':
+			sprite.position.y = sprite.position.y + sprite.speed;
+			break;
+    case 'idle':
+      sprite.position.x = sprite.position.x;
+      sprite.position.y = sprite.position.y;
+      break;
+    default:
+			console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
+			break;
+	}
+}
+
+/**
+ * This function animates the sprite to move from its current position
+ * to the next position, so that we "smoothly" jump between UNITS of 32 pixels
+ * until it gets to its next destination. It also allows us to control which
+ * animation frame is being used.
+ * @param {The sprite we're animating} sprite
+ */
+function animateSprite(sprite, timing, distance)
+{
+	// get the subtiming of this sprite
+	const subtiming = calculateSubtiming(sprite, timing);
+	// grab elapsed time
+	const seconds = millis() / 1000;
+
+	if (seconds > subTimestamp) {
+		// slap a new subtimestamp down
+		subTimestamp = seconds + subtiming;
+		return sprite.position.x + distance;
+	}
+}
 
 /*********************************************************
  *
@@ -100,6 +258,8 @@ function preload(){
   let img7;
   let img8;
   let img9;
+
+  timeStamp = millis() / 1000 + renderTime;
 
   /*
    * load and create tierra
@@ -596,7 +756,7 @@ function draw() {
     moveState = 'idle';
     //migra.position.x = migra.position.x;
   }
-
+  updateRendering(renderQueue, renderTime);
   drawSprites();
 }
 
