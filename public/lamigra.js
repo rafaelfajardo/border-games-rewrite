@@ -180,33 +180,69 @@ function updateSprite(sprite) {
 	if (sprite.animation) {
 		sprite.animation.play();
 	}
+  // choose a number between 0 and 5 as an index that will yield a direction
+  let movementIndex = floor(random(6));
+  // map the index to a movementDir
+  switch (movementIndex) {
+    case 0:
+      sprite.movementDir = 'idle';
+      break;
+    case 1:
+      sprite.movementDir = 'left';
+      break;
+    case 2:
+      sprite.movementDir = 'right';
+      break;
+    case 3:
+      sprite.movementDir = 'up';
+      break;
+    case 4:
+    case 5:
+      sprite.movementDir = 'down';
+    default:
+      console.error('movementIndex is out of range');
+      break;
+  }
 
+  // how a sprite moves if it is a non-player character
 	switch (sprite.movementDir) {
 		case 'left':
 			sprite.position.x = sprite.position.x - sprite.speed;
-			// wrap around on the x-axis
+			// bound the x-axis at 0
 			if (sprite.position.x < 0) {
 				// we calculate the new position as such so that
-				// the sprite wraps around the screen correctly,
-				// in essence doing a modulo on its position
-				sprite.position.x = WIDTH + sprite.position.x;
+				// the sprite x position cannot be below 0,
+				// we may want to be sure that x should be 32 instead of 16
+				sprite.position.x += 32;
 			}
 			break;
 		case 'right':
-			// wrap on the x-axis
+			// bound the x-axis at the shadows under the bridge
 			sprite.position.x = sprite.position.x + sprite.speed;
-			if (sprite.position.x > WIDTH) {
+			if (sprite.position.x > WIDTH-32) {
 				// we calculate the new position as such so that
-				// the sprite wraps around the screen correctly,
-				// in essence doing a modulo on its position
-				sprite.position.x = sprite.position.x - WIDTH;
+				// the sprite x value can never be more than width-32,
+				// in essence bounding the position
+				sprite.position.x -= 32;
 			}
 			break;
 		case 'up':
+      // bound the y-axis at 32
 			sprite.position.y = sprite.position.y - sprite.speed;
+      if (sprite.position.y < 0) {
+        // calculate the new position as such so that
+        // the sprite y position can never be less than 0
+        // the sprites are 64 pixels tall and so their center is 32
+        sprite.position.y += 32;
+      }
 			break;
 		case 'down':
+      // bound the lower y-axis at height-32
 			sprite.position.y = sprite.position.y + sprite.speed;
+        if (sprite.position.y > HEIGHT-32){
+          // the y position of the sprite should never exceed height-32
+          sprite.position.y -= 32;
+        }
 			break;
     case 'idle':
       sprite.position.x = sprite.position.x;
@@ -290,11 +326,11 @@ function preload(){
   pipa0.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa0.changeAnimation('pipa activated'); // will need to change this state later
   pipa0.debug = BUGGY; // set the debug flag
-  renderQueue.push(pipa0); // add pipa0 to renderQueue []
-  pipa0.name = 'pipa0';
-  pipa0.animation.playing = false;
-  pipa0.movementDir = 'idle';
-  pipa0.speed = 0;
+  //renderQueue.push(pipa0); // add pipa0 to renderQueue []
+  //pipa0.name = 'pipa0';
+  //pipa0.animation.playing = false;
+  //pipa0.movementDir = 'idle';
+  //pipa0.speed = 0;
 
   pipa1 = createSprite (32*5+16, 16*32+16, 32, 32);
   pipa1.addImage ('pipa', img0);
