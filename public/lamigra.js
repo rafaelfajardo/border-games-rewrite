@@ -37,7 +37,7 @@ var pipa0; // sprite container for a drain pipe
 var pipa1; // sprite container for a drain pipe
 var pipa2; // sprite container for a drain pipe
 var pipa3; // sprite container for a drain pipe
-var pipas; // will be a group of drain pipe sprites
+let pipas; // will be a group of drain pipe sprites
 //
 //
 //  define player character sprites - migra, esposas, bala
@@ -366,7 +366,7 @@ function preload(){
   //pipa3.speed = 0;
 
   pipas = new Group(); // the group of drain pipes, should allow for testing collision with group
-  pipas.add (pipa0);
+  pipas.add (pipa0); // push pipa0 onto pipas group which acts like an array
   pipas.add (pipa1);
   pipas.add (pipa2);
   pipas.add (pipa3);
