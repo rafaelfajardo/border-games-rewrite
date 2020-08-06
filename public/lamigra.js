@@ -337,33 +337,33 @@ function preload(){
   pipa1.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa1.changeAnimation('pipa activated'); // will need to change this state later
   pipa1.debug = BUGGY; // set the debug flag
-  renderQueue.push(pipa1); // add pipa1 to renderQueue []
-  pipa1.name = 'pipa1';
-  pipa1.animation.playing = false;
-  pipa1.movementDir = 'idle';
-  pipa1.speed = 0;
+  //renderQueue.push(pipa1); // add pipa1 to renderQueue []
+  //pipa1.name = 'pipa1';
+  //pipa1.animation.playing = false;
+  //pipa1.movementDir = 'idle';
+  //pipa1.speed = 0;
 
   pipa2 = createSprite (32*8+16, 16*32+16, 32, 32);
   pipa2.addImage ('pipa', img0);
   pipa2.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa2.changeAnimation('pipa activated'); // will need to change this state later
   pipa2.debug = BUGGY; // set the debug flag
-  renderQueue.push(pipa2); // add pipa2 to renderQueue []
-  pipa2.name = 'pipa2';
-  pipa2.animation.playing = false;
-  pipa2.movementDir = 'idle';
-  pipa2.speed = 0;
+  //renderQueue.push(pipa2); // add pipa2 to renderQueue []
+  //pipa2.name = 'pipa2';
+  //pipa2.animation.playing = false;
+  //pipa2.movementDir = 'idle';
+  //pipa2.speed = 0;
 
   pipa3 = createSprite (32*11+16, 16*32+16, 32, 32);
   pipa3.addImage ('pipa', img0);
   pipa3.addAnimation('pipa activated', img0, img1,img1,img1,img1, img0);
   pipa3.changeAnimation('pipa activated'); // will need to change this state later
   pipa3.debug = BUGGY; // set the debug flag
-  renderQueue.push(pipa3); // add pipa3 to renderQueue []
-  pipa3.name ='pipa3';
-  pipa3.animation.playing = false;
-  pipa3.movementDir = 'idle';
-  pipa3.speed = 0;
+  //renderQueue.push(pipa3); // add pipa3 to renderQueue []
+  //pipa3.name ='pipa3';
+  //pipa3.animation.playing = false;
+  //pipa3.movementDir = 'idle';
+  //pipa3.speed = 0;
 
   pipas = new Group(); // the group of drain pipes, should allow for testing collision with group
   pipas.add (pipa0);
