@@ -159,6 +159,11 @@ function updateRendering(queue, timing) {
 		}
 		// update our index
 		currentIndex = nextIdx;
+
+    // can we test queue[currentIndex] us also part of cacahuates group?
+    // and then pass queue[currentIndex] to a function that
+    // randomizes its direction for the next cycle?
+
 		// now update the sprite, which will cause it to move if its movement
 		// speed is something > 0
 
