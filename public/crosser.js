@@ -1,7 +1,19 @@
-/*
+/* * * * * * * * * * * * * * * *
  *
  *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
  *		there is an accompanying file called "about.js" that contains a dev log
+ *    contributors to this version have been:
+ *      Rafael Fajardo
+ *      Chris GauthierDickey
+ *      Scott Leutenegger
+ *    on top of work that was originally crafted by
+ *      Rafael Fajardo
+ *      Francisco Ortega
+ *      Miguel Tarango
+ *      Ryan Mulloy
+ *      Marco Ortega
+ *      Carmen Escobar
+ *      Tomás Márquez
  *
  */
 
@@ -21,47 +33,47 @@ let url  = "http://localhost:8080/index.html";
 let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
 
-var tierra; // sprite, will need 3 images each 448 x 448
-var carlosmoreno; // sprite, player character, minimum of 9 images
-var cadaver; // sprite will need 1 mexico side
-var gato1; // sprite, will need 2 on US side
-var gato2; // sprite, will need 2 on US side
-var waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
-var llanta; // sprite will need 1 top edge touches bank on US side
-var migraMan2; // sprite will need 3 [tom, dick, harry,] walking on banks
-var migraMan1; // sprite
-var migraSUV; // sprite, will need 1 on center of lane [xlt, gto, exp] currently have wrong art. facing wrong direction. may not have art
-var migraHelo1; // sprite, will need 2 [huey, bell, airwolf]
-var visa; // sprite, goal
-var migraHelo2; // sprite
-var migraMan3; // sprite
+let tierra; // sprite, will need 3 images each 448 x 448
+let carlosmoreno; // sprite, player character, minimum of 9 images
+let cadaver; // sprite will need 1 mexico side
+let gato1; // sprite, will need 2 on US side
+let gato2; // sprite, will need 2 on US side
+let waterLog; // sprite, flotsam & jetsam will need 1 top edge touches border from Mexico side
+let llanta; // sprite will need 1 top edge touches bank on US side
+let migraMan2; // sprite will need 3 [tom, dick, harry,] walking on banks
+let migraMan1; // sprite
+let migraSUV; // sprite, will need 1 on center of lane [xlt, gto, exp] currently have wrong art. facing wrong direction. may not have art
+let migraHelo1; // sprite, will need 2 [huey, bell, airwolf]
+let visa; // sprite, goal
+let migraHelo2; // sprite
+let migraMan3; // sprite
 
-var laMigra; // group, it may be better to call this opponents or hazards because they include flotsam
+let laMigra; // group, it may be better to call this opponents or hazards because they include flotsam
 
-var img; // a temporary placeholder to preload images for sprites
-var img1; // temp placeholder to preload images for sprites
-var img2; // temp placeholder to preload images for sprites
+let img; // a temporary placeholder to preload images for sprites
+let img1; // temp placeholder to preload images for sprites
+let img2; // temp placeholder to preload images for sprites
 
-var spriteCounter = 0; // used in draw loop, along with modulo, to update and draw one sprite per frame.
+let spriteCounter = 0; // used in draw loop, along with modulo, to update and draw one sprite per frame.
 												// will give background image it's own turn since it is a sprite indexed 0
 												//will potentiall cause draw loop to speed up as sprites are removed from list
 
-var BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
+let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 
-var START = false; // to use for button SNES maybe need a reSTART
+let START = false; // to use for button SNES maybe need a reSTART
 //var SELECT = false; // use button for SNES
 //var shoulderLeft = false; // unused button for SNES
 //var shoulderRight = false; // unused button for SNES
 //var GAMEOVER = false; // may not be best option because a gameover state isn't really what we do
-var moveLeft = false; // boolean, used for player character interaction map to dPad
-var moveRight = false; // boolean
-var moveUp = false; // boolean
-var moveDown = false; // boolean
-var moveIdle = true; // boolean, used for player character idle
+let moveLeft = false; // boolean, used for player character interaction map to dPad
+let moveRight = false; // boolean
+let moveUp = false; // boolean
+let moveDown = false; // boolean
+let moveIdle = true; // boolean, used for player character idle
 //var dPad; // sprite, container for d pad image, used for touch interaction
 //var start; // sprite, container for start button image
 
-var gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
+let gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 
 // let ctr0 = 0; // container for a counter used by controller.js
 
