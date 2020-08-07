@@ -138,7 +138,63 @@ function calculateSubtiming(sprite, timing)
 	const total_units = sprite.speed / ONE_UNIT;
 	return timing / total_units;
 }
+/**********
+ * this takes a sprite in the renderQueue[] that is
+ * also a member of cacahuates [] (a play.p5.js group entity)
+ * and sets its movementDir attribute according to a random scheme
+ * @param {The sprite to set movementDir for} sprite
+ */
+ function setPeanutMovementDir(sprite){
+   // take the random movement code that was added to updateSprite earlier and paste it here
+   // choose a number between 0 and 5 as an index that will yield a direction
+   let movementIndex = floor(random(6));
+   // map the index to a movementDir
+   switch (movementIndex) {
+     case 0:
+       sprite.movementDir = 'idle';
+       sprite.speed = 0;
+       break;
+     case 1:
+       sprite.movementDir = 'left';
+       sprite.speed = ONE_UNIT;
+       break;
+     case 2:
+       sprite.movementDir = 'right';
+       sprite.speed = ONE_UNIT;
+       break;
+     case 3:
+       sprite.movementDir = 'up';
+       sprite.speed = ONE_UNIT;
+       break;
+     case 4:
+     case 5:
+       sprite.movementDir = 'down';
+       sprite.speed = ONE_UNIT;
+     default:
+       console.error('movementIndex is out of range');
+       break;
+   }
+ }
 
+/**********
+ * this takes a sprite in the renderQueue[]
+ * and checks to see if it is a member of cacahuates []
+ * and calls setPeanutMovementDir() if so
+ * cacahuate is spanish/nahuatl for peanut
+ * @param {The sprite to be checked} sprite
+ */
+function checkForPeanutSprite(sprite){
+  if (cacahuates.length > 0){
+    for (let cIdx =0; cIdx < cacahuates.length; cIdx++){
+      if (sprite === cacahuates[cIdx]){
+        console.log(sprite.name+' is in cacahuates');
+        setPeanutMovementDir(sprite);
+        //return true;
+      }
+    }
+  }
+  //return false;
+}
 
 /**
  * this takes a rendering queue and updates positions based on how much
@@ -163,7 +219,9 @@ function updateRendering(queue, timing) {
     // can we test queue[currentIndex] us also part of cacahuates group?
     // and then pass queue[currentIndex] to a function that
     // randomizes its direction for the next cycle?
-
+//    If (checkForPeanutSprite(queue[currentIndex])) // if current sprite is in cacahuates
+//      setPeanutMovementDir(queue[currentIndex]); // set the movement direction for said sprite
+    checkForPeanutSprite(queue[currentIndex]);
 		// now update the sprite, which will cause it to move if its movement
 		// speed is something > 0
 
@@ -185,30 +243,6 @@ function updateSprite(sprite) {
 	if (sprite.animation) {
 		sprite.animation.play();
 	}
-  // choose a number between 0 and 5 as an index that will yield a direction
-  let movementIndex = floor(random(6));
-  // map the index to a movementDir
-  switch (movementIndex) {
-    case 0:
-      sprite.movementDir = 'idle';
-      break;
-    case 1:
-      sprite.movementDir = 'left';
-      break;
-    case 2:
-      sprite.movementDir = 'right';
-      break;
-    case 3:
-      sprite.movementDir = 'up';
-      break;
-    case 4:
-    case 5:
-      sprite.movementDir = 'down';
-    default:
-      console.error('movementIndex is out of range');
-      break;
-  }
-
   // how a sprite moves if it is a non-player character
 	switch (sprite.movementDir) {
 		case 'left':
