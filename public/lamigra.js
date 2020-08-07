@@ -1,9 +1,22 @@
-/*
+/* * * * * * * * * * * * * * * *
  *
- *		This is a rewriting/remediation of La Migra (circa 2001 a.c.e.)
+ *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
  *		there is an accompanying file called "about.js" that contains a dev log
+ *    contributors to this version have been:
+ *      Rafael Fajardo
+ *      Chris GauthierDickey
+ *      Scott Leutenegger
+ *    on top of work that was originally crafted by
+ *      Rafael Fajardo
+ *      Francisco Ortega
+ *      Miguel Tarango
+ *      Ryan Mulloy
+ *      Marco Ortega
+ *      Carmen Escobar
+ *      Tomás Márquez
  *
  */
+
 //
 //
 // global variables
@@ -32,54 +45,54 @@ let cuffs; // group container for new esposas which will be newSprites
 //
 //  define background sprites
 //
-var tierra; // sprite container for the background images
-var pipa0; // sprite container for a drain pipe
-var pipa1; // sprite container for a drain pipe
-var pipa2; // sprite container for a drain pipe
-var pipa3; // sprite container for a drain pipe
+let tierra; // sprite container for the background images
+let pipa0; // sprite container for a drain pipe
+let pipa1; // sprite container for a drain pipe
+let pipa2; // sprite container for a drain pipe
+let pipa3; // sprite container for a drain pipe
 let pipas; // will be a group of drain pipe sprites
 //
 //
 //  define player character sprites - migra, esposas, bala
 //
-var migra; // sprite container for player character La Migra SUV
-var esposas; // sprite container for handcuffs that animate like Argentine bolas
-var bala; // sprite container for lethal projectile. existed in original but has been kept quiet.
+let migra; // sprite container for player character La Migra SUV
+let esposas; // sprite container for handcuffs that animate like Argentine bolas
+let bala; // sprite container for lethal projectile. existed in original but has been kept quiet.
 //
 //
 //  define score-counter sprites
 //
-var avisocontador; // sprite container for counter UI of folks who have crossed and should be located lower left
-var avisocounter; // sprite container for counter UI of folks sent back and should be located lower right
+let avisocontador; // sprite container for counter UI of folks who have crossed and should be located lower left
+let avisocounter; // sprite container for counter UI of folks sent back and should be located lower right
 //
 //
 //  define non-player character sprites
 //
-var maluciadepieles; // sprite container for non-player character
-var nitamoreno; // sprite container for non-player character
-var linodepieles; // sprite container for non-player character
-var carlosmoreno; // sprite container for non-player character who moves in cardinal directions
-var marcia; // sprite container for non-player character
-var patricialamachona; // sprite container for non-player character
-var puercoespin; // sprite container for non-player character
-var xrodar; // sprite container for non-player character
+let maluciadepieles; // sprite container for non-player character
+let nitamoreno; // sprite container for non-player character
+let linodepieles; // sprite container for non-player character
+let carlosmoreno; // sprite container for non-player character who moves in cardinal directions
+let marcia; // sprite container for non-player character
+let patricialamachona; // sprite container for non-player character
+let puercoespin; // sprite container for non-player character
+let xrodar; // sprite container for non-player character
 //
 //  define a collection or group identity for non-player character sprites
-var cacahuates; // will be a group of sprites non-player characters
+let cacahuates; // will be a group of sprites non-player characters
 //
 //
 //  define other set pieces that will be in the foreground
 //
-var deportacioncenter; // sprite container for environment set piece
-var repatriationcenter; // sprite container for environment set piece
-var sombra0; // sprite container for environment set piece
-var sombra1; // sprite container for environment set piece
-var sombra2; // sprite container for environment set piece
+let deportacioncenter; // sprite container for environment set piece
+let repatriationcenter; // sprite container for environment set piece
+let sombra0; // sprite container for environment set piece
+let sombra1; // sprite container for environment set piece
+let sombra2; // sprite container for environment set piece
 //
 //
 //  define a boolean to set play.p5.js library debug function state
 //
-var BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
+let BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
 //
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
@@ -848,7 +861,7 @@ function draw() {
 
   // sketch to fling cuffs -- esposas in spanish -- upward
   if (flingEsposas){
-    var newSprite = createSprite(migra.position.x+16, migra.position.y,32,32);
+    let newSprite = createSprite(migra.position.x+16, migra.position.y,32,32);
     newSprite.addAnimation('lanzar', 'img-lamigra/esposas_0.png',
                                      'img-lamigra/esposas_1.png',
                                      'img-lamigra/esposas_2.png',
