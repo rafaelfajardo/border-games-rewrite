@@ -463,16 +463,16 @@ function preload(){
    /*
     * load imgages for avisocontador sprite, should be yellow sign
     */
-   img0 = loadImage('img-lamigra/counter 2 0.png');
-   img1 = loadImage('img-lamigra/counter 2 1.png');
-   img2 = loadImage('img-lamigra/counter 2 2.png');
-   img3 = loadImage('img-lamigra/counter 2 3.png');
-   img4 = loadImage('img-lamigra/counter 2 4.png');
-   img5 = loadImage('img-lamigra/counter 2 5.png');
-   img6 = loadImage('img-lamigra/counter 2 6.png');
-   img7 = loadImage('img-lamigra/counter 2 7.png');
-   img8 = loadImage('img-lamigra/counter 2 8.png');
-   img9 = loadImage('img-lamigra/counter 2 9.png');
+   img0 = loadImage('img-lamigra/counter-2-0.png');
+   img1 = loadImage('img-lamigra/counter-2-1.png');
+   img2 = loadImage('img-lamigra/counter-2-2.png');
+   img3 = loadImage('img-lamigra/counter-2-3.png');
+   img4 = loadImage('img-lamigra/counter-2-4.png');
+   img5 = loadImage('img-lamigra/counter-2-5.png');
+   img6 = loadImage('img-lamigra/counter-2-6.png');
+   img7 = loadImage('img-lamigra/counter-2-7.png');
+   img8 = loadImage('img-lamigra/counter-2-8.png');
+   img9 = loadImage('img-lamigra/counter-2-9.png');
    avisocontador = createSprite (16, 32*14+16, 32, 32);
    avisocontador.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
    avisocontador.debug = BUGGY; // set the debug flag
@@ -480,16 +480,16 @@ function preload(){
   /*
    * load images for avisocounter sprite, should be pale blue sign
    */
-  img0 = loadImage('img-lamigra/counter 3 0.png');
-  img1 = loadImage('img-lamigra/counter 3 1.png');
-  img2 = loadImage('img-lamigra/counter 3 2.png');
-  img3 = loadImage('img-lamigra/counter 3 3.png');
-  img4 = loadImage('img-lamigra/counter 3 4.png');
-  img5 = loadImage('img-lamigra/counter 3 5.png');
-  img6 = loadImage('img-lamigra/counter 3 6.png');
-  img7 = loadImage('img-lamigra/counter 3 7.png');
-  img8 = loadImage('img-lamigra/counter 3 8.png');
-  img9 = loadImage('img-lamigra/counter 3 9.png');
+  img0 = loadImage('img-lamigra/counter-3-0.png');
+  img1 = loadImage('img-lamigra/counter-3-1.png');
+  img2 = loadImage('img-lamigra/counter-3-2.png');
+  img3 = loadImage('img-lamigra/counter-3-3.png');
+  img4 = loadImage('img-lamigra/counter-3-4.png');
+  img5 = loadImage('img-lamigra/counter-3-5.png');
+  img6 = loadImage('img-lamigra/counter-3-6.png');
+  img7 = loadImage('img-lamigra/counter-3-7.png');
+  img8 = loadImage('img-lamigra/counter-3-8.png');
+  img9 = loadImage('img-lamigra/counter-3-9.png');
   avisocounter = createSprite (14*32+16, 16*32+16, 32, 32);
   avisocounter.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
   avisocounter.debug = BUGGY; // set the debug flag
