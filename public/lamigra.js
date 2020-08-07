@@ -183,6 +183,7 @@ function calculateSubtiming(sprite, timing)
      case 5:
        sprite.movementDir = 'down';
        sprite.speed = ONE_UNIT;
+       break;
      default:
        console.error('movementIndex is out of range');
        break;
