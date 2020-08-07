@@ -92,7 +92,7 @@ let sombra2; // sprite container for environment set piece
 //
 //  define a boolean to set play.p5.js library debug function state
 //
-let BUGGY = true; // boolean, debug flag, used for debug feature of P5.Play.JS
+let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 //
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
