@@ -216,21 +216,23 @@ function checkForPeanutSprite(sprite){
  * and if so, checks to see if the y value is less than the border
  * and if so, removes that sprite from renderQue [] and cuffs []
  * @param {The sprite to be checked} sprite
- */
-function checkCuffsJurisdiction(sprite){
-  if (cuffs.lenth > 0){
+ * @param {The renderQueue array} myQueue
+ * @param {The current index of the renderQueue} qIdx
+ */ /*
+function checkCuffsJurisdiction(sprite, myQueue, qIdx){
+  if (cuffs.length > 0){
     for (let i = 0; i < cuffs.length; i++){
       if (sprite === cuffs[i]){
         if (sprite.position.y < 7*32){
           console.log('cuff '+ i +' out of jurisdiction');
           cuffs[i].remove();
-          let removed = queue.splice(currentIndex); // POTENTIALLY DANGEROUS
+          let removed = myQueue.splice(qIdx); // POTENTIALLY DANGEROUS
         }
       }
     }
   }
 }
-
+*/
 /**
  * this takes a rendering queue and updates positions based on how much
  * time has elapsed at this point in the game
@@ -257,12 +259,12 @@ function updateRendering(queue, timing) {
     // if current sprite is in cacahuates
     // set the movement direction for said sprite
     checkForPeanutSprite(queue[currentIndex]);
-
+/*
     // can we test the y value of a member of cuffs []
     // and if y value is less than border, remove from or splice
     // both renderQueue [] and cuffs []
-    checkCuffsJurisdiction(queue[currentIndex]);
-
+    checkCuffsJurisdiction(queue[currentIndex], queue, currentIndex); //DANGEROUS
+*/
     // now update the sprite, which will cause it to move if its movement
 		// speed is something > 0
 		updateSprite(queue[currentIndex])
