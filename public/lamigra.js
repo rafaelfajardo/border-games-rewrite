@@ -193,7 +193,7 @@ function calculateSubtiming(sprite, timing)
 /**********
  * this takes a sprite in the renderQueue[]
  * and checks to see if it is a member of cacahuates []
- * and calls setPeanutMovementDir() if so
+ * and calls setPeanutMovementDir() if so.
  * cacahuate is spanish/nahuatl for peanut
  * @param {The sprite to be checked} sprite
  */
@@ -208,6 +208,27 @@ function checkForPeanutSprite(sprite){
     }
   }
   //return false;
+}
+
+/**********
+ * this function takes a sprite in the renderQueue[]
+ * and checks to see if it is a member of cuff []
+ * and if so, checks to see if the y value is less than the border
+ * and if so, removes that sprite from renderQue [] and cuffs []
+ * @param {The sprite to be checked} sprite
+ */
+function checkCuffsJurisdiction(sprite){
+  if (cuffs.lenth > 0){
+    for (let i = 0; i < cuffs.length; i++){
+      if (sprite === cuffs[i]){
+        if (sprite.position.y < 7*32){
+          console.log('cuff '+ i +' out of jurisdiction');
+          cuffs[i].remove();
+          let removed = queue.splice(currentIndex); // POTENTIALLY DANGEROUS
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -233,12 +254,17 @@ function updateRendering(queue, timing) {
     // can we test queue[currentIndex] us also part of cacahuates group?
     // and then pass queue[currentIndex] to a function that
     // randomizes its direction for the next cycle?
-//    If (checkForPeanutSprite(queue[currentIndex])) // if current sprite is in cacahuates
-//      setPeanutMovementDir(queue[currentIndex]); // set the movement direction for said sprite
+    // if current sprite is in cacahuates
+    // set the movement direction for said sprite
     checkForPeanutSprite(queue[currentIndex]);
-		// now update the sprite, which will cause it to move if its movement
-		// speed is something > 0
 
+    // can we test the y value of a member of cuffs []
+    // and if y value is less than border, remove from or splice
+    // both renderQueue [] and cuffs []
+    checkCuffsJurisdiction(queue[currentIndex]);
+
+    // now update the sprite, which will cause it to move if its movement
+		// speed is something > 0
 		updateSprite(queue[currentIndex])
 	}
 }
