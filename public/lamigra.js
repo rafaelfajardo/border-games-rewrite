@@ -211,14 +211,15 @@ function checkForPeanutSprite(sprite){
 }
 
 /**********
- * this function takes a sprite in the renderQueue[]
- * and checks to see if it is a member of cuff []
+ * this function is called by updateRendering()
+ * and takes a sprite in the renderQueue[]
+ * and checks to see if it is a member of cuffs []
  * and if so, checks to see if the y value is less than the border
  * and if so, removes that sprite from renderQue [] and cuffs []
  * @param {The sprite to be checked} sprite
  * @param {The renderQueue array} myQueue
  * @param {The current index of the renderQueue} qIdx
- */ /*
+ */   ///*
 function checkCuffsJurisdiction(sprite, myQueue, qIdx){
   if (cuffs.length > 0){
     for (let i = 0; i < cuffs.length; i++){
@@ -226,13 +227,13 @@ function checkCuffsJurisdiction(sprite, myQueue, qIdx){
         if (sprite.position.y < 7*32){
           console.log('cuff '+ i +' out of jurisdiction');
           cuffs[i].remove();
-          let removed = myQueue.splice(qIdx); // POTENTIALLY DANGEROUS
+          let removed = myQueue.splice(qIdx,1); // POTENTIALLY DANGEROUS
         }
       }
     }
   }
 }
-*/
+//*/
 /**
  * this takes a rendering queue and updates positions based on how much
  * time has elapsed at this point in the game
@@ -890,7 +891,7 @@ function draw() {
 
   // sketch to fling cuffs -- esposas in spanish -- upward
   if (flingEsposas){
-    let newSprite = createSprite(migra.position.x+16, migra.position.y,32,32);
+    let newSprite = createSprite(migra.position.x+16, migra.position.y-32,32,32);
     newSprite.addAnimation('lanzar', 'img-lamigra/esposas_0.png',
                                      'img-lamigra/esposas_1.png',
                                      'img-lamigra/esposas_2.png',
@@ -926,6 +927,7 @@ function draw() {
     }
   }
   */
+  // /*
   // sketch to move player character
   if (moveState === 'left'){
     migra.changeAnimation ('move');
@@ -949,8 +951,17 @@ function draw() {
     moveState = 'idle';
     //migra.position.x = migra.position.x;
   }
+  // */
+  /*
+  if (keyIsPressed){
+    migra.movementDir = moveState; // trying to use movmentDir and renderQueue for player movement
+  } else {
+    migra.movementDir = 'idle';
+  }
+  */
   updateRendering(renderQueue, renderTime);
   drawSprites();
+  // migra.movementDir = 'idle'; // this doesn't seem to be returning the state to idle after a move
 }
 
 
@@ -988,44 +999,45 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		print('upward key pressed');
     flingEsposas = true;
 
-	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
-		         key === 's'            ||
-		         key === 'S'            ||
-		         key === 'k'            ||
+	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+		         key === 's'          ||
+		         key === 'S'          ||
+		         key === 'k'          ||
 		         key === 'K') {
     print('downward key pressed');
 
-	} else if (//keyCode === '37' || //key === 'ArrowLeft'  ||
-	           key === 'a'            ||
-		         key === 'A'            ||
-		         key === 'j'            ||
+	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	           key === 'a'          ||
+		         key === 'A'          ||
+		         key === 'j'          ||
 		         key === 'J') {
 		print('leftward key pressed');
     moveState = 'left';
 
-	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
-		         key === 'd'             ||
-		         key === 'D'             ||
-		         key === 'l'             ||
+	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+		         key === 'd'          ||
+		         key === 'D'          ||
+		         key === 'l'          ||
 		         key === 'L') {
 		print('rightward key pressed');
     moveState = 'right';
 
-	} else if (key === 't'  ||
+	} else if (key === 't'          ||
 						 key === 'T') {
 	  print('t key pressed');
-		//START = true;
-	} else if (key === 'y'   ||
+		//select = true;
+	} else if (key === 'y'          ||
              key === 'Y') {
 		print('y key pressed');
-
-  } else if (key === 'g'  ||
+    //start = true;
+  } else if (key === 'g'          ||
              key === 'G'){
     print('g key pressed');
-
-	} else if (key === 'h'  ||
+    //select = true; // to be deprecated
+	} else if (key === 'h'          ||
              key === 'H'){
     print('h key pressed');
+    //start = true; // to be deprecated
   } else {
     moveState = 'idle'; // create an idle state for player character
   }
