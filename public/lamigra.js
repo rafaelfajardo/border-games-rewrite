@@ -472,6 +472,7 @@ function preload(){
   /*
    * load images for esposas sprite
    */
+/* // deprecated this one in favor of the dynamically generated one in flingEsposas
   img0 = loadImage('img-lamigra/esposas_0.png');
   img1 = loadImage('img-lamigra/esposas_1.png');
   img2 = loadImage('img-lamigra/esposas_2.png');
@@ -484,9 +485,11 @@ function preload(){
   esposas.animation.playing = true;
   esposas.movementDir = 'up';
   esposas.speed = 32;
+*/
 
   /*
    *  to do: load images for bala(s) (or not)
+   *  this code will look like flingEsposas with disappearance at y <= 16
    */
 
    /*
