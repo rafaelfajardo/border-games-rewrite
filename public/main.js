@@ -1,7 +1,20 @@
-/*
+/* * * * * * * * * * * * * * * *
  *
  *  main.js should contain logic for selecting which game to play
- *  it will use P5.JS and P5.Play.JS
+ *  it will depend on P5.JS and P5.Play.JS
+ *
+ *  it will invoke:
+ *  controller.js
+ *  touch.js
+ *
+ *  it will launch:
+ *  _crosser.html
+ *  _lamigra.html
+ *
+ *  contributors to main.js are:
+ *  Rafael Fajardo
+ *  Chris GauthierDickey
+ *  Scott Leutenegger
  *
  */
 
@@ -17,23 +30,25 @@ let ctr0; // container for a counter
 
 // preload
 function preload(){
-  img1 = loadImage('img-ui/buttonC1.png'); // load dimmed crosser button image
-  img2 = loadImage('img-ui/buttonC2.png'); // load bright crosser button image
-  btn1 = createSprite(224, 200, 64, 32);
+  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  btn1 = createSprite(224, 160, 180, 180);
   btn1.addImage('off1', img1);
   btn1.addImage('on1', img2);
   btn1.addAnimation('off', img1);
   btn1.addAnimation('select', img2);
   btn1.addAnimation('blink', img1,img2,img2,img1);
+  btn1.changeAnimation('select');
 
-  img1 = loadImage('img-ui/buttonL1.png'); // load dimmed la migra button image
-  img2 = loadImage('img-ui/buttonL2.png'); // load bright la migra button image
-  btn2 = createSprite(224, 248, 64, 32);
+  img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
+  img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
+  btn2 = createSprite(224, 370, 64, 32);
   btn2.addImage('off2', img1);
   btn2.addImage('on2', img2);
   btn2.addAnimation('off', img1);
   btn2.addAnimation('select', img2);
   btn2.addAnimation('blink', img1,img2,img2,img1);
+  btn2.changeAnimation('off');
 
 /*  // these paths are for dev and for DAM
   url = 'http://localhost:8080/index.html'; // these urls have to reflect the files in /public
