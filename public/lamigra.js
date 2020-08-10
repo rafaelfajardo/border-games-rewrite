@@ -42,10 +42,18 @@ const WIDTH = 512;
 const HEIGHT = 544;
 // counter to toggle between _crosser.html and _lamigra.html
 let ctr0 = 1;
+/*
+//
 // url targets for invoking _crosser.html or _lamigra.html
+// used by key strokes for 'select' and 'start'
 let url  = "http://localhost:8080/index.html";
 let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
+*/
+// url targets using relative paths
+let url  = 'index.html';
+let url0 = '_crosser.html';
+let url1 = '_lamigra.html';
 //
 //
 //  define state variables
@@ -56,7 +64,7 @@ let flingEsposas = false; // a boolean for launching handcuffs maybe this needs 
 let cuffs; // group container for new esposas which will be newSprites
 //
 //
-//  define background sprites
+//  define background sprites and set pieces
 //
 let tierra; // sprite container for the background images
 let pipa0; // sprite container for a drain pipe
