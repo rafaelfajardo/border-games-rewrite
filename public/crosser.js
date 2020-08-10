@@ -30,9 +30,10 @@
  *
  */
 
- //
- // global variables
- //
+//
+//
+// global variables
+//
 
 // defines one unit of movement, which is 32 pixels
 const ONE_UNIT = 32;
@@ -54,6 +55,17 @@ let url  = 'index.html';
 let url0 = '_crosser.html';
 let url1 = '_lamigra.html';
 
+//
+//
+//  declare state variables
+//
+let gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
+let moveState = 'idle'; // can be invoked from keyPressed to let carlosmoreno movement be guided by updateSprite
+
+//
+//
+//  declare sprites
+//
 let tierra; // sprite, will need 3 images each 448 x 448
 let carlosmoreno; // sprite, player character, minimum of 9 images
 let cadaver; // sprite will need 1 mexico side
@@ -81,22 +93,24 @@ let spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 
 let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 
-let START = false; // to use for button SNES maybe need a reSTART
-//var SELECT = false; // use button for SNES
-//var shoulderLeft = false; // unused button for SNES
-//var shoulderRight = false; // unused button for SNES
-//var GAMEOVER = false; // may not be best option because a gameover state isn't really what we do
-let moveLeft = false; // boolean, used for player character interaction map to dPad
-let moveRight = false; // boolean
-let moveUp = false; // boolean
-let moveDown = false; // boolean
-let moveIdle = true; // boolean, used for player character idle
-//var dPad; // sprite, container for d pad image, used for touch interaction
-//var start; // sprite, container for start button image
+/*
+    // deprecated state variables
 
-let gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
+    let START = false; // to use for button SNES maybe need a reSTART
+    //var SELECT = false; // use button for SNES
+    //var shoulderLeft = false; // unused button for SNES
+    //var shoulderRight = false; // unused button for SNES
+    //var GAMEOVER = false; // may not be best option because a gameover state isn't really what we do
+    let moveLeft = false; // boolean, used for player character interaction map to dPad
+    let moveRight = false; // boolean
+    let moveUp = false; // boolean
+    let moveDown = false; // boolean
+    let moveIdle = true; // boolean, used for player character idle
+    //var dPad; // sprite, container for d pad image, used for touch interaction
+    //var start; // sprite, container for start button image
+*/
 
-// let ctr0 = 0; // container for a counter used by controller.js
+
 
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
