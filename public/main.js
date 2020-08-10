@@ -35,9 +35,15 @@ function preload(){
   btn2.addAnimation('select', img2);
   btn2.addAnimation('blink', img1,img2,img2,img1);
 
+/*  // these paths are for dev and for DAM
   url = 'http://localhost:8080/index.html'; // these urls have to reflect the files in /public
   url0 = 'http://localhost:8080/_crosser.html';
   url1 = 'http://localhost:8080/_lamigra.html';
+*/
+  // these paths are for web serving for Ars Electronica - Garden del Rio Grande
+  url  = 'index.html'; // trying to make this with relative path
+  url0 = '_crosser.html';
+  url1 = '_lamigra.html';
 }
 
 // setup
