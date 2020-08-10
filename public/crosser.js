@@ -41,10 +41,18 @@ const WIDTH = 448;
 const HEIGHT = 448;
 // counter to toggle between _crosser.html and _lamigra.html
 let ctr0 = 0;
+/*
+//
 // url targets for invoking _crosser.html or _lamigra.html
+// used by key strokes for 'select' and 'start'
 let url  = "http://localhost:8080/index.html";
 let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
+*/
+// url targets using relative paths
+let url  = 'index.html';
+let url0 = '_crosser.html';
+let url1 = '_lamigra.html';
 
 let tierra; // sprite, will need 3 images each 448 x 448
 let carlosmoreno; // sprite, player character, minimum of 9 images
