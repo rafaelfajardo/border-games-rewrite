@@ -1,7 +1,20 @@
 /* * * * * * * * * * * * * * * *
  *
  *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
- *		there is an accompanying file called "about.js" that contains a dev log
+ *		there is an accompanying file called "about.js" that contains a partial dev log
+ *    another partial dev log is found on gitHub
+ *    it has come to our attention that gitHub provides technology solutions to DHS and ICE
+ *    We DO NOT support ICE and feel trapped in our complicity because of the importance
+ *    of gitHub to the open source ecosystem.
+ *
+ *    This file depends upon P5.js, Play.P5.js, and JavaScript
+ *
+ *    This file is called by main.js
+ *
+ *    This file calls or may call:
+ *      contoller.js
+ *      touch.js
+ *
  *    contributors to this version have been:
  *      Rafael Fajardo
  *      Chris GauthierDickey
