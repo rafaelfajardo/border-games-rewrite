@@ -93,8 +93,8 @@ let spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 
 let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 
-/*
-    // deprecated state variables
+// /*
+    // deprecated state variables, still used by controller.js and draw()
 
     let START = false; // to use for button SNES maybe need a reSTART
     //var SELECT = false; // use button for SNES
@@ -108,7 +108,7 @@ let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
     let moveIdle = true; // boolean, used for player character idle
     //var dPad; // sprite, container for d pad image, used for touch interaction
     //var start; // sprite, container for start button image
-*/
+// */
 
 
 
