@@ -4,6 +4,7 @@ body {
 p {
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   font-size: 8pt;
+  line-height: 1.4;
   color: #cccccc;
 }
   input[type=submit]{
