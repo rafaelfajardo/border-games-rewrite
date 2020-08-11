@@ -880,8 +880,15 @@ function setup() {
   //createCanvas(448, 548); // Crosser default canvas size
   let canvas = createCanvas(512, 544); // suggested by p5js.org reference for parent()
   canvas.parent('canvas-column'); // place the sketch canvas within the div named canvas-column within index.html
-  noCursor(); // testing cursor manipulation
-	// cursor(HAND); // HAND, ARROW, CROSS, MOVE, TEXT, WAIT
+  //
+  //
+  // cursor is useful for desktop and web served games
+  // cursor is not useful for installation with gamepad
+  // it may be crucial for installation with Leap Motion Controller
+  // we seem to have to provide solutions for both
+// noCursor(); // testing cursor manipulation
+  cursor(HAND); // params = HAND, ARROW, CROSS, MOVE, TEXT, WAIT
+  //
   frameRate(30);
   background(128);
   cuffs = new Group(); // a group of esposas-like sprites
