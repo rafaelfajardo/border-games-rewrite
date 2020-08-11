@@ -379,4 +379,26 @@ In the last couple of weeks I have had communication with DAM who have realized 
 
 I have renamed the repository on gitHub to Border-Games-rewrite
 I have rebased the repository on gitHub to default to main branch
+
+2020 08 11
+just now updated my development environment to Atom version 1.50 x64
+In the last few weeks I have added code to the La Migra shell such that the cacahuates, the group of non-player-characters, are added to the renderQueue[]; and, the player character has movement and can fling handcuffs.
+
+I modified the renderQueue[] function updateSprite() to allow for idle cases. I have not back-propagated this modification to crosser.js
+
+I have spent several days trying to figure out the best place to test the y position of the esposas/cuffs so that they disappear at the border.
+
+I still have to add collision detection to La Migra.
+
+I have worked to edit the HTML files that frame the games. I grabbed legacy art for buttons and dropped them into the appropriate DIVs in the html files. I changed all of the URLs referenced in html and js from absolute to relative paths so as to ease uploading to server. I confirmed that the relative paths work with our localhost on node.js server
+
+Because Ars Electronica requires a web presentation for novices, it may be that I need to bring back the UI Form html elements that Chris had explored. That had been deprecated for DAM because it required a mouse click that couldn't be mapped to a SNES gamepad through JS and (AND) still work as a d-pad. It had to be one or the other.
+
+The DAM installation will be March 2021 at the earliest, and will now have to be touchless. I proposed several solutions, but the most likely will be Leap Motion Controller. It has a JS library and several proof-of-concept examples with P5.js that I have forked in the editor.
+
+I was asked once again about hardware specs for DAM. I had been told that they had particular hardware in their inventory and had been designing toward that specification. They have been instructed by their Exec Director to use all new hardware in the newly remodeled spaces in the Martin/Ponti building. I offered a set of possibilities with price-points. I mentioned the cool little windows machine I have from MinisForum. They were intrigues. I tried to load Node.JS and NPM and caused an infinite loop. I attempted a clean install of Windows 10. The links provided by MinisForum didn't work and so I downloaded a version from Microsoft. It did not load the WiFi drivers and so I'm in the middle of learning how to load only those drivers and ensure they are appropriate for the onboard hardware. It may not be the way to go. I aspire to serve the games via Raspberry Pi. However, the need for a contactless or touchless interface during pandemic times will likely demand a system with higher hardware specifications in the realm of a Mac Mini or a NUC, as a baseline.
+
+It feels like I have to have contingency UIs for all possible cases.
+
+I pruned all of my branches except for main, and created a new branch called ArsElectronica, where I have been pushing my experiments for the last week. I think I have to merge everything I have for the last two weeks to main now.
 */
