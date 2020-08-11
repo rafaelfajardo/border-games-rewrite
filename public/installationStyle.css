@@ -1,9 +1,52 @@
 body {
   background-color: #4d4d4d;
 }
+h1 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 18pt;
+  line-height: 1.4;
+  color: #cccccc;
+}
+h2 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 16pt;
+  line-height: 1.4;
+  color: #cccccc;
+}
+h3 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 14pt;
+  line-height: 1.4;
+  color: #cccccc;
+}
+h4 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 12pt;
+  line-height: 1.4;
+  color: #cccccc;
+}
+h5 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 10pt;
+  line-height: 1.4;
+  color: #cccccc;
+}
+h6 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 8pt;
+  line-height: 1.4;
+  color: #cccccc;
+}
 p {
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   font-size: 8pt;
+  line-height: 1.4;
+  color: #cccccc;
+}
+ul {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 8pt;
+  line-height: 1.4;
   color: #cccccc;
 }
   input[type=submit]{
