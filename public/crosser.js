@@ -46,6 +46,8 @@ let ctr0 = 0;
 //
 // url targets for invoking _crosser.html or _lamigra.html
 // used by key strokes for 'select' and 'start'
+// using absolute paths during development, and maybe during
+// installation at DAM for ReVisión in 2021
 let url  = "http://localhost:8080/index.html";
 let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
@@ -61,6 +63,22 @@ let url1 = '_lamigra.html';
 //
 let gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 let moveState = 'idle'; // can be invoked from keyPressed to let carlosmoreno movement be guided by updateSprite
+// /*
+    // deprecated state variables, still used by controller.js and draw()
+
+    let START = false; // to use for button SNES maybe need a reSTART
+    //var SELECT = false; // use button for SNES
+    //var shoulderLeft = false; // unused button for SNES
+    //var shoulderRight = false; // unused button for SNES
+    //var GAMEOVER = false; // may not be best option because a gameover state isn't really what we do
+    let moveLeft = false; // boolean, used for player character interaction map to dPad
+    let moveRight = false; // boolean
+    let moveUp = false; // boolean
+    let moveDown = false; // boolean
+    let moveIdle = true; // boolean, used for player character idle
+    //var dPad; // sprite, container for d pad image, used for touch interaction
+    //var start; // sprite, container for start button image
+// */
 
 //
 //
@@ -93,22 +111,6 @@ let spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 
 let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 
-// /*
-    // deprecated state variables, still used by controller.js and draw()
-
-    let START = false; // to use for button SNES maybe need a reSTART
-    //var SELECT = false; // use button for SNES
-    //var shoulderLeft = false; // unused button for SNES
-    //var shoulderRight = false; // unused button for SNES
-    //var GAMEOVER = false; // may not be best option because a gameover state isn't really what we do
-    let moveLeft = false; // boolean, used for player character interaction map to dPad
-    let moveRight = false; // boolean
-    let moveUp = false; // boolean
-    let moveDown = false; // boolean
-    let moveIdle = true; // boolean, used for player character idle
-    //var dPad; // sprite, container for d pad image, used for touch interaction
-    //var start; // sprite, container for start button image
-// */
 
 
 
