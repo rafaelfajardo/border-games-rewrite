@@ -373,6 +373,7 @@ We have been working from home since 2020 03 18
 Yesterday gitHub desktop had an update that I uploaded.
 Today Atom has an update that I uploaded. It is now 1.47.0
 
+======
 2020 07 28
 last month we were invited to add Crosser & La Migra to an online component of Ars Electronica 2020. Ars Electronica will only need browser-based and keyboard+mouse UI.
 In the last couple of weeks I have had communication with DAM who have realized that we will need to provide a touchless interface for Crosser & La Migra when they are exhibited. The new target exhibition date is 2021 03. For this we are looking at the Leap Motion Controller. I wonder if the clumsiness of the interface can survive in a touchless environment.
@@ -380,6 +381,7 @@ In the last couple of weeks I have had communication with DAM who have realized 
 I have renamed the repository on gitHub to Border-Games-rewrite
 I have rebased the repository on gitHub to default to main branch
 
+======
 2020 08 11
 just now updated my development environment to Atom version 1.50 x64
 In the last few weeks I have added code to the La Migra shell such that the cacahuates, the group of non-player-characters, are added to the renderQueue[]; and, the player character has movement and can fling handcuffs.
@@ -401,4 +403,11 @@ I was asked once again about hardware specs for DAM. I had been told that they h
 It feels like I have to have contingency UIs for all possible cases.
 
 I pruned all of my branches except for main, and created a new branch called ArsElectronica, where I have been pushing my experiments for the last week. I think I have to merge everything I have for the last two weeks to main now.
+
+======
+2020 08 12
+just now I figured out how to fix carlosmoreno in crosser.js. I had broken him when I had added him to the renderQueue[]. He still isn't perfect, but he is better. Since he now honors is place on the renderQueue[] the player has to button mash to get him to respond. This more closely approximates the original.
+
+I should take the copy of keyTyped() in controller.js and put it into the bottom of main.js. I had put it there thinking it would be a bit of shared code. This was a delusion. Each of the .js files responds to keystrokes differently. It's too much work and creates too tight and interdependence to share this code.
+
 */
