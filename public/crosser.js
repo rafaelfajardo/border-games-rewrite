@@ -550,7 +550,9 @@ function setup() {
 
 function draw() {
 	background(255);
-
+/*
+  // this was the first draft of movement code for carlosmoreno
+  // it executed too fast and did not honor his place in the renderQueue[]
 	if (moveUp){
 		carlosmoreno.changeAnimation ('walkup');
     carlosmoreno.animation.play();
@@ -598,7 +600,7 @@ function draw() {
 	//else {
 		//carlosmoreno.changeAnimation ('facedown');
 	//}
-
+*/
 	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
 		carlosmoreno.changeAnimation ('surprise');
 		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
@@ -636,6 +638,11 @@ function draw() {
 	// update what we're rendering and how frequently
 	updateRendering(renderQueue, renderTime);
 	drawSprites();
+
+  // returns carlosmoreno to idle state after an update
+  // effectively slows down carlos and makes him take his turn in the queue
+  if (!keyIsPressed){carlosmoreno.movementDir = 'idle';}
+
 } // end draw loop
 
 
@@ -728,35 +735,35 @@ function keyReleased() {
 
 
 function keyTyped(){ // tested once per frame, triggered on keystroke
-	if        (keyCode === '38' || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
 		         key === 'w'          ||
 		         key === 'W'          ||
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
 		carlosmoreno.movementDir = 'up'; //moveUp = true;
-	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
-		         key === 's'            ||
-		         key === 'S'            ||
-		         key === 'k'            ||
+	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+		         key === 's'          ||
+		         key === 'S'          ||
+		         key === 'k'          ||
 		         key === 'K') {
     print('key down');
 		carlosmoreno.movementDir = 'down'; //moveDown = true;
-	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
-	           key === 'a'            ||
-		         key === 'A'            ||
-		         key === 'j'            ||
+	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	           key === 'a'          ||
+		         key === 'A'          ||
+		         key === 'j'          ||
 		         key === 'J') {
 		print('key left');
 		carlosmoreno.movementDir = 'left'; //moveLeft = true;
-	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
-		         key === 'd'             ||
-		         key === 'D'             ||
-		         key === 'l'             ||
+	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+		         key === 'd'          ||
+		         key === 'D'          ||
+		         key === 'l'          ||
 		         key === 'L') {
 		print('key right');
 		carlosmoreno.movementDir = 'right'; //moveRight = true;
-	} else if (key === 't'  ||
+	} else if (key === 't'          ||
 						 key === 'T') {
 	  print('t');
 		START = true;
