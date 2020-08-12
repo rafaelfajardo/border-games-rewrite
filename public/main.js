@@ -107,5 +107,85 @@ function draw(){
 } // end draw
 
 // udpdateStatus(pad) has been moved to controller.js
-// keyTyped() has been moved to controller.js
+// keyTyped was copied from crosser.js
+// keyboard mapping W,A,S,D; I,J,K,L; T,Y; as actionable
+// will likely have to pass the values of moveUp, moveDown, moveLeft, moveRight for this to work.
+function keyTyped(){ // tested once per frame, triggered on keystroke
+	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+		         key === 'w'          ||
+		         key === 'W'          ||
+		         key === 'i'          ||
+		         key === 'I') {
+		print('key up');
+		moveUp = true;
+	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+		         key === 's'          ||
+		         key === 'S'          ||
+		         key === 'k'          ||
+		         key === 'K') {
+    print('key down');
+		moveDown = true;
+	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	           key === 'a'          ||
+		         key === 'A'          ||
+		         key === 'j'          ||
+		         key === 'J') {
+		print('key left');
+		moveLeft = true;
+	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+		         key === 'd'          ||
+		         key === 'D'          ||
+		         key === 'l'          ||
+		         key === 'L') {
+		print('key right');
+		moveRight = true;
+	} else if (key === 't'          ||  // this bit is a little crufty
+						 key === 'T') {
+	  print('t');
+		START = true;
+	} else if (key === 'y') {  // this bit is a little crufty too
+		print('y');
+	}
+  /*
+  // another option for mapping start and select functions
+  if keyCode(71){ // keyCode for 'g' use for 'select' on controller
+   // toggle between Crosser and La Migra highlight selection
+   // can use a counter and modulo and set up an odd or even case
+   // counter+=
+   // if counter%(2) === 0 then do the following
+   // else do the following
+  }
+  if keyCode(72){ // keyCode for 'h' use for 'start' on controller
+   // start the highlighted selection
+  }
+  */
+	return false;
+
+} // end keyTyped
+
+function keyReleased() {
+  if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
+    // need to add here a test for if gamestate === playing (either) then load index.html
+    if (ctr0 % 2 === 0){
+      btn1.changeAnimation('off');
+      btn2.changeAnimation('select');
+    } else if (ctr0 % 2 === 1) {
+      btn1.changeAnimation('select');
+      btn2.changeAnimation('off');
+    }
+    ctr0 = ctr0 +1;
+  }
+  if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
+    if (ctr0 % 2 === 0){
+      btn1.changeAnimation('off');
+      btn2.changeAnimation('blink');
+      window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+    }
+    else if (ctr0 % 2 === 1){
+      btn1.changeAnimation('blink');
+      btn2.changeAnimation('off');
+      window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+    }
+  }
+} // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 // function play( game ){}
