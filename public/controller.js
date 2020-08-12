@@ -142,35 +142,35 @@ return;
 // keyboard mapping W,A,S,D; I,J,K,L; T,Y; as actionable
 // will likely have to pass the values of moveUp, moveDown, moveLeft, moveRight for this to work.
 function keyTyped(){ // tested once per frame, triggered on keystroke
-	if        (keyCode === '38' || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
 		         key === 'w'          ||
 		         key === 'W'          ||
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
 		moveUp = true;
-	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
-		         key === 's'            ||
-		         key === 'S'            ||
-		         key === 'k'            ||
+	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+		         key === 's'          ||
+		         key === 'S'          ||
+		         key === 'k'          ||
 		         key === 'K') {
     print('key down');
 		moveDown = true;
-	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
-	           key === 'a'            ||
-		         key === 'A'            ||
-		         key === 'j'            ||
+	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	           key === 'a'          ||
+		         key === 'A'          ||
+		         key === 'j'          ||
 		         key === 'J') {
 		print('key left');
 		moveLeft = true;
-	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
-		         key === 'd'             ||
-		         key === 'D'             ||
-		         key === 'l'             ||
+	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+		         key === 'd'          ||
+		         key === 'D'          ||
+		         key === 'l'          ||
 		         key === 'L') {
 		print('key right');
 		moveRight = true;
-	} else if (key === 't'  ||  // this bit is a little crufty
+	} else if (key === 't'          ||  // this bit is a little crufty
 						 key === 'T') {
 	  print('t');
 		START = true;
