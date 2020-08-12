@@ -40,9 +40,13 @@ const ONE_UNIT = 32;
 // width and height of screen in pixels
 const WIDTH = 448;
 const HEIGHT = 448;
+//
+//
+let btn1; // sprite container for button art
+let btn2; // sprite container for button art
 // counter to toggle between _crosser.html and _lamigra.html
 let ctr0 = 0;
-/*
+/* ****
 //
 // url targets for invoking _crosser.html or _lamigra.html
 // used by key strokes for 'select' and 'start'
@@ -63,7 +67,7 @@ let url1 = '_lamigra.html';
 //
 let gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
 let moveState = 'idle'; // can be invoked from keyPressed to let carlosmoreno movement be guided by updateSprite
-// /*
+ /*
     // deprecated state variables, still used by controller.js and draw()
 
     let START = false; // to use for button SNES maybe need a reSTART
@@ -78,7 +82,7 @@ let moveState = 'idle'; // can be invoked from keyPressed to let carlosmoreno mo
     let moveIdle = true; // boolean, used for player character idle
     //var dPad; // sprite, container for d pad image, used for touch interaction
     //var start; // sprite, container for start button image
-// */
+ */
 
 //
 //
@@ -274,6 +278,29 @@ function animateSprite(sprite, timing, distance)
 
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
+
+  // create a ui button for game selection for crosser.js
+  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  btn1 = createSprite(224, 160, 180, 180);
+  btn1.addImage('off1', img1);
+  btn1.addImage('on1', img2);
+  btn1.addAnimation('off', img1);
+  btn1.addAnimation('select', img2);
+  btn1.addAnimation('blink', img1,img2,img2,img1);
+  btn1.changeAnimation('select');
+
+  // create a ui button for game selection for lamigra.js
+  img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
+  img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
+  btn2 = createSprite(224, 370, 64, 32);
+  btn2.addImage('off2', img1);
+  btn2.addImage('on2', img2);
+  btn2.addAnimation('off', img1);
+  btn2.addAnimation('select', img2);
+  btn2.addAnimation('blink', img1,img2,img2,img1);
+  btn2.changeAnimation('off');
+
 
 	if (BUGGY){
 	  img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
@@ -700,6 +727,11 @@ function updateStatus(pad){ // tested once per frame
   return;
 }
 
+/*******************************************************
+ *
+ *  keyboard player/user input
+ *
+ */
 
 /**
  *  keyReleased was tested in /public/ui to afford selecting and changing games
@@ -742,6 +774,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'I') {
 		print('key up');
 		carlosmoreno.movementDir = 'up'; //moveUp = true;
+
 	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
 		         key === 's'          ||
 		         key === 'S'          ||
@@ -749,6 +782,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'K') {
     print('key down');
 		carlosmoreno.movementDir = 'down'; //moveDown = true;
+
 	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
 	           key === 'a'          ||
 		         key === 'A'          ||
@@ -756,6 +790,7 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'J') {
 		print('key left');
 		carlosmoreno.movementDir = 'left'; //moveLeft = true;
+
 	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
 		         key === 'd'          ||
 		         key === 'D'          ||
@@ -763,12 +798,15 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'L') {
 		print('key right');
 		carlosmoreno.movementDir = 'right'; //moveRight = true;
+
 	} else if (key === 't'          ||
 						 key === 'T') {
 	  print('t');
 		START = true;
+
 	} else if (key === 'y') {
 		print('y');
+
 	} else {
     carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
   }
