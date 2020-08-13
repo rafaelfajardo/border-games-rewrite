@@ -40,6 +40,10 @@ const ONE_UNIT = 32;
 // width and height of screen in pixels
 const WIDTH = 512;
 const HEIGHT = 544;
+//
+//
+let btn1; // sprite container for button art
+let btn2; // sprite container for button art
 // counter to toggle between _crosser.html and _lamigra.html
 let ctr0 = 1;
 /*
@@ -399,6 +403,28 @@ function preload(){
   let img9;
 
   timeStamp = millis() / 1000 + renderTime;
+
+  // create a ui button for game selection for crosser.js
+  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  btn1 = createSprite(224, 160, 180, 180);
+  btn1.addImage('off1', img1);
+  btn1.addImage('on1', img2);
+  btn1.addAnimation('off', img1);
+  btn1.addAnimation('select', img2);
+  btn1.addAnimation('blink', img1,img2,img2,img1);
+  btn1.changeAnimation('select');
+
+  // create a ui button for game selection for lamigra.js
+  img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
+  img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
+  btn2 = createSprite(224, 370, 64, 32);
+  btn2.addImage('off2', img1);
+  btn2.addImage('on2', img2);
+  btn2.addAnimation('off', img1);
+  btn2.addAnimation('select', img2);
+  btn2.addAnimation('blink', img1,img2,img2,img1);
+  btn2.changeAnimation('off');
 
   /*
    * load and create tierra
@@ -1019,6 +1045,39 @@ function keyReleased (){
 }
 //********************
 */
+
+
+/**
+ *  keyReleased was tested in /public/ui to afford selecting and changing games
+ *  depends on global var ctr0 which is a counter
+ *  depends on global var url0 and url1 which are targets
+ */
+
+function keyReleased() {
+  if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
+    // need to add here a test for if gamestate === playing (either) then load index.html
+    if (ctr0 % 2 === 0){
+      btn1.changeAnimation('off');
+      btn2.changeAnimation('select');
+    } else if (ctr0 % 2 === 1) {
+      btn1.changeAnimation('select');
+      btn2.changeAnimation('off');
+    }
+    ctr0 = ctr0 +1;
+  }
+  if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
+    if (ctr0 % 2 === 0){
+      btn1.changeAnimation('off');
+      btn2.changeAnimation('blink');
+      window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+    }
+    else if (ctr0 % 2 === 1){
+      btn1.changeAnimation('blink');
+      btn2.changeAnimation('off');
+      window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+    }
+  }
+} // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
 function keyTyped(){ // tested once per frame, triggered on keystroke
