@@ -65,7 +65,7 @@ let url1 = '_lamigra.html';
 //
 //  declare state variables
 //
-let gamestate = "startup"; // string variable should only contain 'startup','play','win','lose'
+let gameState = "startup"; // string variable should only contain 'select, startup','play','win','lose'
 let moveState = 'idle'; // can be invoked from keyPressed to let carlosmoreno movement be guided by updateSprite
  /*
     // deprecated state variables, still used by controller.js and draw()
@@ -577,6 +577,38 @@ function setup() {
 
 function draw() {
 	background(255);
+
+  /*
+   * I have commented out the switch statement during the early part of coding
+   *
+  switch (gameState) { // switch is not documented in P5.JS but is part of Javascript
+    case "select":
+      // statements that display select condition, called by keyReleased() 'g'
+      // statements that may alter gameState label and condition
+      // statements that may reload this game
+      // statements that may launch the other game
+      break;
+    case "startup":
+      // statements to display the startup condition
+      // statements that may alter gamestate label and condition
+      break;
+    case "play":
+      // statements that display gameplay
+      break;
+    case "lose":
+      // statements that display loss condition
+      break;
+    case "win":
+      // statements that display win condition
+      break;
+    default:
+      // statements that catch and redirect in case none of the above is true
+      break; // is there a 'break' after 'default'? I forget
+  } */
+
+
+
+
 /*
   // this was the first draft of movement code for carlosmoreno
   // it executed too fast and did not honor his place in the renderQueue[]
