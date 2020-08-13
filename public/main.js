@@ -42,7 +42,7 @@ function preload(){
 
   img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
   img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-  btn2 = createSprite(224, 370, 64, 32);
+  btn2 = createSprite(224, 370, 180, 180);
   btn2.addImage('off2', img1);
   btn2.addImage('on2', img2);
   btn2.addAnimation('off', img1);
@@ -99,12 +99,34 @@ function draw(){
       //console.log(pads);
       //console.log('warning, no gamepads connected');
   	}
-    let browser = navigator.vendor; // window.navigator.vendor may be correct syntax
-    if (browser !== 'Google Inc.'){
-      console.log('warning, wrong browser')
-    }
+
+    /* * * *
+     * This test is necessary for DAM installation for ReVisión in 2021
+     */
+//    let browser = navigator.vendor; // window.navigator.vendor may be correct syntax
+//    if (browser !== 'Google Inc.'){
+//      console.log('warning, wrong browser')
+//    }
+
+
     drawSprites();
 } // end draw
+
+
+//
+//  implementing button clickable UI in index.html + main.js
+//  it's not working yet 
+function mouseClicked(){
+  if (mouseX > 224-90 && mouseX < 224+90 && mouseY > 160-90 && mouseY < 160-90) {
+    btn1.changeAnimation('blink');
+    window.open(url0,"_self");
+  }
+  if (mouseX > 224-90 && mouseX < 224+90 && mouseY > 370-90 && mouseY < 370-90){
+    window.open(url1,"_self");
+  }
+  return false;
+}
+
 
 // udpdateStatus(pad) has been moved to controller.js
 // keyTyped was copied from crosser.js
