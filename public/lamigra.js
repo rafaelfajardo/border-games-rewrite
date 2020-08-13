@@ -62,7 +62,7 @@ let url1 = '_lamigra.html';
 //
 //  define state variables
 //
-let gamestate = "startup"; // variable container should hold string labels "startup", "play", "win", "lose"
+let gameState = "startup"; // variable container should hold string labels "select, startup", "play", "win", "lose"
 let moveState = 'idle'; // container for player character move states can contain 'idle', 'left', 'right'
 let flingEsposas = false; // a boolean for launching handcuffs maybe this needs to be a function?
 let cuffs; // group container for new esposas which will be newSprites
@@ -928,7 +928,13 @@ function draw() {
   /*
    * I have commented out the switch statement during the early part of coding
    *
-  switch (gamestate) { // switch is not documented in P5.JS but is part of Javascript
+  switch (gameState) { // switch is not documented in P5.JS but is part of Javascript
+    case "select":
+      // statements that display select condition, called by keyReleased() 'g'
+      // statements that may alter gameState label and condition
+      // statements that may reload this game
+      // statements that may launch the other game
+      break;
     case "startup":
       // statements to display the startup condition
       // statements that may alter gamestate label and condition
@@ -944,6 +950,7 @@ function draw() {
       break;
     default:
       // statements that catch and redirect in case none of the above is true
+      break; // is there a 'break' after 'default'? I forget 
   } */
 
   // sketch to fling cuffs -- esposas in spanish -- upward
