@@ -115,14 +115,19 @@ function draw(){
 
 //
 //  implementing button clickable UI in index.html + main.js
-//  it's not working yet 
+//  it's not working yet
 function mouseClicked(){
   if (mouseX > 224-90 && mouseX < 224+90 && mouseY > 160-90 && mouseY < 160-90) {
     btn1.changeAnimation('blink');
     window.open(url0,"_self");
+  } else {
+    btn1.changeAnimation('off');
   }
   if (mouseX > 224-90 && mouseX < 224+90 && mouseY > 370-90 && mouseY < 370-90){
+    btn2.changeAnimation('blink');
     window.open(url1,"_self");
+  } else {
+    btn2.changeAnimation('off');
   }
   return false;
 }
