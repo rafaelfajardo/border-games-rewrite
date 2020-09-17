@@ -9,9 +9,10 @@ I've created this repository even though it has come to light that Microsoft and
 * Crosser (2000) is a product of SWEAT 1.0
 * Carmen Escobar
 * Tomás Márquez Carmona
-* Miguel Tarango
-* Marco Ortega
-* Ryan Molloy
+* Miguel Tarango (now MFA)
+* Marco Ortega (now MA)
+* Ryan Molloy (now MFA)
+* Francisco Ortega (now PhD)
 * Rafael Fajardo
 
 ## 2020 Collaborators
