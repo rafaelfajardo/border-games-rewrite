@@ -410,4 +410,12 @@ just now I figured out how to fix carlosmoreno in crosser.js. I had broken him w
 
 I should take the copy of keyTyped() in controller.js and put it into the bottom of main.js. I had put it there thinking it would be a bit of shared code. This was a delusion. Each of the .js files responds to keystrokes differently. It's too much work and creates too tight and interdependence to share this code.
 
+======
+2020 09 17
+Ars Electronica was from September 9-16 online this year. I had to leave the games as a work in progress in the Garden del Rio Grande. I will put language that reflects that in the html pages that are live there.
+
+Today I returned to thinking about the recoding of the games. I spent the last month prepping the beginning of the fall quarter of teaching. It was a grind and I continue to be anxious about it.
+
+======
+
 */
