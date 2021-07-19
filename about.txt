@@ -373,7 +373,6 @@ We have been working from home since 2020 03 18
 Yesterday gitHub desktop had an update that I uploaded.
 Today Atom has an update that I uploaded. It is now 1.47.0
 
-======
 2020 07 28
 last month we were invited to add Crosser & La Migra to an online component of Ars Electronica 2020. Ars Electronica will only need browser-based and keyboard+mouse UI.
 In the last couple of weeks I have had communication with DAM who have realized that we will need to provide a touchless interface for Crosser & La Migra when they are exhibited. The new target exhibition date is 2021 03. For this we are looking at the Leap Motion Controller. I wonder if the clumsiness of the interface can survive in a touchless environment.
@@ -381,7 +380,6 @@ In the last couple of weeks I have had communication with DAM who have realized 
 I have renamed the repository on gitHub to Border-Games-rewrite
 I have rebased the repository on gitHub to default to main branch
 
-======
 2020 08 11
 just now updated my development environment to Atom version 1.50 x64
 In the last few weeks I have added code to the La Migra shell such that the cacahuates, the group of non-player-characters, are added to the renderQueue[]; and, the player character has movement and can fling handcuffs.
@@ -417,5 +415,14 @@ Ars Electronica was from September 9-16 online this year. I had to leave the gam
 Today I returned to thinking about the recoding of the games. I spent the last month prepping the beginning of the fall quarter of teaching. It was a grind and I continue to be anxious about it.
 
 ======
+2021 07 19
+I spent the last ten months teaching and grieving the death of my father from COVID-19. Today reopened components of the project to reorient myself. We have an opening date late in October of 2021. I have not heard from the DAM since the anouncement of the opening date, and a request to update the terms of our loan of the work.
 
+In the interim we have also moved the studio.
+
+Today I opened the UltraLeap website to find they have updated the SDK to only work with Windows 10 and to work only in an idiom of C that they have defined. They do offer legacy SDKs that will still work with JS. I thought I had downloaded their JS dev kit available last year, but I can't find it in the project folders at first glance.
+
+I have to ensure that this note is committed to Main.
+
+======
 */
