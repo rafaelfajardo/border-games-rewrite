@@ -1,7 +1,7 @@
 /* * * * * * * * * * * * * * * *
  *
  *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
- *		there is an accompanying file called "about.js" that contains a partial dev log
+ *		there is an accompanying file called "about.txt" that contains a partial dev log
  *    another partial dev log is found on gitHub
  *    it has come to our attention that gitHub provides technology solutions to DHS and ICE
  *    We DO NOT support ICE and feel trapped in our complicity because of the importance
@@ -950,7 +950,7 @@ function draw() {
       break;
     default:
       // statements that catch and redirect in case none of the above is true
-      break; // is there a 'break' after 'default'? I forget 
+      break; // is there a 'break' after 'default'? I forget
   } */
 
   // sketch to fling cuffs -- esposas in spanish -- upward
