@@ -425,4 +425,16 @@ Today I opened the UltraLeap website to find they have updated the SDK to only w
 I have to ensure that this note is committed to Main.
 
 ======
+2021 07 23
+I spent a couple of hours in the last few days refamiliarizing myself with the project files and organization. I fixed some typos and committed them to a new branch called simply RAF.
+
+I'm still puzzling the interface(s) needed for installation, for online with keyboard, and online with touch.
+
+In December of 2020 I outlined the states that will be invoked by the interface.
+
+For installation we need an Idle/Attract/Not Playing state (0), a Selecting state (1) with two possible sub-states - selecting Crosser or selecting La Migra - which each will launch  the respective URL. Selecting can be invoked from Idle and from within the playing state of each game. I don't know if this means that there needs to be a Playing state (2) at the top level.
+
+This state machine design is feeling opaque to me.
+
+======
 */
