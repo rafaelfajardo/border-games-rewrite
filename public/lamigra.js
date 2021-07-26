@@ -284,7 +284,7 @@ function updateRendering(queue, timing) {
 		// update our index
 		currentIndex = nextIdx;
 
-    // can we test queue[currentIndex] us also part of cacahuates group?
+    // can we test queue[currentIndex] is also part of cacahuates group?
     // and then pass queue[currentIndex] to a function that
     // randomizes its direction for the next cycle?
     // if current sprite is in cacahuates
