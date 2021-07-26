@@ -305,7 +305,7 @@ function updateRendering(queue, timing) {
 
 /**********************************************
  * is called by updateRendering()
- *
+ * stops the animation of the sprite in the queue at the current index
  */
 function stopSprite(sprite) {
 	console.log('stopping ' + sprite.name);
