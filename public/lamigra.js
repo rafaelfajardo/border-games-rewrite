@@ -264,8 +264,9 @@ function checkCuffsJurisdiction(sprite, myQueue, qIdx){
   }
 }
 //*/
-/**
- * this takes a rendering queue and updates positions based on how much
+/************************************************************
+ * this function takes/receives a rendering queue and timing;
+ * and, updates positions based on how much
  * time has elapsed at this point in the game
  * @param {A queue of sprites to render} queue
  * @param {How long we spend at each sprite drawing} timing
