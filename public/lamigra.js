@@ -49,7 +49,7 @@ let ctr0 = 1;
 /*
 //
 // url targets using absolute paths
-// likely necessary for installation contexts with local a server 
+// likely necessary for installation contexts with local a server
 // for invoking _crosser.html or _lamigra.html
 // used by key strokes for 'select' and 'start'
 let url  = "http://localhost:8080/index.html";
@@ -602,6 +602,7 @@ function preload(){
   img1 = loadImage('img-lamigra/marialucia-2_10.png');
   maluciadepieles.addAnimation('muerto', img1,img1,img1,img1);
   maluciadepieles.changeAnimation('down');
+  maluciadepieles.setDefaultCollider();
   maluciadepieles.debug = BUGGY; // set the debug flag
   renderQueue.push(maluciadepieles); // add maluciadepieles to renderQueue []
   maluciadepieles.name = 'maluciadepieles';
@@ -635,6 +636,7 @@ function preload(){
   img1 = loadImage('img-lamigra/nita-2_10.png');
   nitamoreno.addAnimation('muerto', img1,img1,img1,img1);
   nitamoreno.changeAnimation('down');
+  nitamoreno.setDefaultCollider();
   nitamoreno.debug = BUGGY; // set the debug flag
   renderQueue.push(nitamoreno); // add nitamoreno to renderQueue []
   nitamoreno.name = 'nitamoreno';
@@ -669,6 +671,7 @@ function preload(){
   img1 = loadImage('img-lamigra/lino-2_10.png');
   linodepieles.addAnimation('muerto', img1,img1,img1,img1);
   linodepieles.changeAnimation('down');
+  linodepieles.setDefaultCollider();
   linodepieles.debug = BUGGY; // set the debug flag
   renderQueue.push(linodepieles);
   linodepieles.name = 'linodepieles';
@@ -702,6 +705,7 @@ function preload(){
   img1 = loadImage('img-lamigra/Carlos-Moreno-3_15.png');
   carlosmoreno.addAnimation('muerto', img1,img1,img1,img1);
   carlosmoreno.changeAnimation('down');
+  carlosmoreno.setDefaultCollider();
   carlosmoreno.debug = BUGGY; // set the debug flag
   renderQueue.push(carlosmoreno); // add carlosmoreno to renderQueue []
   carlosmoreno.name = 'carlosmoreno';
@@ -736,6 +740,7 @@ function preload(){
   img1 = loadImage('img-lamigra/marcia-3_10.png');
   marcia.addAnimation('muerto',img1,img1,img1,img1);
   marcia.changeAnimation('down');
+  marcia.setDefaultCollider();
   marcia.debug = BUGGY; // set the debug flag
   renderQueue.push(marcia); // add marcia to renderQueue []
   marcia.name = 'marcia';
@@ -770,6 +775,7 @@ function preload(){
   img1 = loadImage('img-lamigra/patricia-2_10.png');
   patricialamachona.addAnimation('muerto',img1,img1,img1,img1);
   patricialamachona.changeAnimation('down');
+  patricialamachona.setDefaultCollider();
   patricialamachona.debug = BUGGY; // set the debug flag
   renderQueue.push(patricialamachona); // add patricialamachona to renderQueue []
   patricialamachona.name = 'patricialamachona';
@@ -804,6 +810,7 @@ function preload(){
   img1 = loadImage('img-lamigra/porcupine_14.png');
   puercoespin.addAnimation('muerto',img1,img1,img1,img1);
   puercoespin.changeAnimation('down');
+  puercoespin.setDefaultCollider();
   puercoespin.debug = BUGGY; // set the debug flag
   renderQueue.push(puercoespin); // add puercoespin to renderQueue []
   puercoespin.name = 'puercoespin';
@@ -838,6 +845,7 @@ function preload(){
   img1 = loadImage('img-lamigra/X-rodar-3_10-copy-b.png');
   xrodar.addAnimation('muerto',img1,img1,img1,img1); // resolved - image is not transparent
   xrodar.changeAnimation('down');
+  xrodar.setDefaultCollider();
   xrodar.debug = BUGGY; // set the debug flag
   renderQueue.push(xrodar); // add xrodar to renderQueue []
   xrodar.name = 'xrodar';
