@@ -48,7 +48,9 @@ let btn2; // sprite container for button art
 let ctr0 = 1;
 /*
 //
-// url targets for invoking _crosser.html or _lamigra.html
+// url targets using absolute paths
+// likely necessary for installation contexts with local a server 
+// for invoking _crosser.html or _lamigra.html
 // used by key strokes for 'select' and 'start'
 let url  = "http://localhost:8080/index.html";
 let url0 = "http://localhost:8080/_crosser.html";
