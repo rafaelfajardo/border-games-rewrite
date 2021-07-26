@@ -179,7 +179,8 @@ function calculateSubtiming(sprite, timing)
 	return timing / total_units;
 }
 /**********
- * this takes a sprite in the renderQueue[] that is
+ * this function is called by checkForPeanutSprite(sprite)
+ * this takes/receives a sprite in the renderQueue[] that is
  * also a member of cacahuates [] (a play.p5.js group entity)
  * and sets its movementDir attribute according to a random scheme
  * @param {The sprite to set movementDir for} sprite
