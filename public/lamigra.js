@@ -303,6 +303,10 @@ function updateRendering(queue, timing) {
 	}
 }
 
+/**********************************************
+ * is called by updateRendering()
+ *
+ */
 function stopSprite(sprite) {
 	console.log('stopping ' + sprite.name);
 	if (sprite.animation) {
