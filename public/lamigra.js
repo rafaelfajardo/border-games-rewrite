@@ -229,7 +229,9 @@ function checkForPeanutSprite(sprite){
     for (let cIdx =0; cIdx < cacahuates.length; cIdx++){
       if (sprite === cacahuates[cIdx]){
         console.log(sprite.name+' is in cacahuates');
-        setPeanutMovementDir(sprite);
+        if ( !(sprite.collide(cacahuates[cIdx])) ){  //this is a test to see if they collide
+          setPeanutMovementDir(sprite); // this line works outside if-sprite-collide test
+        }
         //return true;
       }
     }
