@@ -771,31 +771,45 @@ function updateStatus(pad){ // tested once per frame
  *  depends on global var url0 and url1 which are targets
  */
 
-function keyReleased() {
-  if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
-    // need to add here a test for if gamestate === playing (either) then load index.html
-    if (ctr0 % 2 === 0){
-      btn1.changeAnimation('off');
-      btn2.changeAnimation('select');
-    } else if (ctr0 % 2 === 1) {
-      btn1.changeAnimation('select');
-      btn2.changeAnimation('off');
-    }
-    ctr0 = ctr0 +1;
-  }
-  if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-    if (ctr0 % 2 === 0){
-      btn1.changeAnimation('off');
-      btn2.changeAnimation('blink');
-      window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
-    }
-    else if (ctr0 % 2 === 1){
-      btn1.changeAnimation('blink');
-      btn2.changeAnimation('off');
-      window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
-    }
-  }
-} // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
+ function keyReleased() {
+   if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
+     // need to add here a test for if gamestate === playing (either) then load index.html
+
+     // deprecating attempt to get Select UI in this window
+     /*
+     if (ctr0 % 2 === 0){
+       btn1.changeAnimation('off');
+       btn2.changeAnimation('select');
+     } else if (ctr0 % 2 === 1) {
+       btn1.changeAnimation('select');
+       btn2.changeAnimation('off');
+     }
+     ctr0 = ctr0 +1;
+     */
+
+     // open the Select url which should be index.html
+     window.open(url, "_self");
+   }
+   if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
+
+     // deprecating attempt to get Select and Start UI in this window
+     /*
+     if (ctr0 % 2 === 0){
+       btn1.changeAnimation('off');
+       btn2.changeAnimation('blink');
+       window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+     }
+     else if (ctr0 % 2 === 1){
+       btn1.changeAnimation('blink');
+       btn2.changeAnimation('off');
+       window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+     }
+     */
+
+     // Start key will reload and hence restart this window
+     window.open(url0, '_self')
+   }
+ } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
 function keyTyped(){ // tested once per frame, triggered on keystroke
