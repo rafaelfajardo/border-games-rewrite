@@ -179,7 +179,8 @@ function calculateSubtiming(sprite, timing)
 	return timing / total_units;
 }
 /**********
- * this takes a sprite in the renderQueue[] that is
+ * this function is called by checkForPeanutSprite(sprite)
+ * this takes/receives a sprite in the renderQueue[] that is
  * also a member of cacahuates [] (a play.p5.js group entity)
  * and sets its movementDir attribute according to a random scheme
  * @param {The sprite to set movementDir for} sprite
@@ -263,8 +264,9 @@ function checkCuffsJurisdiction(sprite, myQueue, qIdx){
   }
 }
 //*/
-/**
- * this takes a rendering queue and updates positions based on how much
+/************************************************************
+ * this function takes/receives a rendering queue and timing;
+ * and, updates positions based on how much
  * time has elapsed at this point in the game
  * @param {A queue of sprites to render} queue
  * @param {How long we spend at each sprite drawing} timing
@@ -283,7 +285,7 @@ function updateRendering(queue, timing) {
 		// update our index
 		currentIndex = nextIdx;
 
-    // can we test queue[currentIndex] us also part of cacahuates group?
+    // can we test queue[currentIndex] is also part of cacahuates group?
     // and then pass queue[currentIndex] to a function that
     // randomizes its direction for the next cycle?
     // if current sprite is in cacahuates
@@ -301,13 +303,19 @@ function updateRendering(queue, timing) {
 	}
 }
 
+/**********************************************
+ * is called by updateRendering()
+ * stops the animation of the sprite in the queue at the current index
+ */
 function stopSprite(sprite) {
 	console.log('stopping ' + sprite.name);
 	if (sprite.animation) {
 		sprite.animation.stop();
 	}
 }
-/**
+
+/**********************************************************
+ * is called by updateRendering() and receives a sprite in the queue
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
 function updateSprite(sprite) {
