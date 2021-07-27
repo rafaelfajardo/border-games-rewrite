@@ -437,4 +437,10 @@ For installation we need an Idle/Attract/Not Playing state (0), a Selecting stat
 This state machine design is feeling opaque to me.
 
 ======
+2021 07 27
+The last couple of days I edited and added comments to lamigra.js to help me understand the render queue better with the hopes of figuring out where the collision detection should go.
+
+I also realized that it would be simpler to invoke index.html any time a player wishes to select which game to play. I have modified the keyReleased() function in crosser.js and lamigra.js to that end.
+
+======
 */
