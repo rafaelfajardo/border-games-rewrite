@@ -209,7 +209,8 @@ function stopSprite(sprite) {
 		sprite.animation.stop();
 	}
 }
-/**
+/***********************************************************************
+ * is called by updateRendering() and receives a sprite in the render queue 
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
 function updateSprite(sprite) {
