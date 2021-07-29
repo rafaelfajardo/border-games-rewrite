@@ -177,9 +177,12 @@ function calculateSubtiming(sprite, timing)
 }
 
 
-/**
- * this takes a rendering queue and updates positions based on how much
+/*******************************************************************
+ * is called from the draw() loop
+ * this takes/receives a rendering queue and a timing
+ * and updates positions based on how much
  * time has elapsed at this point in the game
+ * it calls upon updateSprite() and stopSprite()
  * @param {A queue of sprites to render} queue
  * @param {How long we spend at each sprite drawing} timing
  */
@@ -210,7 +213,7 @@ function stopSprite(sprite) {
 	}
 }
 /***********************************************************************
- * is called by updateRendering() and receives a sprite in the render queue 
+ * is called by updateRendering() and receives a sprite in the render queue
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
 function updateSprite(sprite) {
