@@ -443,4 +443,8 @@ The last couple of days I edited and added comments to lamigra.js to help me und
 I also realized that it would be simpler to invoke index.html any time a player wishes to select which game to play. I have modified the keyReleased() function in crosser.js and lamigra.js to that end.
 
 ======
+2021 08 03
+I have closed some issues on gitHub and opened many more. These have been focused on the collision detections that need to be added to lamigra.js. I've tried to be detailed, but see that I'm fatiguing and getting sloppy so I'm going to pursue another task for a while.
+
+======
 */
