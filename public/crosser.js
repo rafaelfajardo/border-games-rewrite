@@ -207,7 +207,7 @@ function updateRendering(queue, timing) {
 }
 
 function stopSprite(sprite) {
-	console.log('stopping ' + sprite.name);
+	//console.log('stopping ' + sprite.name);
 	if (sprite.animation) {
 		sprite.animation.stop();
 	}
@@ -217,7 +217,7 @@ function stopSprite(sprite) {
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
 function updateSprite(sprite) {
-	console.log('updating ' + sprite.name);
+	//console.log('updating ' + sprite.name);
 	if (sprite.animation) {
 		sprite.animation.play();
 	}
@@ -691,11 +691,12 @@ function draw() {
 	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
 	let pad0 = pads[0]; // limit to first pad connected
 	if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
+		console.log(pad0)
 		updateStatus(pad0); // will need an updateStatus() function
 	} else { // what to do if pad0 is null, which is to say there is no gamepad connected
 		// use keyboard
 		// or use touches
-
+		console.log("did not find gamepad (probably need to click it so it wakes up)")
 	}
 
 	// update what we're rendering and how frequently
@@ -716,47 +717,36 @@ function updateStatus(pad){ // tested once per frame
    *  axis default values are -0.00392 so can test for greater and less than that.
    *  need a test to enclose it
    */
-  if (pad.id === 'usb gamepad (Vendor: 0810 Product: e501)'){
-    	if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left';} //{ moveLeft = true;} else { moveLeft = false; }
-    	if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right';} //{ moveRight = true;} else { moveRight = false; }
-    	if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up';} //{ moveUp = true;} else { moveUp = false; }
-    	if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down';} //{ moveDown = true;} else { moveDown = false; }
-    	if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
+
+  /*
+   * Regular expressions to search the ID string given to us by the manufacturer
+   * so that we can identify which controller is which and behave accordingly.
+   */
+  let nintendoId = /Vendor\: 0810 Product\: e501/;
+  let standardID = /Vendor\: 0583 Product\: 2060/;
+
+	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
+    	if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('NES d-pad left pressed');} // NES d-pad left
+    	if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('NES d-pad right pressed');} // NES d-pad right
+    	if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up'; print('NES d-pad up pressed');} // NES d-pad up
+    	if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down'; print('NES d-pad down pressed');} // NES d-pad down
+    	if (pad.buttons[0].value === 1.00){ print('NES B button pressed'); } // NES B button
     	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
       // does not have buttons 2-7 inclusive
-    	if (pad.buttons[8].value === 1.00){ print('NES Select pressed'); } // NES Select button
-    	if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } // NES Start button
+    	if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
+    	if (pad.buttons[9].value === 1.00){ window.open(url0, '_self'); print('NES Start pressed'); } // NES Start button
   }
-
-  /**
-   *  This bit is specific to the Exlene SNES style controller,
-   *  USB Gamepad (Vendor: 0079 Product: 0011)
-   *
-   */
-   if (pad.id === 'USB Gamepad (Vendor: 0079 Product: 0011)'){
-     if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
-     if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
-     if (pad.axis[1] === -1.0000){carlosmoreno.movementDir = 'up';}
-     if (pad.axis[1] ===  1.0000){carlosmoreno.movementDir = 'down';}
-     if (pad.buttons[0] === 1.000){carlosmoreno.movementDir = 'right';} // SNES A button
-     if (pad.buttons[1] === 1.000){carlosmoreno.movementDir = 'down';} // SNES B button
-     if (pad.buttons[2] === 1.000){carlosmoreno.movementDir = 'up';} // SNES X button
-     if (pad.buttons[3] === 1.000){carlosmoreno.movementDir = 'left';} // SNES Y button
-     if (pad.buttons[4] === 1.000){carlosmoreno.movementDir = '';} // SNES left shoulder button
-     if (pad.buttons[5] === 1.000){carlosmoreno.movementDir = '';} // SNES right shoulder button
-//     if (pad.buttons[6] === 1.000){carlosmoreno.movementDir = '';} // not mapped
-//     if (pad.buttons[7] === 1.000){carlosmoreno.movementDir = '';} // not mapped
-     if (pad.buttons[8] === 1.000){carlosmoreno.movementDir = '';} // SNES select button
-     if (pad.buttons[9] === 1.000){carlosmoreno.movementDir = '';} // SNES start button
-
-   }
 
   /**
    *  This bit is specific to the Buffalo SNES style controller,
    *  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
    *  need a test to enclose it. Axis defaults are 0.00392 (positive values)
    */
-   if (pad.id === 'USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)'){ // this line would test which controller ID is connected
+   if (pad.id.match(standardID)) { // this matches the id against the controller ID value
+       if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
+       if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
+       if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up'; print('Buffalo SNES d-pad up pressed');} // SNES d-pad leftward
+       if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down'; print('Buffalo SNES d-pad down pressed');} // SNES d-pad leftward
        if (pad.buttons[0].value === 1){ print('SNES B-button pressed');}
        if (pad.buttons[1].value === 1){ print('SNES A-button pressed');}
        if (pad.buttons[2].value === 1){ print('SNES Y-button pressed');}
@@ -765,8 +755,8 @@ function updateStatus(pad){ // tested once per frame
        if (pad.buttons[5].value === 1){ print('SNES R-button pressed');}
        if (pad.buttons[6].value === 1){ print('SNES L-button pressed');} // redundant mapping
        if (pad.buttons[7].value === 1){ print('SNES R-button pressed');} // redundant mapping
-       if (pad.buttons[8].value === 1){ print('SNES SELECT button pressed');}
-       if (pad.buttons[9].value === 1){ print('SNES START button pressed');}
+       if (pad.buttons[8].value === 1){ window.open(url, "_self"); print('SNES SELECT button pressed');}
+       if (pad.buttons[9].value === 1){ window.open(url0, '_self'); print('SNES START button pressed');}
        if (pad.buttons[10].value === 1){ print('unmapped button 10');} // I haven't found a signal on this button[index]
        if (pad.buttons[11].value === 1){ print('unmapped button 11');} // I haven't found a signal on this button[index]
        if (pad.buttons[12].value === 1){ print('SNES D-pad up pressed');} // redundant with axes 1 (Y-value)
@@ -774,6 +764,30 @@ function updateStatus(pad){ // tested once per frame
        if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
        if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
     }
+    /**
+     *  This bit is specific to the Exlene SNES style controller,
+     *  USB Gamepad (Vendor: 0079 Product: 0011)
+     *  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
+     */
+  /**
+     let exlene = /Vendor\: 0079 Product\: 0011/;
+     if (pad.id.match(exlene) ){
+       if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
+       if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
+       if (pad.axis[1] === -1.0000){carlosmoreno.movementDir = 'up';}
+       if (pad.axis[1] ===  1.0000){carlosmoreno.movementDir = 'down';}
+       if (pad.buttons[0] === 1.000){carlosmoreno.movementDir = 'right';} // SNES A button
+       if (pad.buttons[1] === 1.000){carlosmoreno.movementDir = 'down';} // SNES B button
+       if (pad.buttons[2] === 1.000){carlosmoreno.movementDir = 'up';} // SNES X button
+       if (pad.buttons[3] === 1.000){carlosmoreno.movementDir = 'left';} // SNES Y button
+       if (pad.buttons[4] === 1.000){carlosmoreno.movementDir = '';} // SNES left shoulder button
+       if (pad.buttons[5] === 1.000){carlosmoreno.movementDir = '';} // SNES right shoulder button
+  //     if (pad.buttons[6] === 1.000){carlosmoreno.movementDir = '';} // not mapped
+  //     if (pad.buttons[7] === 1.000){carlosmoreno.movementDir = '';} // not mapped
+       if (pad.buttons[8] === 1.000){carlosmoreno.movementDir = '';} // SNES select button
+       if (pad.buttons[9] === 1.000){carlosmoreno.movementDir = '';} // SNES start button
+     }
+  */
 
    /**
     * This bit is specific to the Sony PS3 contoller,
@@ -834,7 +848,7 @@ function updateStatus(pad){ // tested once per frame
      */
 
      // Start key will reload and hence restart this window
-     window.open(url0, '_self')
+     window.open(url0, '_self');
    }
  } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
