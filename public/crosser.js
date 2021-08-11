@@ -733,8 +733,8 @@ function updateStatus(pad){ // tested once per frame
     	if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
     	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
       // does not have buttons 2-7 inclusive
-    	if (pad.buttons[8].value === 1.00){ print('NES Select pressed'); } // NES Select button
-    	if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } // NES Start button
+    	if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
+    	if (pad.buttons[9].value === 1.00){ window.open(url0, '_self'); print('NES Start pressed'); } // NES Start button
   }
 
   /**
@@ -742,7 +742,8 @@ function updateStatus(pad){ // tested once per frame
    *  USB Gamepad (Vendor: 0079 Product: 0011)
    *
    */
-   if (pad.id === 'USB Gamepad (Vendor: 0079 Product: 0011)'){
+   let exlene = /Vendor\: 0079 Product\: 0011/;
+   if (pad.id.match(exlene) ){
      if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
      if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
      if (pad.axis[1] === -1.0000){carlosmoreno.movementDir = 'up';}
@@ -843,7 +844,7 @@ function updateStatus(pad){ // tested once per frame
      */
 
      // Start key will reload and hence restart this window
-     window.open(url0, '_self')
+     window.open(url0, '_self');
    }
  } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
