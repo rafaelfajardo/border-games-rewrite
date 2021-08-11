@@ -134,6 +134,34 @@ let currentIndex = 0;
 // timestamp for our indexing into the queue
 let timeStamp = 0;
 
+// create an input queue so we can store the last two inputs we received
+let inputQueue = [];
+let maxQueueSize = 2;
+
+/**
+ * Adds an input into our queue, which we can remove with dequeueInput
+ * @param {The input queue (which should be an array) that we're using} inputQueue
+ * @param {The next input to add} item 
+ */
+function addInput(inputQueue, item) {
+  if (inputQueue.length < maxQueueSize)
+  {
+	  inputQueue.push(item);
+  } else {
+	  inputQueue.shift();
+	  inputQueue.push(item);
+  }
+}
+
+/**
+ * This function removes the next item (i.e., the oldest) in the queue
+ * @param {The input queue we're using (which should be an array)} inputQueue 
+ * @returns {The item we just removed from the queue}
+ */
+function dequeueInput(inputQueue) {
+	return inputQueue.shift();
+}
+
 /**
  * Calculates the new index from the current one, based on
  * what our current index is, how many elements are in the queue
@@ -220,6 +248,20 @@ function updateSprite(sprite) {
 	//console.log('updating ' + sprite.name);
 	if (sprite.animation) {
 		sprite.animation.play();
+	}
+
+	// here we check to see if the sprite is actually the player that we're updating
+	if (sprite.isPlayer == true)
+	{
+		// if so, get the next movement that's been queued up
+		let dir = dequeueInput(inputQueue)
+		if (dir)
+		{
+			sprite.movementDir = dir;
+		} else {
+			// and if there's no movement, then just be idle
+			sprite.movementDir = 'idle';
+		}
 	}
 
 	switch (sprite.movementDir) {
@@ -324,9 +366,12 @@ function preload() {
 	carlosmoreno.addImage('surprise',img);
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
-  carlosmoreno.animation.playing = false;
-  carlosmoreno.movementDir = 'idle';
-  carlosmoreno.speed = 32;
+  	carlosmoreno.animation.playing = false;
+  	carlosmoreno.movementDir = 'idle';
+  	carlosmoreno.speed = 32;
+	// added an isPlayer field so we can easily detect when we're working with the player
+	// sprite--this is needed to handle the input queue
+	carlosmoreno.isPlayer = true;
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
@@ -709,27 +754,54 @@ function draw() {
 
 } // end draw loop
 
-
+// this is the input delay for reading input--during this delay, we stop reading input, after it's
+// elapsed, we'll start reading input again. The delay should only be set after some input has been
+// read
+const inputDelay = 1;
+let readInputAt = 0; 
 function updateStatus(pad){ // tested once per frame
-  /**
-   *  This bit is specific to an NES style controller,
-   *  usb gamepad (Vendor: 0810 Product: e501)
-   *  axis default values are -0.00392 so can test for greater and less than that.
-   *  need a test to enclose it
-   */
+	// get the current time
+	const time = millis() / 1000;
 
-  /*
-   * Regular expressions to search the ID string given to us by the manufacturer
-   * so that we can identify which controller is which and behave accordingly.
-   */
-  let nintendoId = /Vendor\: 0810 Product\: e501/;
-  let standardID = /Vendor\: 0583 Product\: 2060/;
+	// don't get controller input while we're waiting
+	if (time < readInputAt)
+		return;
+
+	/**
+	 *  This bit is specific to an NES style controller,
+	 *  usb gamepad (Vendor: 0810 Product: e501)
+	 *  axis default values are -0.00392 so can test for greater and less than that.
+	 *  need a test to enclose it
+	 */
+
+	/*
+	* Regular expressions to search the ID string given to us by the manufacturer
+	* so that we can identify which controller is which and behave accordingly.
+	*/
+	let nintendoId = /Vendor\: 0810 Product\: e501/;
+	let standardID = /Vendor\: 0583 Product\: 2060/;
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
-    	if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left';} //{ moveLeft = true;} else { moveLeft = false; }
-    	if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right';} //{ moveRight = true;} else { moveRight = false; }
-    	if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up';} //{ moveUp = true;} else { moveUp = false; }
-    	if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down';} //{ moveDown = true;} else { moveDown = false; }
+    	if (pad.axes[0] === -1.00000)
+		{
+			readInputAt = time + inputDelay;
+			addInput(inputQueue, 'left');
+		} //{ moveLeft = true;} else { moveLeft = false; }
+    	if (pad.axes[0] ===  1.00000)
+		{
+			readInputAt = time + inputDelay;
+			addInput(inputQueue, 'right');
+		} //{ moveRight = true;} else { moveRight = false; }
+    	if (pad.axes[1] === -1.00000)
+		{
+			readInputAt = time + inputDelay;
+			addInput(inputQueue, 'up');
+		} //{ moveUp = true;} else { moveUp = false; }
+    	if (pad.axes[1] ===  1.00000)
+		{
+			readInputAt = time + inputDelay;
+			addInput(inputQueue, 'down');
+		} //{ moveDown = true;} else { moveDown = false; }
     	if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
     	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
       // does not have buttons 2-7 inclusive
