@@ -729,6 +729,29 @@ function updateStatus(pad){ // tested once per frame
   }
 
   /**
+   *  This bit is specific to the Exlene SNES style controller,
+   *  USB Gamepad (Vendor: 0079 Product: 0011)
+   *
+   */
+   if (pad.id === 'USB Gamepad (Vendor: 0079 Product: 0011)'){
+     if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
+     if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
+     if (pad.axis[1] === -1.0000){carlosmoreno.movementDir = 'up';}
+     if (pad.axis[1] ===  1.0000){carlosmoreno.movementDir = 'down';}
+     if (pad.buttons[0] === 1.000){carlosmoreno.movementDir = 'right';} // SNES A button
+     if (pad.buttons[1] === 1.000){carlosmoreno.movementDir = 'down';} // SNES B button
+     if (pad.buttons[2] === 1.000){carlosmoreno.movementDir = 'up';} // SNES X button
+     if (pad.buttons[3] === 1.000){carlosmoreno.movementDir = 'left';} // SNES Y button
+     if (pad.buttons[4] === 1.000){carlosmoreno.movementDir = '';} // SNES left shoulder button
+     if (pad.buttons[5] === 1.000){carlosmoreno.movementDir = '';} // SNES right shoulder button
+//     if (pad.buttons[6] === 1.000){carlosmoreno.movementDir = '';} // not mapped
+//     if (pad.buttons[7] === 1.000){carlosmoreno.movementDir = '';} // not mapped
+     if (pad.buttons[8] === 1.000){carlosmoreno.movementDir = '';} // SNES select button
+     if (pad.buttons[9] === 1.000){carlosmoreno.movementDir = '';} // SNES start button
+
+   }
+
+  /**
    *  This bit is specific to the Buffalo SNES style controller,
    *  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
    *  need a test to enclose it. Axis defaults are 0.00392 (positive values)
