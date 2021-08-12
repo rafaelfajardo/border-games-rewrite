@@ -273,6 +273,9 @@ function updateSprite(sprite) {
 			// and if there's no movement, then just be idle
 			sprite.movementDir = 'idle';
 		}
+
+		// now we'll update the direction that Carlos is facing based on the next movement
+		updateCarlosDirection(sprite);
 	}
 
 	switch (sprite.movementDir) {
@@ -309,6 +312,36 @@ function updateSprite(sprite) {
 		default:
 			console.log('movementDir of ' + sprite.name + ' is undefined as \'' + sprite.movementDir + '\'');
 				break;
+	}
+}
+
+/**
+ * This function changes the direction that Carlos is facing and is
+ * called by updateSprite whenever the player (Carlos) is being drawn
+ * @param {A Sprite (play.p5) that has animations for Carlos} carlos 
+ */
+function updateCarlosDirection(carlos)
+{
+	switch (carlos.movementDir) 
+	{
+		case 'left':
+			carlos.changeAnimation('walk_left');
+			break;
+		case 'right':
+			carlos.changeAnimation('walk_right');
+			break;
+		case 'up':
+			carlos.changeAnimation('walk_up');
+			break;
+		case 'down':
+			carlos.changeAnimation('walk_down');
+			break;
+		case 'surprised':
+			carlos.changeAnimation('surprised');
+			break;
+		default: 
+			// do nothing in the default state so the last animation remains
+			break;
 	}
 }
 
@@ -375,6 +408,22 @@ function preload() {
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	carlosmoreno.addImage('surprise',img);
+	// adding multiple animations for the various ways that Carlos moves around
+	carlosmoreno.addAnimation('walk_left', 
+							  'img/carlosmoreno-3_07.png',
+							  'img/carlosmoreno-3_08.png');
+	carlosemoreno.addAnimation('walk_right', 
+							   'img/carlosmoreno-3_05.png',
+							   'img/carlosmoreno-3_06.png');
+	carlosemoreno.addAnimation('walk_up', 
+							   'img/carlosmoreno-3_03.png',
+	   						   'img/carlosmoreno-3_04.png');
+	carlosemoreno.addAnimation('walk_down', 
+							   'img/carlosmoreno-3_01.png',
+	   						   'img/carlosmoreno-3_02.png');
+	carlosemoreno.addAnimation('surprised',
+							   'img/carlosmoreno-3_09.png');
+	
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
   	carlosmoreno.animation.playing = false;
