@@ -987,22 +987,31 @@ function updateStatus(pad){ // tested once per frame
  } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
-function keyTyped(){ // tested once per frame, triggered on keystroke
+function keyPressed(){ // tested once per frame, triggered on keystroke
+	// get the current time
+	const time = millis() / 1000;
+
+	// don't get keyboard input while we're waiting
+	if (time < readInputAt)
+		return;
+
 	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
 		         key === 'w'          ||
 		         key === 'W'          ||
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
-		carlosmoreno.movementDir = 'up'; //moveUp = true;
+		addInput(inputQueue, 'up')
+		readInputAt = time + inputDelay;
 
 	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
 		         key === 's'          ||
 		         key === 'S'          ||
 		         key === 'k'          ||
 		         key === 'K') {
-    print('key down');
-		carlosmoreno.movementDir = 'down'; //moveDown = true;
+    	print('key down');
+		addInput(inputQueue, 'down')
+		readInputAt = time + inputDelay;
 
 	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
 	           key === 'a'          ||
@@ -1010,7 +1019,8 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'j'          ||
 		         key === 'J') {
 		print('key left');
-		carlosmoreno.movementDir = 'left'; //moveLeft = true;
+		addInput(inputQueue, 'left')
+		readInputAt = time + inputDelay;
 
 	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
 		         key === 'd'          ||
@@ -1018,19 +1028,18 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'l'          ||
 		         key === 'L') {
 		print('key right');
-		carlosmoreno.movementDir = 'right'; //moveRight = true;
+		addInput(inputQueue, 'right')
+		readInputAt = time + inputDelay;
 
-	} else if (key === 't'          ||
-						 key === 'T') {
-	  print('t');
+	} else if (key === 't'		||
+			   key === 'T') {
+	  	print('t');
 		START = true;
-
 	} else if (key === 'y') {
 		print('y');
-
 	} else {
-    carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
-  }
-	return false;
+    	carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
+  	}
+return false;	
 
 } // end keyTyped
