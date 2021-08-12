@@ -218,19 +218,29 @@ function updateRendering(queue, timing) {
 	// calculate the next index
 	const nextIdx = getNextIndex(queue, currentIndex, timing);
 
-	// if the index hasn't changed, then we're really done at this point
+	// if the index has changed, then we need to update the sprite
 	if (nextIdx !== currentIndex)
 	{
+    // we want to move the sprite at the end of its time frame,
+    // so it animates in place first, then moves
+    updateSprite(queue[currentIndex]);
 		// stop the sprite animations
 		if (currentIndex >= 0) {
-			stopSprite(queue[currentIndex]);
+      // only stop the sprite (animation) if the next index is
+      // not this sprite, since we duplicate them
+      if (queue[currentIndex] !== queue[nextIdx]) {
+			     stopSprite(queue[currentIndex]);
+      }
 		}
+
 		// update our index
 		currentIndex = nextIdx;
-		// now update the sprite, which will cause it to move if its movement
-		// speed is something > 0
-
-		updateSprite(queue[currentIndex])
+    const sprite = queue[currentIndex];
+		// now start the animation of this sprite
+    if (sprite.animation && !sprite.animation.playing) {
+      //sprite.animation.goToFrame(0);
+      sprite.animation.play();
+    }
 	}
 }
 
@@ -238,6 +248,7 @@ function stopSprite(sprite) {
 	//console.log('stopping ' + sprite.name);
 	if (sprite.animation) {
 		sprite.animation.stop();
+    sprite.animation.goToFrame(0);
 	}
 }
 /***********************************************************************
@@ -262,6 +273,9 @@ function updateSprite(sprite) {
 			// and if there's no movement, then just be idle
 			sprite.movementDir = 'idle';
 		}
+
+		// now we'll update the direction that Carlos is facing based on the next movement
+		updateCarlosDirection(sprite);
 	}
 
 	switch (sprite.movementDir) {
@@ -290,13 +304,43 @@ function updateSprite(sprite) {
 			break;
 		case 'down':
 			sprite.position.y = sprite.position.y + sprite.speed;
+			break;	
+		case 'idle':
+		sprite.position.x = sprite.position.x;
+		sprite.position.y = sprite.position.y;
+		break;
+		default:
+			console.log('movementDir of ' + sprite.name + ' is undefined as \'' + sprite.movementDir + '\'');
+				break;
+	}
+}
+
+/**
+ * This function changes the direction that Carlos is facing and is
+ * called by updateSprite whenever the player (Carlos) is being drawn
+ * @param {A Sprite (play.p5) that has animations for Carlos} carlos 
+ */
+function updateCarlosDirection(carlos)
+{
+	switch (carlos.movementDir) 
+	{
+		case 'left':
+			carlos.changeAnimation('walkleft');
 			break;
-    case 'idle':
-      sprite.position.x = sprite.position.x;
-      sprite.position.y = sprite.position.y;
-      break;
-    default:
-			console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
+		case 'right':
+			carlos.changeAnimation('walkright');
+			break;
+		case 'up':
+			carlos.changeAnimation('walkup');
+			break;
+		case 'down':
+			carlos.changeAnimation('walkdown');
+			break;
+		case 'surprise':
+			carlos.changeAnimation('surprise');
+			break;
+		default: 
+			// do nothing in the default state so the last animation remains
 			break;
 	}
 }
@@ -325,27 +369,27 @@ function animateSprite(sprite, timing, distance)
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
 
-  // create a ui button for game selection for crosser.js
-  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-  btn1 = createSprite(224, 160, 180, 180);
-  btn1.addImage('off1', img1);
-  btn1.addImage('on1', img2);
-  btn1.addAnimation('off', img1);
-  btn1.addAnimation('select', img2);
-  btn1.addAnimation('blink', img1,img2,img2,img1);
-  btn1.changeAnimation('select');
+	// create a ui button for game selection for crosser.js
+	img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+	img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+	btn1 = createSprite(224, 160, 180, 180);
+	btn1.addImage('off1', img1);
+	btn1.addImage('on1', img2);
+	btn1.addAnimation('off', img1);
+	btn1.addAnimation('select', img2);
+	btn1.addAnimation('blink', img1,img2,img2,img1);
+	btn1.changeAnimation('select');
 
-  // create a ui button for game selection for lamigra.js
-  img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
-  img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-  btn2 = createSprite(224, 370, 64, 32);
-  btn2.addImage('off2', img1);
-  btn2.addImage('on2', img2);
-  btn2.addAnimation('off', img1);
-  btn2.addAnimation('select', img2);
-  btn2.addAnimation('blink', img1,img2,img2,img1);
-  btn2.changeAnimation('off');
+	// create a ui button for game selection for lamigra.js
+	img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
+	img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
+	btn2 = createSprite(224, 370, 64, 32);
+	btn2.addImage('off2', img1);
+	btn2.addImage('on2', img2);
+	btn2.addAnimation('off', img1);
+	btn2.addAnimation('select', img2);
+	btn2.addAnimation('blink', img1,img2,img2,img1);
+	btn2.changeAnimation('off');
 
 
 	if (BUGGY){
@@ -363,7 +407,10 @@ function preload() {
 	// load images and create sprite for player character Carlos Moreno
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
+	// changed the order only so that idle is the starting image
+	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
 	carlosmoreno.addImage('surprise',img);
+
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
   	carlosmoreno.animation.playing = false;
@@ -390,6 +437,8 @@ function preload() {
 	carlosmoreno.addAnimation('walkleft',img1,img2);
 	// end load images for player character Carlos Moreno
 
+	carlosmoreno.addAnimation('surprise', 'img/carlos-moreno-3_09.png');
+
 	// load and create cadaver
 	img1 = loadImage('img/cadaverA.png');
 	img2 = loadImage('img/cadaverB.png');
@@ -398,7 +447,7 @@ function preload() {
 	cadaver.setDefaultCollider();
 	cadaver.animation.playing = false;
 	cadaver.movementDir = 'right';
-	cadaver.speed = 32;
+	cadaver.speed = ONE_UNIT;
 	// add the cadaver to the queue
 	renderQueue.push(cadaver);
 	cadaver.name = 'cadaver';
@@ -407,7 +456,7 @@ function preload() {
 	// load and create gato1
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato1 = createSprite(32*2+16,32*9);
+	gato1 = createSprite(32*2+16,32*8+24);
 	gato1.addAnimation('float',img1,img1,img2);
 	gato1.setDefaultCollider();
 	gato1.animation.playing = false;
@@ -423,7 +472,7 @@ function preload() {
 	// load and create gato2
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato2 = createSprite(32*7+16,32*9);
+	gato2 = createSprite(32*7+16,32*8+24);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.animation.playing = false;
 	gato2.setDefaultCollider();
@@ -439,12 +488,12 @@ function preload() {
 	// load and create waterLog
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
-	waterLog = createSprite(32*8,32*11);
+	waterLog = createSprite(32*8,32*10+4);
 	waterLog.addAnimation('float',img1,img1,img2,img2);
 	waterLog.setCollider('rectangle',0,16,64,32);
 	waterLog.animation.playing = false;
 	waterLog.movementDir = 'right';
-	waterLog.speed = 32;
+	waterLog.speed = ONE_UNIT;
 	// add waterlog to the queue
 	renderQueue.push(waterLog);
 	waterLog.name = 'waterlog';
@@ -453,7 +502,7 @@ function preload() {
 	// load and create llanta
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
-	llanta = createSprite(32*12,32*9);
+	llanta = createSprite(32*12,32*8+12);
 	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
 	llanta.animation.playing = false;
 	llanta.movementDir = 'right';
@@ -474,7 +523,7 @@ function preload() {
 	migraMan2.animation.playing = false;
 	migraMan2.setDefaultCollider();
 	migraMan2.movementDir = 'right';
-	migraMan2.speed = 32;
+	migraMan2.speed = ONE_UNIT;
 	// migra hombre 2
 	renderQueue.push(migraMan2);
 	migraMan2.name = 'migraHombre2';
@@ -488,7 +537,7 @@ function preload() {
 	migraMan1.animation.playing = false;
 	migraMan1.setDefaultCollider();
 	migraMan1.movementDir = 'right';
-	migraMan1.speed = 32;
+	migraMan1.speed = ONE_UNIT;
 	// migra hombre 1
 	renderQueue.push(migraMan1);
 	migraMan1.name = 'migraHombre1';
@@ -563,7 +612,7 @@ function preload() {
 	migraMan3.animation.playing = false;
 	migraMan3.setDefaultCollider();
 	migraMan3.movementDir = 'right';
-	migraMan3.speed = 32;
+	migraMan3.speed = ONE_UNIT;
 	// migra hombre 3
 	renderQueue.push(migraMan3);
 	migraMan3.name = 'migraHombre3';
@@ -591,6 +640,7 @@ function setup() {
 
 	tierra.changeImage('frontera'); // this image should change to 'asarco' to default to gamestate='startup'
 
+/*
 	carlosmoreno.debug = BUGGY;
 	cadaver.debug = BUGGY;
 	gato1.debug = BUGGY;
@@ -604,6 +654,7 @@ function setup() {
 	visa.debug = BUGGY;
 	migraHelo2.debug = BUGGY;
 	migraMan3.debug = BUGGY;
+  */
 
 
 	// I've reordered the adds to match the render queue order
@@ -925,7 +976,7 @@ function updateStatus(pad){ // tested once per frame
  } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
-function keyPressed(){ // tested once per frame, triggered on keystroke
+function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
 	const time = millis() / 1000;
 
