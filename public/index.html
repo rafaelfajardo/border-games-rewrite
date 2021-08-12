@@ -1,23 +1,113 @@
 <html>
     <head>
+      <meta charset="utf-8">
+      <title>Crosser™(2020) & La Migra™(2020)</title>
+<!--
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/installationStyle.css">
     <script type="text/javascript" src="http://localhost:8080/lib/p5.js"></script>
+    <script type="text/javascript" src="http://localhost:8080/lib/p5.dom.js"></script>
     <script type="text/javascript" src="http://localhost:8080/lib/p5.play.js"></script>
     <script type="text/javascript" src="http://localhost:8080/main.js"></script>
     <script type="text/javascript" src="http://localhost:8080/controller.js"></script>
-    
-    <title>Crosser™(2000) and La Migra™(2001)</title>
+  -->
+<!--
+    <link rel="stylesheet" type="text/css" href="http://sudor.org/garden-del-rio-grande/installationStyle.css">
+    <script type="text/javascript" src="http://sudor.org/garden-del-rio-grande/lib/p5.js"></script>
+    <script type="text/javascript" src="http://sudor.org/garden-del-rio-grande/lib/p5.play.js"></script>
+    <script type="text/javascript" src="http://sudor.org/garden-del-rio-grande/main.js"></script>
+    <script type="text/javascript" src="http://localhost:8080/controller.js"></script>
+-->
+    <link rel="stylesheet" type="text/css" href="installationStyle.css">
+    <script type="text/javascript" src="lib/p5.js"></script>
+    <script type="text/javascript" src="lib/p5.play.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+<!--    <script type="text/javascript" src="controller.js"></script>
+-->
+
     </head>
+
     <body>
-        <!--
-            just using a simple button for launching each of these, using
-            a form allows us to give a url to go to when clicked
-        -->
-        <form action="_crosser.html">
-            <input type="submit" value="Play Crosser™ (2000)"></input>
-        </form>
-        <form action="_lamigra.html">
-            <input type="submit" value="Play La Migra™ (2001)"></input>
-        </form>
+      <div id = "envelope">
+        <!-- envelope will comprise 3 columns -->
+        <div id = "left-column">
+          <!-- items for left column will go here -->
+
+          <!-- deprecating mouse click link with image for installation -->
+          <!--
+          <a href="_crosser.html">
+          <img src="assets/CrosserButtonAllFrames.gif"
+               alt="Click here for Crosser game"
+               name="CrosserButton"
+               width="180"
+               height="180"
+               border="0">
+          </a>
+          -->
+            <h1>Play Crosser & La Migra</h1>
+            <p>Crosser puts you, the player, in a position to help Carlos Moreno cross the Rio Grande and seek a better life.</p>
+            <p>La Migra places you, the player, inside a state of the art SUV patrolling the border during Operation Hold The Line.</p>
+            <h4>How to play:</h4>
+            <p>during development the keyboard is expected. The "g" key will call up this selection window. Pressing "g" again will toggle between Crosser and La Migra and the respective icon will be highlighted to the right. Press "h" to call up the highlighted game and begin playing.
+<!--          <h1>Garden del Rio Grande</h1>
+          <p>This garden is about reclaiming spaces, telling our stories, and resisting digital colonialism.</p>
+          <p>In this part of the garden you will find a diptych, two videogames — Crosser and La Migra — that form a greater whole. The diptych deals with immigration and its responses across the US/Mexico border at El Paso and Ciudad Juarez</p>
+          <p>Crosser puts you, the player, in a position to help Carlos Moreno cross the Rio Grande and seek a better life. Click on the button above to play Crosser.</p>
+          <p>La Migra places you, the player, inside a state of the art SUV patrolling the border during Operation Hold The Line. Click on the button on the right side of the screen to play La Migra.</p>
+          <p>These games are currently being rewritten from the ground up and are presented here as a work in progress. They are not yet fully functional.</p>
+-->
+
+<!--          <p> Help Carlos Moreno in Crosser or take on the role of a border agent in “La Migra"</p>
+          <p>Crosser uses the “d-pad” or directional pad, which is the game jargon for the cross-shaped button on the left with arrow symbols embossed on it. This moves/controls the player character, Carlos Moreno, left, right, up, down to move Carlos across the border into the US. Avoid getting hit by the floating debris, you will have to start over. Avoid getting caught by la migra, you will be sent back. Sometimes la migra won't look, be quick. Get to the green card on the other side to pursue the American dream.</p>
+          <p>La Migra uses the d-pad, and the A-button on the right. The d-pad moves the player character, the Ford Explorer, left and right. The A-button launches hand-cuffs upward. and press the START button on gamepad. <br> Use the Y- and A-buttons to patrol the border. Use the X-button to fling handcuffs at the alien invaders. Catch as many as you can to be named agent of the month.</p>
+          <p>Use the “select” button to call up a menu screen to allow a player to choose between the two games and the start button to start to play.</p>
+-->                  </div>
+        <div id = "canvas-column" align = "center"> <!-- the align attribute is deprecated in html5 but the css is inpenetrable -->
+          <!-- p5js canvas element will go here -->
+        </div>
+        <div id = "right-column">
+          <!-- items for right column will go here -->
+
+          <!-- deprecating mouse click link with image for installation -->
+          <!--
+          <a href="_lamigra.html">
+          <img src="assets/LaMigraAllFrames.gif"
+               alt="Click here for La Migra game"
+               name="LaMigraButton"
+               width="180"
+               height="180"
+               border="0">
+          </a>
+          -->
+          <h4>Credits</h4>
+          <p>Crosser and La Migra are a product of SWEAT, a loose collaborative dedicated to the creation of socially conscious games.</p>
+          <p> The members of SWEAT that have contributed to Crosser and La Migra are: <ul><li>Francisco Ortega-Grimaldo, <li>Carmen Escobar, <li>Miguel Tarango, <li>Marco Ortega, <li>Ryan Molloy, <li>Tomás Márquez-Carmona, <li>Scott Leutenegger, <li>Chris GauthierDickey, <li>and Rafael Fajardo.</ul></p>
+          <!--
+              These two following paragraphs are appropriate for online but not for exhibition
+
+          <p> We are open source on <a href = "https://github.com/rafaelfajardo/border-games-rewrite" target="_blank" rel = "noopener noreferrer"> gitHub </a>.</p>
+          <p>Abolish ICE.
+            [<a href="https://www.vice.com/en_us/article/7x5d9y/github-ceo-says-beholden-to-microsofts-position-on-working-with-ice-immigration-customs-enforcement" target="_blank" rel="noopener noreferrer">1</a>]
+            [<a href="https://www.vice.com/en_us/article/wjw4az/internal-email-github-plans-to-renew-ice-immigration-customs-enforcement-contract" target="_blank" rel="noopener noreferrer">2</a>]
+          </p>
+          </-->
+          <!--
+              just using a simple button for launching each of these, using
+              a form allows us to give a url to go to when clicked
+              form has been replaced by window in p5js files
+              form required mouse click
+              window can be invoked by an event in p5js
+
+          <form action="_crosser.html">
+              <input type="submit" value="Play Crosser™ (2000)"></input>
+          </form>
+          <form action="_lamigra.html">
+              <input type="submit" value="Play La Migra™ (2001)"></input>
+
+          </form>
+          -->
+
+        </div>
+      </div>
     </body>
 
 </html>

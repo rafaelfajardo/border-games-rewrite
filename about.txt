@@ -366,4 +366,85 @@ I have restarted the npm live-server on the new local directory.
 I have to orient Scott Leutenegger to the project and try to organize the work.
 
 
+======
+2020 05 19
+the changes have been recorded in the gitHub changelog. I want to know how to export these.
+We have been working from home since 2020 03 18
+Yesterday gitHub desktop had an update that I uploaded.
+Today Atom has an update that I uploaded. It is now 1.47.0
+
+2020 07 28
+last month we were invited to add Crosser & La Migra to an online component of Ars Electronica 2020. Ars Electronica will only need browser-based and keyboard+mouse UI.
+In the last couple of weeks I have had communication with DAM who have realized that we will need to provide a touchless interface for Crosser & La Migra when they are exhibited. The new target exhibition date is 2021 03. For this we are looking at the Leap Motion Controller. I wonder if the clumsiness of the interface can survive in a touchless environment.
+
+I have renamed the repository on gitHub to Border-Games-rewrite
+I have rebased the repository on gitHub to default to main branch
+
+2020 08 11
+just now updated my development environment to Atom version 1.50 x64
+In the last few weeks I have added code to the La Migra shell such that the cacahuates, the group of non-player-characters, are added to the renderQueue[]; and, the player character has movement and can fling handcuffs.
+
+I modified the renderQueue[] function updateSprite() to allow for idle cases. I have not back-propagated this modification to crosser.js
+
+I have spent several days trying to figure out the best place to test the y position of the esposas/cuffs so that they disappear at the border.
+
+I still have to add collision detection to La Migra.
+
+I have worked to edit the HTML files that frame the games. I grabbed legacy art for buttons and dropped them into the appropriate DIVs in the html files. I changed all of the URLs referenced in html and js from absolute to relative paths so as to ease uploading to server. I confirmed that the relative paths work with our localhost on node.js server
+
+Because Ars Electronica requires a web presentation for novices, it may be that I need to bring back the UI Form html elements that Chris had explored. That had been deprecated for DAM because it required a mouse click that couldn't be mapped to a SNES gamepad through JS and (AND) still work as a d-pad. It had to be one or the other.
+
+The DAM installation will be March 2021 at the earliest, and will now have to be touchless. I proposed several solutions, but the most likely will be Leap Motion Controller. It has a JS library and several proof-of-concept examples with P5.js that I have forked in the editor.
+
+I was asked once again about hardware specs for DAM. I had been told that they had particular hardware in their inventory and had been designing toward that specification. They have been instructed by their Exec Director to use all new hardware in the newly remodeled spaces in the Martin/Ponti building. I offered a set of possibilities with price-points. I mentioned the cool little windows machine I have from MinisForum. They were intrigues. I tried to load Node.JS and NPM and caused an infinite loop. I attempted a clean install of Windows 10. The links provided by MinisForum didn't work and so I downloaded a version from Microsoft. It did not load the WiFi drivers and so I'm in the middle of learning how to load only those drivers and ensure they are appropriate for the onboard hardware. It may not be the way to go. I aspire to serve the games via Raspberry Pi. However, the need for a contactless or touchless interface during pandemic times will likely demand a system with higher hardware specifications in the realm of a Mac Mini or a NUC, as a baseline.
+
+It feels like I have to have contingency UIs for all possible cases.
+
+I pruned all of my branches except for main, and created a new branch called ArsElectronica, where I have been pushing my experiments for the last week. I think I have to merge everything I have for the last two weeks to main now.
+
+======
+2020 08 12
+just now I figured out how to fix carlosmoreno in crosser.js. I had broken him when I had added him to the renderQueue[]. He still isn't perfect, but he is better. Since he now honors is place on the renderQueue[] the player has to button mash to get him to respond. This more closely approximates the original.
+
+I should take the copy of keyTyped() in controller.js and put it into the bottom of main.js. I had put it there thinking it would be a bit of shared code. This was a delusion. Each of the .js files responds to keystrokes differently. It's too much work and creates too tight and interdependence to share this code.
+
+======
+2020 09 17
+Ars Electronica was from September 9-16 online this year. I had to leave the games as a work in progress in the Garden del Rio Grande. I will put language that reflects that in the html pages that are live there.
+
+Today I returned to thinking about the recoding of the games. I spent the last month prepping the beginning of the fall quarter of teaching. It was a grind and I continue to be anxious about it.
+
+======
+2021 07 19
+I spent the last ten months teaching and grieving the death of my father from COVID-19. Today reopened components of the project to reorient myself. We have an opening date late in October of 2021. I have not heard from the DAM since the anouncement of the opening date, and a request to update the terms of our loan of the work.
+
+In the interim we have also moved the studio.
+
+Today I opened the UltraLeap website to find they have updated the SDK to only work with Windows 10 and to work only in an idiom of C that they have defined. They do offer legacy SDKs that will still work with JS. I thought I had downloaded their JS dev kit available last year, but I can't find it in the project folders at first glance.
+
+I have to ensure that this note is committed to Main.
+
+======
+2021 07 23
+I spent a couple of hours in the last few days refamiliarizing myself with the project files and organization. I fixed some typos and committed them to a new branch called simply RAF.
+
+I'm still puzzling the interface(s) needed for installation, for online with keyboard, and online with touch.
+
+In December of 2020 I outlined the states that will be invoked by the interface.
+
+For installation we need an Idle/Attract/Not Playing state (0), a Selecting state (1) with two possible sub-states - selecting Crosser or selecting La Migra - which each will launch  the respective URL. Selecting can be invoked from Idle and from within the playing state of each game. I don't know if this means that there needs to be a Playing state (2) at the top level.
+
+This state machine design is feeling opaque to me.
+
+======
+2021 07 27
+The last couple of days I edited and added comments to lamigra.js to help me understand the render queue better with the hopes of figuring out where the collision detection should go.
+
+I also realized that it would be simpler to invoke index.html any time a player wishes to select which game to play. I have modified the keyReleased() function in crosser.js and lamigra.js to that end.
+
+======
+2021 08 03
+I have closed some issues on gitHub and opened many more. These have been focused on the collision detections that need to be added to lamigra.js. I've tried to be detailed, but see that I'm fatiguing and getting sloppy so I'm going to pursue another task for a while.
+
+======
 */

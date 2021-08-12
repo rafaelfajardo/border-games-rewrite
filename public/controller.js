@@ -57,10 +57,10 @@
  * B15: Axis-0, x-axis rightward 0 1 (redundant? but useful)
  *
  * The d-pad is digital, not analog, on this device. (NB verify?)
- * The redundant mapping of the d-pad to buttons is useful for Crosser and La Migra 
+ * The redundant mapping of the d-pad to buttons is useful for Crosser and La Migra
  * because the gamepad object value is simple 0 or 1 rather than a floating point.
  *
- * There is logic available to isolate a single button push 
+ * There is logic available to isolate a single button push
  * rather than return true for multiple frames because the cycles are so fast:
  * https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API
  * It creates a "newPress" boolean variable to execute new presses instead of press-and-hold situations.
@@ -138,61 +138,7 @@ function updateStatus(pad){ // tested once per frame, should be called from draw
 return;
 }
 
-// keyTyped was copied from crosser.js
-// keyboard mapping W,A,S,D; I,J,K,L; T,Y; as actionable
-// will likely have to pass the values of moveUp, moveDown, moveLeft, moveRight for this to work.
-function keyTyped(){ // tested once per frame, triggered on keystroke
-	if        (keyCode === '38' || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
-		         key === 'w'          ||
-		         key === 'W'          ||
-		         key === 'i'          ||
-		         key === 'I') {
-		print('key up');
-		moveUp = true;
-	} else if (keyCode === '40' || //keyCode === 'ArrowDown'  ||
-		         key === 's'            ||
-		         key === 'S'            ||
-		         key === 'k'            ||
-		         key === 'K') {
-    print('key down');
-		moveDown = true;
-	} else if (keyCode === '37' || //key === 'ArrowLeft'  ||
-	           key === 'a'            ||
-		         key === 'A'            ||
-		         key === 'j'            ||
-		         key === 'J') {
-		print('key left');
-		moveLeft = true;
-	} else if (keyCode === '39' || //key === 'ArrowRight'  ||
-		         key === 'd'             ||
-		         key === 'D'             ||
-		         key === 'l'             ||
-		         key === 'L') {
-		print('key right');
-		moveRight = true;
-	} else if (key === 't'  ||  // this bit is a little crufty
-						 key === 'T') {
-	  print('t');
-		START = true;
-	} else if (key === 'y') {  // this bit is a little crufty too
-		print('y');
-	}
-  /*
-  // another option for mapping start and select functions
-  if keyCode(71){ // keyCode for 'g' use for 'select' on controller
-   // toggle between Crosser and La Migra highlight selection
-   // can use a counter and modulo and set up an odd or even case
-   // counter+=
-   // if counter%(2) === 0 then do the following
-   // else do the following
-  }
-  if keyCode(72){ // keyCode for 'h' use for 'start' on controller
-   // start the highlighted selection
-  }
-  */
-	return false;
 
-} // end keyTyped
 
 /* commented out touch UI which may be revisited at a later time
 // touchStarted was copied from crosser.js
@@ -207,7 +153,8 @@ function touchStarted(){
 	sprite center will be 48 x 48
 	controller origin top left corner (conX,conY)
 	d pad button edges can be a multiple of the offsets offX and offY
-	// */
+ */
+  /*
 	let conX = 0;
 	let conY = 448;
 	let offX = 32;
@@ -234,9 +181,9 @@ function touchStarted(){
 		print('touch right');
 		moveRight = true;
 	}
-	return false;
+	//return false; // this statement is being called an illegal return by console on chrome
 } // end touchStarted
-*/ 
+*/
 
 
 
