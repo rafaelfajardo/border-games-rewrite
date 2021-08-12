@@ -325,19 +325,19 @@ function updateCarlosDirection(carlos)
 	switch (carlos.movementDir) 
 	{
 		case 'left':
-			carlos.changeAnimation('walk_left');
+			carlos.changeAnimation('walkleft');
 			break;
 		case 'right':
-			carlos.changeAnimation('walk_right');
+			carlos.changeAnimation('walkright');
 			break;
 		case 'up':
-			carlos.changeAnimation('walk_up');
+			carlos.changeAnimation('walkup');
 			break;
 		case 'down':
-			carlos.changeAnimation('walk_down');
+			carlos.changeAnimation('walkdown');
 			break;
-		case 'surprised':
-			carlos.changeAnimation('surprised');
+		case 'surprise':
+			carlos.changeAnimation('surprise');
 			break;
 		default: 
 			// do nothing in the default state so the last animation remains
@@ -369,34 +369,34 @@ function animateSprite(sprite, timing, distance)
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
 
-  // create a ui button for game selection for crosser.js
-  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-  btn1 = createSprite(224, 160, 180, 180);
-  btn1.addImage('off1', img1);
-  btn1.addImage('on1', img2);
-  btn1.addAnimation('off', img1);
-  btn1.addAnimation('select', img2);
-  btn1.addAnimation('blink', img1,img2,img2,img1);
-  btn1.changeAnimation('select');
+	// create a ui button for game selection for crosser.js
+	img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+	img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+	btn1 = createSprite(224, 160, 180, 180);
+	btn1.addImage('off1', img1);
+	btn1.addImage('on1', img2);
+	btn1.addAnimation('off', img1);
+	btn1.addAnimation('select', img2);
+	btn1.addAnimation('blink', img1,img2,img2,img1);
+	btn1.changeAnimation('select');
 
-  // create a ui button for game selection for lamigra.js
-  img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
-  img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-  btn2 = createSprite(224, 370, 64, 32);
-  btn2.addImage('off2', img1);
-  btn2.addImage('on2', img2);
-  btn2.addAnimation('off', img1);
-  btn2.addAnimation('select', img2);
-  btn2.addAnimation('blink', img1,img2,img2,img1);
-  btn2.changeAnimation('off');
+	// create a ui button for game selection for lamigra.js
+	img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
+	img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
+	btn2 = createSprite(224, 370, 64, 32);
+	btn2.addImage('off2', img1);
+	btn2.addImage('on2', img2);
+	btn2.addAnimation('off', img1);
+	btn2.addAnimation('select', img2);
+	btn2.addAnimation('blink', img1,img2,img2,img1);
+	btn2.changeAnimation('off');
 
 
 	if (BUGGY){
 	  img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
 	} else {
 		img = loadImage('img/frontera-2.png');
-	//}
+	}
 	img1 = loadImage('img/asarco.png'); // asarco.png is the splash/startup screen
 	img2 = loadImage('img/the_end_2.png'); // the_end_2.png is the win screen
 	tierra = createSprite(224,224); // tierra holds the background images
@@ -407,23 +407,10 @@ function preload() {
 	// load images and create sprite for player character Carlos Moreno
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
+	// changed the order only so that idle is the starting image
+	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
 	carlosmoreno.addImage('surprise',img);
-	// adding multiple animations for the various ways that Carlos moves around
-	carlosmoreno.addAnimation('walk_left', 
-							  'img/carlosmoreno-3_07.png',
-							  'img/carlosmoreno-3_08.png');
-	carlosemoreno.addAnimation('walk_right', 
-							   'img/carlosmoreno-3_05.png',
-							   'img/carlosmoreno-3_06.png');
-	carlosemoreno.addAnimation('walk_up', 
-							   'img/carlosmoreno-3_03.png',
-	   						   'img/carlosmoreno-3_04.png');
-	carlosemoreno.addAnimation('walk_down', 
-							   'img/carlosmoreno-3_01.png',
-	   						   'img/carlosmoreno-3_02.png');
-	carlosemoreno.addAnimation('surprised',
-							   'img/carlosmoreno-3_09.png');
-	
+
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
   	carlosmoreno.animation.playing = false;
@@ -449,6 +436,8 @@ function preload() {
 	img2 = loadImage('img/carlos-moreno-3_08.png');
 	carlosmoreno.addAnimation('walkleft',img1,img2);
 	// end load images for player character Carlos Moreno
+
+	carlosmoreno.addAnimation('surprise', 'img/carlos-moreno-3_09.png');
 
 	// load and create cadaver
 	img1 = loadImage('img/cadaverA.png');
@@ -987,7 +976,7 @@ function updateStatus(pad){ // tested once per frame
  } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
-function keyPressed(){ // tested once per frame, triggered on keystroke
+function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
 	const time = millis() / 1000;
 
