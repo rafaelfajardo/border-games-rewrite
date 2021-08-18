@@ -115,8 +115,9 @@ let spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 // will give background image it's own turn since it is a sprite indexed 0
 //will potentiall cause draw loop to speed up as sprites are removed from list
 
-let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
-
+const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
+// turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value 
+const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
 
 
@@ -339,6 +340,7 @@ function updateSprite(sprite) {
 	}
 }
 
+
 /**
  * This function changes the direction that Carlos is facing and is
  * called by updateSprite whenever the player (Carlos) is being drawn
@@ -390,6 +392,8 @@ function animateSprite(sprite, timing, distance)
 	}
 }
 
+// this can be changed to true if you want all collision boxes to be
+// drawn or false to turn it off (generally false for release)
 const ANIM_DELAY = 1;
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
@@ -435,13 +439,13 @@ function preload() {
 	// changed the order only so that idle is the starting image
 	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
 	carlosmoreno.addImage('surprise',img);
-	carlosmoreno.debug = true;
 	
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
 	carlosmoreno.animation.playing = false;
 	carlosmoreno.movementDir = 'idle';
 	carlosmoreno.speed = 32;
+	carlosmoreno.setCollider('rectangle',0,-8,30,48)
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
@@ -478,7 +482,7 @@ function preload() {
 	img2 = loadImage('img/cadaverB.png');
 	cadaver = createSprite(32*1, 32*11);
 	cadaver.addAnimation('float',img1,img1,img1,img2,img1,img2);
-	cadaver.setDefaultCollider();
+	cadaver.setCollider('rectangle',0,0,62,62);
 	cadaver.animation.playing = false;
 	cadaver.movementDir = 'right';
 	cadaver.speed = ONE_UNIT;
@@ -490,9 +494,11 @@ function preload() {
 	// load and create gato1
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato1 = createSprite(32*2+16,32*8+24);
+	//gato1 = createSprite(32*2+16,32*8+24);
+	// createSprite takes the initial x, y position and the width height
+	gato1 = createSprite(32 * 2 + 16, 32 * 9, 32, 64);
 	gato1.addAnimation('float',img1,img2,img1,img2,img1,img2);
-	gato1.setDefaultCollider();
+	gato1.setCollider('rectangle',0,-8,30,46);
 	gato1.animation.playing = false;
 	gato1.movementDir = 'right';
 	//gato1.speed = 32*2;
@@ -506,14 +512,14 @@ function preload() {
 	// load and create gato2
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
-	gato2 = createSprite(32*7+16,32*8+24);
+	gato2 = createSprite(32*7+16,32*9);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.animation.playing = false;
-	gato2.setDefaultCollider();
+	gato2.setCollider('rectangle',0,-8,30,46);
 	gato2.movementDir = 'right';
 	//gato2.speed = 32*2;
 	gato2.speed = ONE_UNIT;
-	// add gato1 to the queue
+	// add gato1 to the queue twice so that it moves two units
 	renderQueue.push(gato2);
 	renderQueue.push(gato2);
 	gato2.name = 'gato2';
@@ -522,9 +528,9 @@ function preload() {
 	// load and create waterLog
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
-	waterLog = createSprite(32*8,32*10+4);
+	waterLog = createSprite(32*8,32*11);
 	waterLog.addAnimation('float',img1,img1,img2,img2);
-	waterLog.setCollider('rectangle',0,16,64,32);
+	waterLog.setCollider('rectangle',0,-16,62,30);
 	waterLog.animation.playing = false;
 	waterLog.movementDir = 'right';
 	waterLog.speed = ONE_UNIT;
@@ -536,13 +542,13 @@ function preload() {
 	// load and create llanta
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
-	llanta = createSprite(32*12,32*8+12);
+	llanta = createSprite(32*12,32*9-2);
 	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
 	llanta.animation.playing = false;
 	llanta.movementDir = 'right';
 	//llanta.speed = 32*2;
 	llanta.speed = ONE_UNIT;
-	llanta.setDefaultCollider();
+	llanta.setCollider('rectangle',0,-14,62,28);
 	// added the tire to the queue, we add it twice so it moves twice in a row
 	renderQueue.push(llanta);
 	renderQueue.push(llanta);
@@ -555,7 +561,7 @@ function preload() {
 	migraMan2 = createSprite(32*7+16,32*7);
 	migraMan2.addAnimation('marchright',img1,img1,img2,img2);
 	migraMan2.animation.playing = false;
-	migraMan2.setDefaultCollider();
+	migraMan2.setCollider('rectangle',0,0,30,62);
 	migraMan2.movementDir = 'right';
 	migraMan2.speed = ONE_UNIT;
 	// migra hombre 2
@@ -569,7 +575,7 @@ function preload() {
 	migraMan1 = createSprite(32*2+16,32*7);
 	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
 	migraMan1.animation.playing = false;
-	migraMan1.setDefaultCollider();
+	migraMan1.setCollider('rectangle',0,0,30,62);
 	migraMan1.movementDir = 'right';
 	migraMan1.speed = ONE_UNIT;
 	// migra hombre 1
@@ -584,7 +590,7 @@ function preload() {
 	migraSUV.addAnimation('drive',img1,img2,img1);
 	migraSUV.animation.playing = false;
 	// migraSUV.mirrorX(-1); // this line is no longer needed, art has been corrected
-	migraSUV.setDefaultCollider(); // with corrected art this should be 64x64
+	migraSUV.setCollider('rectangle', 0,0,64,48); // with corrected art this should be 64x64
 	migraSUV.movementDir = 'left';
 	//migraSUV.speed = 32*3;
 	migraSUV.speed = ONE_UNIT;
@@ -644,7 +650,7 @@ function preload() {
 	migraMan3 = createSprite(32*12+16,32*7)
 	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
 	migraMan3.animation.playing = false;
-	migraMan3.setDefaultCollider();
+	migraMan3.setCollider('rectangle',0,0,30,62);
 	migraMan3.movementDir = 'right';
 	migraMan3.speed = ONE_UNIT;
 	// migra hombre 3
@@ -674,21 +680,20 @@ function setup() {
 	
 	tierra.changeImage('frontera'); // this image should change to 'asarco' to default to gamestate='startup'
 	
-	/*
-	carlosmoreno.debug = BUGGY;
-	cadaver.debug = BUGGY;
-	gato1.debug = BUGGY;
-	gato2.debug = BUGGY;
-	waterLog.debug = BUGGY;
-	llanta.debug = BUGGY;
-	migraMan2.debug = BUGGY;
-	migraMan1.debug = BUGGY;
-	migraSUV.debug = BUGGY;
-	migraHelo1.debug = BUGGY;
-	visa.debug = BUGGY;
-	migraHelo2.debug = BUGGY;
-	migraMan3.debug = BUGGY;
-	*/
+	
+	carlosmoreno.debug = DRAW_COLLIDER;
+	cadaver.debug = DRAW_COLLIDER;
+	gato1.debug = DRAW_COLLIDER;
+	gato2.debug = DRAW_COLLIDER;
+	waterLog.debug = DRAW_COLLIDER;
+	llanta.debug = DRAW_COLLIDER;
+	migraMan2.debug = DRAW_COLLIDER;
+	migraMan1.debug = DRAW_COLLIDER;
+	migraSUV.debug = DRAW_COLLIDER;
+	migraHelo1.debug = DRAW_COLLIDER;
+	visa.debug = DRAW_COLLIDER;
+	migraHelo2.debug = DRAW_COLLIDER;
+	migraMan3.debug = DRAW_COLLIDER;
 	
 	
 	// I've reordered the adds to match the render queue order
@@ -842,7 +847,7 @@ function draw() {
 // this is the input delay for reading input--during this delay, we stop reading input, after it's
 // elapsed, we'll start reading input again. The delay should only be set after some input has been
 // read
-const inputDelay = 1;
+const inputDelay = .5;
 let readInputAt = 0; 
 function updateStatus(pad){ // tested once per frame
 	// get the current time
