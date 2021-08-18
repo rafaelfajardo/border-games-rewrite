@@ -249,6 +249,10 @@ function updateRendering(queue, timing) {
 				sprite.animation.play();
 			}
 		}
+	} else {
+		// in this case, we can do things to the current sprite since
+		// which resides in queue[currentIndex]
+		queue[currentIndex].animation.play();
 	}
 }
 
@@ -293,9 +297,10 @@ function updateSprite(sprite) {
 		
 		// now we'll update the direction that Carlos is facing based on the next movement
 		updateCarlosDirection(sprite);
-	} else if (sprite.animation) {
-		sprite.animation.play();
 	}
+	// } else if (sprite.animation) {
+	// 	sprite.animation.play();
+	// }
 	
 	switch (sprite.movementDir) {
 		case 'left':
@@ -430,6 +435,7 @@ function preload() {
 	// changed the order only so that idle is the starting image
 	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
 	carlosmoreno.addImage('surprise',img);
+	carlosmoreno.debug = true;
 	
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
@@ -485,7 +491,7 @@ function preload() {
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
 	gato1 = createSprite(32*2+16,32*8+24);
-	gato1.addAnimation('float',img1,img1,img2);
+	gato1.addAnimation('float',img1,img2,img1,img2,img1,img2);
 	gato1.setDefaultCollider();
 	gato1.animation.playing = false;
 	gato1.movementDir = 'right';
@@ -537,7 +543,7 @@ function preload() {
 	//llanta.speed = 32*2;
 	llanta.speed = ONE_UNIT;
 	llanta.setDefaultCollider();
-	// added the tire to the queue
+	// added the tire to the queue, we add it twice so it moves twice in a row
 	renderQueue.push(llanta);
 	renderQueue.push(llanta);
 	llanta.name = 'llanta';
