@@ -392,8 +392,6 @@ function animateSprite(sprite, timing, distance)
 	}
 }
 
-// this can be changed to true if you want all collision boxes to be
-// drawn or false to turn it off (generally false for release)
 const ANIM_DELAY = 1;
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
@@ -847,7 +845,7 @@ function draw() {
 // this is the input delay for reading input--during this delay, we stop reading input, after it's
 // elapsed, we'll start reading input again. The delay should only be set after some input has been
 // read
-const inputDelay = .5;
+const INPUT_DELAY = .5;
 let readInputAt = 0; 
 function updateStatus(pad){ // tested once per frame
 	// get the current time
@@ -874,22 +872,22 @@ function updateStatus(pad){ // tested once per frame
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 		if (pad.axes[0] === -1.00000)
 		{
-			readInputAt = time + inputDelay;
+			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'left');
 		} //{ moveLeft = true;} else { moveLeft = false; }
 		if (pad.axes[0] ===  1.00000)
 		{
-			readInputAt = time + inputDelay;
+			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'right');
 		} //{ moveRight = true;} else { moveRight = false; }
 		if (pad.axes[1] === -1.00000)
 		{
-			readInputAt = time + inputDelay;
+			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'up');
 		} //{ moveUp = true;} else { moveUp = false; }
 		if (pad.axes[1] ===  1.00000)
 		{
-			readInputAt = time + inputDelay;
+			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'down');
 		} //{ moveDown = true;} else { moveDown = false; }
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
@@ -1030,7 +1028,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'I') {
 		print('key up');
 		addInput(inputQueue, 'up')
-		readInputAt = time + inputDelay;
+		readInputAt = time + INPUT_DELAY;
 		
 	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
 	key === 's'          ||
@@ -1039,7 +1037,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'K') {
 		print('key down');
 		addInput(inputQueue, 'down')
-		readInputAt = time + inputDelay;
+		readInputAt = time + INPUT_DELAY;
 		
 	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
 	key === 'a'          ||
@@ -1048,7 +1046,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'J') {
 		print('key left');
 		addInput(inputQueue, 'left')
-		readInputAt = time + inputDelay;
+		readInputAt = time + INPUT_DELAY;
 		
 	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
 	key === 'd'          ||
@@ -1057,7 +1055,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'L') {
 		print('key right');
 		addInput(inputQueue, 'right')
-		readInputAt = time + inputDelay;
+		readInputAt = time + INPUT_DELAY;
 		
 	} else if (key === 't'		||
 	key === 'T') {
