@@ -422,12 +422,12 @@ function preload() {
 	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
 	carlosmoreno.addImage('surprise',img);
 
-	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
+	//renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
 	carlosmoreno.animation.playing = false;
 	carlosmoreno.movementDir = 'idle';
 	carlosmoreno.speed = 32;
-	carlosmoreno.setCollider('rectangle',0,-8,30,48)
+	carlosmoreno.setCollider('rectangle',0,-16,28,30)
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
@@ -480,7 +480,7 @@ function preload() {
 	// createSprite takes the initial x, y position and the width height
 	gato1 = createSprite(32 * 2 + 16, 32 * 9, 32, 64);
 	gato1.addAnimation('float',img1,img2,img1,img2,img1,img2);
-	gato1.setCollider('rectangle',0,-8,30,46);
+	gato1.setCollider('rectangle',0,-16,30,30);
 	gato1.animation.playing = false;
 	gato1.movementDir = 'right';
 	//gato1.speed = 32*2;
@@ -497,7 +497,7 @@ function preload() {
 	gato2 = createSprite(32*7+16,32*9);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.animation.playing = false;
-	gato2.setCollider('rectangle',0,-8,30,46);
+	gato2.setCollider('rectangle',0,-16,30,30);
 	gato2.movementDir = 'right';
 	//gato2.speed = 32*2;
 	gato2.speed = ONE_UNIT;
@@ -512,7 +512,7 @@ function preload() {
 	img2 = loadImage('img/waterlogB.png');
 	waterLog = createSprite(32*8,32*11);
 	waterLog.addAnimation('float',img1,img1,img2,img2);
-	waterLog.setCollider('rectangle',0,-16,62,30);
+	waterLog.setCollider('rectangle',0,-16,60,28);
 	waterLog.animation.playing = false;
 	waterLog.movementDir = 'right';
 	waterLog.speed = ONE_UNIT;
@@ -530,7 +530,7 @@ function preload() {
 	llanta.movementDir = 'right';
 	//llanta.speed = 32*2;
 	llanta.speed = ONE_UNIT;
-	llanta.setCollider('rectangle',0,-14,62,28);
+	llanta.setCollider('rectangle',0,-14,60,28);
 	// added the tire to the queue, we add it twice so it moves twice in a row
 	renderQueue.push(llanta);
 	renderQueue.push(llanta);
@@ -543,7 +543,7 @@ function preload() {
 	migraMan2 = createSprite(32*7+16,32*7);
 	migraMan2.addAnimation('marchright',img1,img1,img2,img2);
 	migraMan2.animation.playing = false;
-	migraMan2.setCollider('rectangle',0,0,30,62);
+	migraMan2.setCollider('rectangle',0,-16,30,30);
 	migraMan2.movementDir = 'right';
 	migraMan2.speed = ONE_UNIT;
 	// migra hombre 2
@@ -557,7 +557,7 @@ function preload() {
 	migraMan1 = createSprite(32*2+16,32*7);
 	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
 	migraMan1.animation.playing = false;
-	migraMan1.setCollider('rectangle',0,0,30,62);
+	migraMan1.setCollider('rectangle',0,-16,30,30);
 	migraMan1.movementDir = 'right';
 	migraMan1.speed = ONE_UNIT;
 	// migra hombre 1
@@ -589,7 +589,7 @@ function preload() {
 	migraHelo1 = createSprite(32*5,32*3);
 	migraHelo1.addAnimation('fly',img1,img2,img2,img1,img2);
 	migraHelo1.animation.playing = false;
-	migraHelo1.setDefaultCollider();
+	migraHelo1.setCollider('rectangle', 0,-16,62,30);
 	migraHelo1.movementDir = 'left';
 	//migraHelo1.speed = 32*4;
 	migraHelo1.speed = ONE_UNIT;
@@ -614,7 +614,7 @@ function preload() {
 	migraHelo2 = createSprite(32*10,32*3);
 	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
 	migraHelo2.animation.playing = false;
-	migraHelo2.setDefaultCollider();
+	migraHelo2.setCollider('rectangle', 0,-16,60,30);
 	migraHelo2.movementDir = 'left';
 	//migraHelo2.speed = 32*4;
 	migraHelo2.speed = ONE_UNIT;
@@ -632,7 +632,7 @@ function preload() {
 	migraMan3 = createSprite(32*12+16,32*7)
 	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
 	migraMan3.animation.playing = false;
-	migraMan3.setCollider('rectangle',0,0,30,62);
+	migraMan3.setCollider('rectangle',0,-16,30,30);
 	migraMan3.movementDir = 'right';
 	migraMan3.speed = ONE_UNIT;
 	// migra hombre 3
@@ -641,6 +641,7 @@ function preload() {
 	// end load and create migraMan3
 
 	// carlosmoreno should go here, will it feel different if he doesn't?
+  renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 
 } // end preload
 
