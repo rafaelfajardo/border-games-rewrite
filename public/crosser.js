@@ -244,17 +244,26 @@ function updateRendering(queue, timing) {
 			//sprite.animation.goToFrame(0);
 			if (sprite.isPlayer && sprite.movementDir !== 'idle')
 			{
-				sprite.animation.play();
+				//sprite.animation.play();
+				manuallyAnimate(sprite);
 			}
 			else if (!sprite.isPlayer) {
-				sprite.animation.play();
+				manuallyAnimate(sprite);
 			}
 		}
 	} else {
 		// in this case, we can do things to the current sprite since
 		// which resides in queue[currentIndex]
-		queue[currentIndex].animation.play();
+		manuallyAnimate(queue[currentIndex]);
 	}
+}
+
+/**
+ * Manually animates the sprite by moving to the next frame
+ * @param {The sprite we're animating} sprite 
+ */
+function manuallyAnimate(sprite, looping) {
+	sprite.animation.nextFrame();
 }
 
 /**
@@ -298,10 +307,7 @@ function updateSprite(sprite) {
 		
 		// now we'll update the direction that Carlos is facing based on the next movement
 		updateCarlosDirection(sprite);
-	}
-	// } else if (sprite.animation) {
-	// 	sprite.animation.play();
-	// }
+	} 
 	
 	switch (sprite.movementDir) {
 		case 'left':
@@ -541,7 +547,7 @@ function preload() {
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
 	llanta = createSprite(32*12,32*9-2);
-	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
+	llanta.addAnimation('float',img1,img2,img1,img2,img1,img2);
 	llanta.animation.playing = false;
 	llanta.movementDir = 'right';
 	//llanta.speed = 32*2;
@@ -557,7 +563,7 @@ function preload() {
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
 	migraMan2 = createSprite(32*7+16,32*7);
-	migraMan2.addAnimation('marchright',img1,img1,img2,img2);
+	migraMan2.addAnimation('marchright',img1,img2,img1,img2,img1,img2);
 	migraMan2.animation.playing = false;
 	migraMan2.setCollider('rectangle',0,0,30,62);
 	migraMan2.movementDir = 'right';
@@ -893,8 +899,16 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
-		if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
-		if (pad.buttons[9].value === 1.00){ window.open(url0, '_self'); print('NES Start pressed'); } // NES Start button
+		if (pad.buttons[8].value === 1.00) { 
+			window.open(url, "_self"); 
+			print('NES Select pressed'); 
+			inputQueue = [];
+		} // NES Select button
+		if (pad.buttons[9].value === 1.00) { 
+			window.open(url0, '_self'); 
+			print('NES Start pressed'); 
+			inputQueue = [];
+		} // NES Start button
 	}
 	
 	/**
