@@ -148,10 +148,10 @@ function updateStatus(pad){ // tested once per frame
   let standardID = /Vendor\: 0583 Product\: 2060/;
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
-    	if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('NES d-pad left pressed');} // NES d-pad left
-    	if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('NES d-pad right pressed');} // NES d-pad right
-    	if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up'; print('NES d-pad up pressed');} // NES d-pad up
-    	if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down'; print('NES d-pad down pressed');} // NES d-pad down
+    	if (pad.axes[0] === -1.00000){print('NES d-pad left pressed'); } // NES d-pad left
+    	if (pad.axes[0] ===  1.00000){print('NES d-pad right pressed'); } // NES d-pad right
+    	if (pad.axes[1] === -1.00000){print('NES d-pad up pressed'); } // NES d-pad up
+    	if (pad.axes[1] ===  1.00000){print('NES d-pad down pressed'); } // NES d-pad down
     	if (pad.buttons[0].value === 1.00){ print('NES B button pressed'); } // NES B button
     	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
       // does not have buttons 2-7 inclusive
@@ -185,18 +185,18 @@ function updateStatus(pad){ // tested once per frame
    *  need a test to enclose it. Axis defaults are 0.00392 (positive values)
    */
    if (pad.id.match(standardID)) { // this matches the id against the controller ID value
-       if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
-       if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
-       if (pad.axes[1] === -1.00000){carlosmoreno.movementDir = 'up'; print('Buffalo SNES d-pad up pressed');} // SNES d-pad leftward
-       if (pad.axes[1] ===  1.00000){carlosmoreno.movementDir = 'down'; print('Buffalo SNES d-pad down pressed');} // SNES d-pad leftward
-       if (pad.buttons[0].value === 1){ print('SNES B-button pressed');}
-       if (pad.buttons[1].value === 1){ print('SNES A-button pressed');}
-       if (pad.buttons[2].value === 1){ print('SNES Y-button pressed');}
-       if (pad.buttons[3].value === 1){ print('SNES X-button pressed');}
-       if (pad.buttons[4].value === 1){ print('SNES L-button pressed');}
-       if (pad.buttons[5].value === 1){ print('SNES R-button pressed');}
-       if (pad.buttons[6].value === 1){ print('SNES L-button pressed');} // redundant mapping
-       if (pad.buttons[7].value === 1){ print('SNES R-button pressed');} // redundant mapping
+       if (pad.axes[0] === -1.00000){print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
+       if (pad.axes[0] ===  1.00000){print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
+       if (pad.axes[1] === -1.00000){print('Buffalo SNES d-pad up pressed');} // SNES d-pad leftward
+       if (pad.axes[1] ===  1.00000){print('Buffalo SNES d-pad down pressed');} // SNES d-pad leftward
+       if (pad.buttons[0].value === 1){ print('Buffalo SNES B-button pressed');}
+       if (pad.buttons[1].value === 1){ print('Buffalo SNES A-button pressed');}
+       if (pad.buttons[2].value === 1){ print('Buffalo SNES Y-button pressed');}
+       if (pad.buttons[3].value === 1){ print('Buffalo SNES X-button pressed');}
+       if (pad.buttons[4].value === 1){ print('Buffalo SNES L-button pressed');}
+       if (pad.buttons[5].value === 1){ print('Buffalo SNES R-button pressed');}
+       if (pad.buttons[6].value === 1){ print('Buffalo SNES L-button pressed');} // redundant mapping
+       if (pad.buttons[7].value === 1){ print('Buffalo SNES R-button pressed');} // redundant mapping
        if (pad.buttons[8].value === 1){
          if (ctr0 % 2 === 0){
            btn1.changeAnimation('off');
@@ -206,7 +206,7 @@ function updateStatus(pad){ // tested once per frame
            btn2.changeAnimation('off');
          }
          ctr0 = ctr0 +1;
-         print('SNES SELECT button pressed');
+         print('Buffalo SNES SELECT button pressed');
         }
        if (pad.buttons[9].value === 1){
          if (ctr0 % 2 === 0){
@@ -219,14 +219,14 @@ function updateStatus(pad){ // tested once per frame
            btn2.changeAnimation('off');
            window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
          }
-         print('SNES START button pressed');
+         print('Buffalo SNES START button pressed');
          }
-       if (pad.buttons[10].value === 1){ print('unmapped button 10');} // I haven't found a signal on this button[index]
-       if (pad.buttons[11].value === 1){ print('unmapped button 11');} // I haven't found a signal on this button[index]
-       if (pad.buttons[12].value === 1){ print('SNES D-pad up pressed');} // redundant with axes 1 (Y-value)
-       if (pad.buttons[13].value === 1){ print('SNES D-pad down pressed');} // redundant with axes 1 (Y-value)
-       if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
-       if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
+       if (pad.buttons[10].value === 1){ print('Buffalo unmapped button 10');} // I haven't found a signal on this button[index]
+       if (pad.buttons[11].value === 1){ print('Buffalo unmapped button 11');} // I haven't found a signal on this button[index]
+       if (pad.buttons[12].value === 1){ print('Buffalo SNES D-pad up pressed');} // redundant with axes 1 (Y-value)
+       if (pad.buttons[13].value === 1){ print('Buffalo SNES D-pad down pressed');} // redundant with axes 1 (Y-value)
+       if (pad.buttons[14].value === 1){ print('Buffalo SNES D-pad left pressed');} // redundant with axes 0 (X-value)
+       if (pad.buttons[15].value === 1){ print('Buffalo SNES D-pad right pressed');} // redundant with axes 0 (X-value)
     }
     /**
      *  This bit is specific to the Exlene SNES style controller,
@@ -246,8 +246,8 @@ function updateStatus(pad){ // tested once per frame
        if (pad.buttons[3] === 1.000){carlosmoreno.movementDir = 'left';} // SNES Y button
        if (pad.buttons[4] === 1.000){carlosmoreno.movementDir = '';} // SNES left shoulder button
        if (pad.buttons[5] === 1.000){carlosmoreno.movementDir = '';} // SNES right shoulder button
-  //     if (pad.buttons[6] === 1.000){carlosmoreno.movementDir = '';} // not mapped
-  //     if (pad.buttons[7] === 1.000){carlosmoreno.movementDir = '';} // not mapped
+       if (pad.buttons[6] === 1.000){carlosmoreno.movementDir = '';} // not mapped
+       if (pad.buttons[7] === 1.000){carlosmoreno.movementDir = '';} // not mapped
        if (pad.buttons[8] === 1.000){carlosmoreno.movementDir = '';} // SNES select button
        if (pad.buttons[9] === 1.000){carlosmoreno.movementDir = '';} // SNES start button
      }
