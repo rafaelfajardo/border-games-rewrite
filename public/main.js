@@ -345,4 +345,3 @@ function keyReleased() {
     }
   }
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
-// function play( game ){}
