@@ -69,22 +69,6 @@ let url1 = '_lamigra.html';
 //
 let gameState = "startup"; // string variable should only contain 'select, startup','play','win','lose'
 let moveState = 'idle'; // can be invoked from keyPressed to let carlosmoreno movement be guided by updateSprite
-/*
-// deprecated state variables, still used by controller.js and draw()
-
-let START = false; // to use for button SNES maybe need a reSTART
-//var SELECT = false; // use button for SNES
-//var shoulderLeft = false; // unused button for SNES
-//var shoulderRight = false; // unused button for SNES
-//var GAMEOVER = false; // may not be best option because a gameover state isn't really what we do
-let moveLeft = false; // boolean, used for player character interaction map to dPad
-let moveRight = false; // boolean
-let moveUp = false; // boolean
-let moveDown = false; // boolean
-let moveIdle = true; // boolean, used for player character idle
-//var dPad; // sprite, container for d pad image, used for touch interaction
-//var start; // sprite, container for start button image
-*/
 
 //
 //
@@ -116,7 +100,7 @@ let spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 //will potentiall cause draw loop to speed up as sprites are removed from list
 
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
-// turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value 
+// turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
 const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
 
@@ -144,7 +128,7 @@ let maxQueueSize = 2;
 /**
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
- * @param {The next input to add} item 
+ * @param {The next input to add} item
  */
 function addInput(inputQueue, item) {
 	if (inputQueue.length < maxQueueSize) {
@@ -157,7 +141,7 @@ function addInput(inputQueue, item) {
 
 /**
  * This function removes the next item (i.e., the oldest) in the queue
- * @param {The input queue we're using (which should be an array)} inputQueue 
+ * @param {The input queue we're using (which should be an array)} inputQueue
  * @returns {The item we just removed from the queue}
  */
 function dequeueInput(inputQueue) {
@@ -176,7 +160,7 @@ function getNextIndex(queue, idx, timing) {
 	// get the time in seconds, with subsecond accuracy
 	const seconds = millis() / 1000;
 	const len = queue.length;
-	
+
 	if (seconds > timeStamp)
 	{
 		// first, update our timeStamp to be in the future
@@ -219,7 +203,7 @@ function calculateSubtiming(sprite, timing)
 function updateRendering(queue, timing) {
 	// calculate the next index
 	const nextIdx = getNextIndex(queue, currentIndex, timing);
-	
+
 	// if the index has changed, then we need to update the sprite
 	if (nextIdx !== currentIndex)
 	{
@@ -234,7 +218,7 @@ function updateRendering(queue, timing) {
 				stopSprite(queue[currentIndex]);
 			}
 		}
-		
+
 		// update our index
 		currentIndex = nextIdx;
 		const sprite = queue[currentIndex];
@@ -259,7 +243,7 @@ function updateRendering(queue, timing) {
 
 /**
  * Turns off the animations on the sprite and rewinds them to the first frame
- * @param {The sprite we're working with} sprite 
+ * @param {The sprite we're working with} sprite
  */
 function stopSprite(sprite) {
 	//console.log('stopping ' + sprite.name);
@@ -269,7 +253,7 @@ function stopSprite(sprite) {
 	}
 }
 /***********************************************************************
- * 
+ *
  * is called by updateRendering() and receives a sprite in the render queue
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
@@ -278,7 +262,7 @@ function updateSprite(sprite) {
 	// if (sprite.animation) {
 	// 	sprite.animation.play();
 	// }
-	
+
 	// here we check to see if the sprite is actually the player that we're updating
 	if (sprite.isPlayer == true)
 	{
@@ -287,7 +271,7 @@ function updateSprite(sprite) {
 		if (dir)
 		{
 			sprite.movementDir = dir;
-			
+
 			sprite.animation.goToFrame(1);
 			sprite.animation.play();
 		} else {
@@ -295,14 +279,14 @@ function updateSprite(sprite) {
 			sprite.movementDir = 'idle';
 			sprite.animation.stop();
 		}
-		
+
 		// now we'll update the direction that Carlos is facing based on the next movement
 		updateCarlosDirection(sprite);
 	}
 	// } else if (sprite.animation) {
 	// 	sprite.animation.play();
 	// }
-	
+
 	switch (sprite.movementDir) {
 		case 'left':
 			sprite.position.x = sprite.position.x - sprite.speed;
@@ -329,7 +313,7 @@ function updateSprite(sprite) {
 			break;
 		case 'down':
 			sprite.position.y = sprite.position.y + sprite.speed;
-			break;	
+			break;
 		case 'idle':
 			sprite.position.x = sprite.position.x;
 			sprite.position.y = sprite.position.y;
@@ -344,11 +328,11 @@ function updateSprite(sprite) {
 /**
  * This function changes the direction that Carlos is facing and is
  * called by updateSprite whenever the player (Carlos) is being drawn
- * @param {A Sprite (play.p5) that has animations for Carlos} carlos 
+ * @param {A Sprite (play.p5) that has animations for Carlos} carlos
  */
 function updateCarlosDirection(carlos)
 {
-	switch (carlos.movementDir) 
+	switch (carlos.movementDir)
 	{
 		case 'left':
 			carlos.changeAnimation('walkleft');
@@ -365,7 +349,7 @@ function updateCarlosDirection(carlos)
 		case 'surprise':
 			carlos.changeAnimation('surprise');
 			break;
-		default: 
+		default:
 			// do nothing in the default state so the last animation remains
 			break;
 	}
@@ -384,7 +368,7 @@ function animateSprite(sprite, timing, distance)
 	const subtiming = calculateSubtiming(sprite, timing);
 	// grab elapsed time
 	const seconds = millis() / 1000;
-	
+
 	if (seconds > subTimestamp) {
 		// slap a new subtimestamp down
 		subTimestamp = seconds + subtiming;
@@ -395,7 +379,7 @@ function animateSprite(sprite, timing, distance)
 const ANIM_DELAY = 1;
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
-	
+
 	// create a ui button for game selection for crosser.js
 	img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
 	img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
@@ -406,7 +390,7 @@ function preload() {
 	btn1.addAnimation('select', img2);
 	btn1.addAnimation('blink', img1,img2,img2,img1);
 	btn1.changeAnimation('select');
-	
+
 	// create a ui button for game selection for lamigra.js
 	img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
 	img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
@@ -417,8 +401,8 @@ function preload() {
 	btn2.addAnimation('select', img2);
 	btn2.addAnimation('blink', img1,img2,img2,img1);
 	btn2.changeAnimation('off');
-	
-	
+
+
 	if (BUGGY){
 		img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
 	} else {
@@ -430,14 +414,14 @@ function preload() {
 	tierra.addImage('frontera',img);
 	tierra.addImage('asarco',img1);
 	tierra.addImage('end',img2);
-	
+
 	// load images and create sprite for player character Carlos Moreno
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	// changed the order only so that idle is the starting image
 	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
 	carlosmoreno.addImage('surprise',img);
-	
+
 	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
 	carlosmoreno.animation.playing = false;
@@ -447,7 +431,7 @@ function preload() {
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
-	
+
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
 	anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
@@ -459,22 +443,22 @@ function preload() {
 	anim = carlosmoreno.addAnimation('walkup',img1,img2);
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
-	
+
 	img1 = loadImage('img/carlos-moreno-3_05.png');
 	img2 = loadImage('img/carlos-moreno-3_06.png');
 	anim = carlosmoreno.addAnimation('walkright',img1,img2);
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
-	
+
 	img1 = loadImage('img/carlos-moreno-3_07.png');
 	img2 = loadImage('img/carlos-moreno-3_08.png');
 	anim = carlosmoreno.addAnimation('walkleft',img2,img1);
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
 	// end load images for player character Carlos Moreno
-	
+
 	carlosmoreno.addAnimation('surprise', 'img/carlos-moreno-3_09.png');
-	
+
 	// load and create cadaver
 	img1 = loadImage('img/cadaverA.png');
 	img2 = loadImage('img/cadaverB.png');
@@ -488,7 +472,7 @@ function preload() {
 	renderQueue.push(cadaver);
 	cadaver.name = 'cadaver';
 	// end load and create cadaver
-	
+
 	// load and create gato1
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
@@ -506,7 +490,7 @@ function preload() {
 	renderQueue.push(gato1);
 	gato1.name = 'gato1';
 	// end load and create gato1
-	
+
 	// load and create gato2
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
@@ -522,7 +506,7 @@ function preload() {
 	renderQueue.push(gato2);
 	gato2.name = 'gato2';
 	// end load and create gato2
-	
+
 	// load and create waterLog
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
@@ -536,7 +520,7 @@ function preload() {
 	renderQueue.push(waterLog);
 	waterLog.name = 'waterlog';
 	// end load and create waterLog
-	
+
 	// load and create llanta
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
@@ -552,7 +536,7 @@ function preload() {
 	renderQueue.push(llanta);
 	llanta.name = 'llanta';
 	// end load and create llanta
-	
+
 	// load and create migraMan2
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
@@ -566,7 +550,7 @@ function preload() {
 	renderQueue.push(migraMan2);
 	migraMan2.name = 'migraHombre2';
 	// end load and create migraman2
-	
+
 	// load and create migraMan1
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
@@ -580,7 +564,7 @@ function preload() {
 	renderQueue.push(migraMan1);
 	migraMan1.name = 'migraHombre1';
 	// end load and create migraMan1
-	
+
 	// load and create migraSUV
 	img1 = loadImage('img/migra_car-1.png');
 	img2 = loadImage('img/migra_car-2.png');
@@ -598,7 +582,7 @@ function preload() {
 	renderQueue.push(migraSUV);
 	migraSUV.name = 'migraSUV';
 	// end load and create migraSUV
-	
+
 	// load and create migraHelo1
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
@@ -616,14 +600,14 @@ function preload() {
 	renderQueue.push(migraHelo1);
 	migraHelo1.name = 'migraHeli1';
 	// end load and create migraHelo1
-	
+
 	// load and create visa
 	img = loadImage('img/visa.png');
 	visa = createSprite(32*5+16,16);
 	visa.addImage('visa',img);
 	visa.setDefaultCollider();
 	// end load and create visa
-	
+
 	// load and create migraHelo2
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
@@ -641,7 +625,7 @@ function preload() {
 	renderQueue.push(migraHelo2);
 	migraHelo2.name = 'migraHeli2';
 	// end load and create migraHelo2
-	
+
 	// load and create migraMan3
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
@@ -655,9 +639,9 @@ function preload() {
 	renderQueue.push(migraMan3);
 	migraMan3.name = 'migraHombre3';
 	// end load and create migraMan3
-	
+
 	// carlosmoreno should go here, will it feel different if he doesn't?
-	
+
 } // end preload
 
 function setup() {
@@ -675,10 +659,10 @@ function setup() {
 	//
 	frameRate(FRAME_RATE); // tried as slow as 1fps
 	background(255);
-	
+
 	tierra.changeImage('frontera'); // this image should change to 'asarco' to default to gamestate='startup'
-	
-	
+
+
 	carlosmoreno.debug = DRAW_COLLIDER;
 	cadaver.debug = DRAW_COLLIDER;
 	gato1.debug = DRAW_COLLIDER;
@@ -692,8 +676,8 @@ function setup() {
 	visa.debug = DRAW_COLLIDER;
 	migraHelo2.debug = DRAW_COLLIDER;
 	migraMan3.debug = DRAW_COLLIDER;
-	
-	
+
+
 	// I've reordered the adds to match the render queue order
 	laMigra = new Group();
 	laMigra.add(cadaver);
@@ -707,14 +691,14 @@ function setup() {
 	laMigra.add(migraHelo1);
 	laMigra.add(migraHelo2);
 	laMigra.add(migraMan3);
-	
+
 	//carlosmoreno.changeImage('facedown');
-	
+
 } // end setup
 
 function draw() {
 	background(255);
-	
+
 	/*
 	* I have commented out the switch statement during the early part of coding
 	*
@@ -742,10 +726,10 @@ function draw() {
 		// statements that catch and redirect in case none of the above is true
 		break; // is there a 'break' after 'default'? I forget
 	} */
-	
-	
-	
-	
+
+
+
+
 	/*
 	// this was the first draft of movement code for carlosmoreno
 	// it executed too fast and did not honor his place in the renderQueue[]
@@ -801,7 +785,7 @@ function draw() {
 		carlosmoreno.changeAnimation ('surprise');
 		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
 		carlosmoreno.position.y = 64*6+32;
-		
+
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
 		cadaver.visible = false;
@@ -819,7 +803,7 @@ function draw() {
 		carlosmoreno.visible = false;
 		tierra.changeImage('end');
 	}
-	
+
 	// experimental code for gamepad
 	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
 	let pad0 = pads[0]; // limit to first pad connected
@@ -831,44 +815,44 @@ function draw() {
 		// or use touches
 		//console.log("did not find gamepad (probably need to click it so it wakes up)")
 	}
-	
+
 	// update what we're rendering and how frequently
 	updateRendering(renderQueue, renderTime);
 	drawSprites();
-	
+
 	// returns carlosmoreno to idle state after an update
 	// effectively slows down carlos and makes him take his turn in the queue
 	if (!keyIsPressed){carlosmoreno.movementDir = 'idle';}
-	
+
 } // end draw loop
 
 // this is the input delay for reading input--during this delay, we stop reading input, after it's
 // elapsed, we'll start reading input again. The delay should only be set after some input has been
 // read
 const INPUT_DELAY = .5;
-let readInputAt = 0; 
+let readInputAt = 0;
 function updateStatus(pad){ // tested once per frame
 	// get the current time
 	const time = millis() / 1000;
-	
+
 	// don't get controller input while we're waiting
 	if (time < readInputAt)
 	return;
-	
+
 	/**
 	*  This bit is specific to an NES style controller,
 	*  usb gamepad (Vendor: 0810 Product: e501)
 	*  axis default values are -0.00392 so can test for greater and less than that.
 	*  need a test to enclose it
 	*/
-	
+
 	/*
 	* Regular expressions to search the ID string given to us by the manufacturer
 	* so that we can identify which controller is which and behave accordingly.
 	*/
 	let nintendoId = /Vendor\: 0810 Product\: e501/;
 	let standardID = /Vendor\: 0583 Product\: 2060/;
-	
+
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 		if (pad.axes[0] === -1.00000)
 		{
@@ -896,7 +880,7 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
 		if (pad.buttons[9].value === 1.00){ window.open(url0, '_self'); print('NES Start pressed'); } // NES Start button
 	}
-	
+
 	/**
 	*  This bit is specific to the Buffalo SNES style controller,
 	*  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
@@ -948,7 +932,7 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[9] === 1.000){carlosmoreno.movementDir = '';} // SNES start button
 	}
 	*/
-	
+
 	/**
 	* This bit is specific to the Sony PS3 contoller,
 	* PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)
@@ -975,7 +959,7 @@ function updateStatus(pad){ // tested once per frame
 function keyReleased() {
 	if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
 		// need to add here a test for if gamestate === playing (either) then load index.html
-		
+
 		// deprecating attempt to get Select UI in this window
 		/*
 		if (ctr0 % 2 === 0){
@@ -987,12 +971,12 @@ function keyReleased() {
 		}
 		ctr0 = ctr0 +1;
 		*/
-		
+
 		// open the Select url which should be index.html
 		window.open(url, "_self");
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-		
+
 		// deprecating attempt to get Select and Start UI in this window
 		/*
 		if (ctr0 % 2 === 0){
@@ -1006,7 +990,7 @@ function keyReleased() {
 			window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
 		}
 		*/
-		
+
 		// Start key will reload and hence restart this window
 		window.open(url0, '_self');
 	}
@@ -1016,11 +1000,11 @@ function keyReleased() {
 function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
 	const time = millis() / 1000;
-	
+
 	// don't get keyboard input while we're waiting
 	if (time < readInputAt)
 	return;
-	
+
 	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
 	key === 'w'          ||
 	key === 'W'          ||
@@ -1029,7 +1013,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		print('key up');
 		addInput(inputQueue, 'up')
 		readInputAt = time + INPUT_DELAY;
-		
+
 	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
 	key === 's'          ||
 	key === 'S'          ||
@@ -1038,7 +1022,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		print('key down');
 		addInput(inputQueue, 'down')
 		readInputAt = time + INPUT_DELAY;
-		
+
 	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
 	key === 'a'          ||
 	key === 'A'          ||
@@ -1047,7 +1031,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		print('key left');
 		addInput(inputQueue, 'left')
 		readInputAt = time + INPUT_DELAY;
-		
+
 	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
 	key === 'd'          ||
 	key === 'D'          ||
@@ -1056,7 +1040,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		print('key right');
 		addInput(inputQueue, 'right')
 		readInputAt = time + INPUT_DELAY;
-		
+
 	} else if (key === 't'		||
 	key === 'T') {
 		print('t');
@@ -1066,6 +1050,6 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
 	}
-	return false;	
-	
+	return false;
+
 } // end keyTyped
