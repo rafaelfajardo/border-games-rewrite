@@ -296,25 +296,25 @@ function updateStatus(pad){ // tested once per frame
 // keyboard mapping W,A,S,D; I,J,K,L; T,Y; as actionable
 // will likely have to pass the values of moveUp, moveDown, moveLeft, moveRight for this to work.
 function keyTyped(){ // tested once per frame, triggered on keystroke
-	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+	if        (//keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
 		         key === 'w'          ||
 		         key === 'W'          ||
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
-	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+	} else if (//keyCode === '40'     || //keyCode === 'ArrowDown'  ||
 		         key === 's'          ||
 		         key === 'S'          ||
 		         key === 'k'          ||
 		         key === 'K') {
     print('key down');
-	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	} else if (//keyCode === '37'     || //key === 'ArrowLeft'  ||
 	           key === 'a'          ||
 		         key === 'A'          ||
 		         key === 'j'          ||
 		         key === 'J') {
 		print('key left');
-	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+	} else if (//keyCode === '39'     || //key === 'ArrowRight'  ||
 		         key === 'd'          ||
 		         key === 'D'          ||
 		         key === 'l'          ||
