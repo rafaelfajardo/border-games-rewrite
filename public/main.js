@@ -316,11 +316,6 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'l'          ||
 		         key === 'L') {
 		print('key right');
-	} else if (key === 't'          ||  // this bit is a little crufty
-						 key === 'T') {
-	  print('t');
-	} else if (key === 'y') {  // this bit is a little crufty too
-		print('y');
 	}
   /*
   // another option for mapping start and select functions
