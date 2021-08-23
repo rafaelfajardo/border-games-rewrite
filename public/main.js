@@ -146,6 +146,7 @@ function updateStatus(pad){ // tested once per frame
    */
   let nintendoId = /Vendor\: 0810 Product\: e501/;
   let standardID = /Vendor\: 0583 Product\: 2060/;
+  let exleneID = /Vendor\: 0079 Product\: 0011/;
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
     	if (pad.axes[0] === -1.00000){print('NES d-pad left pressed'); } // NES d-pad left
@@ -231,25 +232,52 @@ function updateStatus(pad){ // tested once per frame
     /**
      *  This bit is specific to the Exlene SNES style controller,
      *  USB Gamepad (Vendor: 0079 Product: 0011)
-     *  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
+     *  The Exlene controller worked on older MacOS X and Mac Mini, with middleware.
+     *  Is not working here.
+     *  axes 0: -0.9921568632125854 by default in this controller
+     *  instead of  a value closer to 0
+     *  it may be that we have to evaluate for a value < -1 for 'left'
+     *  and some value > -0.99 for 'right'
+     *  well that didn't work. going to leave Exlene commented out
      */
   /**
-     let exlene = /Vendor\: 0079 Product\: 0011/;
-     if (pad.id.match(exlene) ){
-       if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
-       if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
-       if (pad.axis[1] === -1.0000){carlosmoreno.movementDir = 'up';}
-       if (pad.axis[1] ===  1.0000){carlosmoreno.movementDir = 'down';}
-       if (pad.buttons[0] === 1.000){carlosmoreno.movementDir = 'right';} // SNES A button
-       if (pad.buttons[1] === 1.000){carlosmoreno.movementDir = 'down';} // SNES B button
-       if (pad.buttons[2] === 1.000){carlosmoreno.movementDir = 'up';} // SNES X button
-       if (pad.buttons[3] === 1.000){carlosmoreno.movementDir = 'left';} // SNES Y button
-       if (pad.buttons[4] === 1.000){carlosmoreno.movementDir = '';} // SNES left shoulder button
-       if (pad.buttons[5] === 1.000){carlosmoreno.movementDir = '';} // SNES right shoulder button
-       if (pad.buttons[6] === 1.000){carlosmoreno.movementDir = '';} // not mapped
-       if (pad.buttons[7] === 1.000){carlosmoreno.movementDir = '';} // not mapped
-       if (pad.buttons[8] === 1.000){carlosmoreno.movementDir = '';} // SNES select button
-       if (pad.buttons[9] === 1.000){carlosmoreno.movementDir = '';} // SNES start button
+     if (pad.id.match(exleneID) ){
+       if (pad.axes[0] < -1.0000){print('Exlene SNES D-pad left pressed');} // this axis is not registering at present
+       if (pad.axes[0] > -0.992){print('Exlene SNES D-pad right pressed');} // this axis is not registering at present
+       if (pad.axes[1] === -1.0000){print('Exlene SNES D-pad up pressed');}
+       if (pad.axes[1] ===  1.0000){print('Exlene SNES D-pad down pressed');}
+       if (pad.buttons[0].value === 1){print('Exlene SNES A-button pressed');} // SNES A button
+       if (pad.buttons[1].value === 1){print('Exlene SNES B-button pressed');} // SNES B button
+       if (pad.buttons[2].value === 1){print('Exlene SNES X-button pressed');} // SNES X button
+       if (pad.buttons[3].value === 1){print('Exlene SNES Y-button pressed');} // SNES Y button
+       if (pad.buttons[4].value === 1){print('Exlene SNES L-button pressed');} // SNES left shoulder button
+       if (pad.buttons[5].value === 1){print('Exlene SNES R-button pressed');} // SNES right shoulder button
+       if (pad.buttons[6].value === 1){print('Exlene unmapped button 6 pressed');} // not mapped
+       if (pad.buttons[7].value === 1){print('Exlene unmapped button 7 pressed');} // not mapped
+       if (pad.buttons[8].value === 1){
+         if (ctr0 % 2 === 0){
+           btn1.changeAnimation('off');
+           btn2.changeAnimation('select');
+         } else if (ctr0 % 2 === 1) {
+           btn1.changeAnimation('select');
+           btn2.changeAnimation('off');
+         }
+         ctr0 = ctr0 +1;
+         print('Exlene SNES Select button pressed');
+        } // SNES select button
+       if (pad.buttons[9].value === 1){
+         if (ctr0 % 2 === 0){
+           btn1.changeAnimation('off');
+           btn2.changeAnimation('blink');
+           window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+         }
+         else if (ctr0 % 2 === 1){
+           btn1.changeAnimation('blink');
+           btn2.changeAnimation('off');
+           window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+         }
+         print('Exlene SNES Start button pressed');
+        } // SNES start button
      }
   */
 
@@ -345,4 +373,3 @@ function keyReleased() {
     }
   }
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
-// function play( game ){}
