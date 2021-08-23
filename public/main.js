@@ -302,32 +302,27 @@ function keyTyped(){ // tested once per frame, triggered on keystroke
 		         key === 'i'          ||
 		         key === 'I') {
 		print('key up');
-		//moveUp = true; // deprecated state variable
 	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
 		         key === 's'          ||
 		         key === 'S'          ||
 		         key === 'k'          ||
 		         key === 'K') {
     print('key down');
-		//moveDown = true; // deprecated state variable
 	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
 	           key === 'a'          ||
 		         key === 'A'          ||
 		         key === 'j'          ||
 		         key === 'J') {
 		print('key left');
-		//moveLeft = true; // deprecated state variable
 	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
 		         key === 'd'          ||
 		         key === 'D'          ||
 		         key === 'l'          ||
 		         key === 'L') {
 		print('key right');
-		//moveRight = true; // deprecated state variable
 	} else if (key === 't'          ||  // this bit is a little crufty
 						 key === 'T') {
 	  print('t');
-		// START = true; // deprecated state variable
 	} else if (key === 'y') {  // this bit is a little crufty too
 		print('y');
 	}
