@@ -1091,53 +1091,33 @@ function keyReleased() {
 
 
 function keyTyped(){ // tested once per frame, triggered on keystroke
-	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
-		         key === 'w'          ||
+	if        (key === 'w'          ||
 		         key === 'W'          ||
 		         key === 'i'          ||
 		         key === 'I') {
 		print('upward key pressed');
     flingEsposas = true;
 
-	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
-		         key === 's'          ||
+	} else if (key === 's'          ||
 		         key === 'S'          ||
 		         key === 'k'          ||
 		         key === 'K') {
     print('downward key pressed');
 
-	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
-	           key === 'a'          ||
+	} else if (key === 'a'          ||
 		         key === 'A'          ||
 		         key === 'j'          ||
 		         key === 'J') {
 		print('leftward key pressed');
     moveState = 'left';
 
-	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
-		         key === 'd'          ||
+	} else if (key === 'd'          ||
 		         key === 'D'          ||
 		         key === 'l'          ||
 		         key === 'L') {
 		print('rightward key pressed');
     moveState = 'right';
 
-	} else if (key === 't'          ||
-						 key === 'T') {
-	  print('t key pressed');
-		//select = true;
-	} else if (key === 'y'          ||
-             key === 'Y') {
-		print('y key pressed');
-    //start = true;
-  } else if (key === 'g'          ||
-             key === 'G'){
-    print('g key pressed');
-    //select = true; // to be deprecated
-	} else if (key === 'h'          ||
-             key === 'H'){
-    print('h key pressed');
-    //start = true; // to be deprecated
   } else {
     moveState = 'idle'; // create an idle state for player character
   }
