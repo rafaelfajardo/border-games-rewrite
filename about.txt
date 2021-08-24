@@ -457,4 +457,9 @@ Chris has been working on fixing and refining the animations in Crosser. This ca
 I've been distracted by home maintenance and student needs.
 
 ======
+2021 08 23
+It looks as though we will be running a Dell micro pc: https://www.dell.com/en-us/work/shop/cty/pdp/spd/optiplex-3080-micro
+
+I've been deleting cruft. Chris is trying to figure out why the NES controller always reloads as though it is caching an "h" key.
+======
 */
