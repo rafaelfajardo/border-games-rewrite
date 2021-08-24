@@ -556,6 +556,16 @@ function preload(){
   img8 = loadImage('img-lamigra/counter-3-8.png');
   img9 = loadImage('img-lamigra/counter-3-9.png');
   avisocounter = createSprite (14*32+16, 16*32+16, 32, 32);
+  avisocounter.addImage('0',img0);
+  avisocounter.addImage('1',img1);
+  avisocounter.addImage('2',img2);
+  avisocounter.addImage('3',img3);
+  avisocounter.addImage('4',img4);
+  avisocounter.addImage('5',img5);
+  avisocounter.addImage('6',img6);
+  avisocounter.addImage('7',img7);
+  avisocounter.addImage('8',img8);
+  avisocounter.addImage('9',img9);
   avisocounter.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
   avisocounter.debug = BUGGY; // set the debug flag
 
