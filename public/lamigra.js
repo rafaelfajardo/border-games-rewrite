@@ -44,8 +44,6 @@ const HEIGHT = 544;
 //
 let btn1; // sprite container for button art
 let btn2; // sprite container for button art
-// counter to toggle between _crosser.html and _lamigra.html
-let ctr0 = 1;
 /*
 //
 // url targets using absolute paths
@@ -1076,7 +1074,6 @@ function keyReleased (){
 
 /**
  *  keyReleased was tested in /public/ui to afford selecting and changing games
- *  depends on global var ctr0 which is a counter
  *  depends on global var url0 and url1 which are targets
  */
 
