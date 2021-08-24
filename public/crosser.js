@@ -851,8 +851,8 @@ function updateStatus(pad){ // tested once per frame
 	* Regular expressions to search the ID string given to us by the manufacturer
 	* so that we can identify which controller is which and behave accordingly.
 	*/
-	let nintendoId = /Vendor\: 0810 Product\: e501/;
-	let standardID = /Vendor\: 0583 Product\: 2060/;
+	let nintendoId = /Vendor\: 0810 Product\: e501/; // this is our canonical NES controller/gamepad
+	let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 		if (pad.axes[0] === -1.00000)
@@ -915,7 +915,7 @@ function updateStatus(pad){ // tested once per frame
 	*  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
 	*/
 	/**
-	let exlene = /Vendor\: 0079 Product\: 0011/;
+	let exlene = /Vendor\: 0079 Product\: 0011/; // this is the Exlene SNES gamepad 
 	if (pad.id.match(exlene) ){
 		if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
 		if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
