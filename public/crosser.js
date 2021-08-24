@@ -731,57 +731,6 @@ function draw() {
 
 
 
-	/*
-	// this was the first draft of movement code for carlosmoreno
-	// it executed too fast and did not honor his place in the renderQueue[]
-	if (moveUp){
-		carlosmoreno.changeAnimation ('walkup');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y - 32;
-		if (carlosmoreno.position.y - 32 < 0) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y += 32;
-		}
-		moveUp = false;
-		//carlosmoreno.changeImage ('faceup');
-	}
-	else if (moveDown){
-		carlosmoreno.changeAnimation ('walkdown');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y + 32;
-		if (carlosmoreno.position.y + 32 > HEIGHT) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y -= 32;
-		}
-		moveDown = false;
-		//carlosmoreno.changeImage ('facedown');
-	}
-	else if (moveLeft){
-		carlosmoreno.changeAnimation ('walkleft');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x - 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x < 0) {
-			carlosmoreno.position.x += 32;
-		}
-		moveLeft = false;
-		//carlosmoreno.changeImage ('faceleft');
-	}
-	else if (moveRight){
-		carlosmoreno.changeAnimation ('walkright');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x + 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x > WIDTH) {
-			carlosmoreno.position.x -= 32;
-		}
-		moveRight = false;
-		//carlosmoreno.changeImage ('faceright');
-	}
-	//else {
-	//carlosmoreno.changeAnimation ('facedown');
-	//}
-	*/
 	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
 		carlosmoreno.changeAnimation ('surprise');
 		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
@@ -915,7 +864,7 @@ function updateStatus(pad){ // tested once per frame
 	*  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
 	*/
 	/**
-	let exlene = /Vendor\: 0079 Product\: 0011/; // this is the Exlene SNES gamepad 
+	let exlene = /Vendor\: 0079 Product\: 0011/; // this is the Exlene SNES gamepad
 	if (pad.id.match(exlene) ){
 		if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
 		if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
