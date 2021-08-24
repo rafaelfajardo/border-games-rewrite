@@ -859,22 +859,22 @@ function updateStatus(pad){ // tested once per frame
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'left');
-		} //{ moveLeft = true;} else { moveLeft = false; }
+		}
 		if (pad.axes[0] ===  1.00000)
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'right');
-		} //{ moveRight = true;} else { moveRight = false; }
+		}
 		if (pad.axes[1] === -1.00000)
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'up');
-		} //{ moveUp = true;} else { moveUp = false; }
+		}
 		if (pad.axes[1] ===  1.00000)
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'down');
-		} //{ moveDown = true;} else { moveDown = false; }
+		}
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
