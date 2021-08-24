@@ -44,8 +44,6 @@ const HEIGHT = 448;
 const FRAME_RATE = 30;
 //
 //
-let btn1; // sprite container for button art
-let btn2; // sprite container for button art
 // counter to toggle between _crosser.html and _lamigra.html
 let ctr0 = 0;
 /* ****
@@ -694,7 +692,7 @@ function setup() {
 	laMigra.add(migraMan3);
 
 	//carlosmoreno.changeImage('facedown');
-
+  gameState = 'startup';
 } // end setup
 
 function draw() {
@@ -702,16 +700,21 @@ function draw() {
 
 	/*
 	* I have commented out the switch statement during the early part of coding
-	*
-	switch (gameState) { // switch is not documented in P5.JS but is part of Javascript
-		case "select":
+	*/
+	switch (gameState)
+  { // switch is not documented in P5.JS but is part of Javascript
+    // select, startup','play','win','lose
+		//case "select": //will not use this case since it is handled in keyReleased() and updateStatus(pad)
 		// statements that display select condition, called by keyReleased() 'g'
 		// statements that may alter gameState label and condition
 		// statements that may reload this game
 		// statements that may launch the other game
-		break;
+		//break;
 		case "startup":
 		// statements to display the startup condition
+     tierra.changeAnimation('frontera');
+     laMigra.visible = false;
+     text('Press START to play', width/2, height/2);
 		// statements that may alter gamestate label and condition
 		break;
 		case "play":
@@ -719,26 +722,13 @@ function draw() {
 		break;
 		case "lose":
 		// statements that display loss condition
+    carlosmoreno.changeAnimation ('surprise');
+    carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+    carlosmoreno.position.y = 64*6+32;
 		break;
 		case "win":
 		// statements that display win condition
-		break;
-		default:
-		// statements that catch and redirect in case none of the above is true
-		break; // is there a 'break' after 'default'? I forget
-	} */
-
-
-
-
-	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
-		carlosmoreno.changeAnimation ('surprise');
-		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-		carlosmoreno.position.y = 64*6+32;
-
-	}
-	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
-		cadaver.visible = false;
+    cadaver.visible = false;
 		waterLog.visible = false;
 		gato1.visible = false;
 		gato2.visible = false;
@@ -752,6 +742,20 @@ function draw() {
 		visa.visible = false;
 		carlosmoreno.visible = false;
 		tierra.changeImage('end');
+		break;
+		default:
+		// statements that catch and redirect in case none of the above is true
+		break; // is there a 'break' after 'default'? I forget
+	} // end gameState switch/case statements
+
+
+
+
+	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
+    gameState = 'lose';
+	}
+	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
+    gameState = 'win';
 	}
 
 	// experimental code for gamepad
