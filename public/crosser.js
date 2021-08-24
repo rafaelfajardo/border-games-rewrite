@@ -93,10 +93,6 @@ let img; // a temporary placeholder to preload images for sprites
 let img1; // temp placeholder to preload images for sprites
 let img2; // temp placeholder to preload images for sprites
 
-let spriteCounter = 0; // used in draw loop, along with modulo, to update and draw one sprite per frame.
-// will give background image it's own turn since it is a sprite indexed 0
-//will potentiall cause draw loop to speed up as sprites are removed from list
-
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
 const DRAW_COLLIDER = BUGGY ? BUGGY : true;
