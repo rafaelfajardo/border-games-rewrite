@@ -45,7 +45,8 @@ const FRAME_RATE = 30;
 //
 //
 // counter to toggle between _crosser.html and _lamigra.html
-let ctr0 = 0;
+// let ctr0 = 0; // used in main.js but not in crosser.js nor lamigra.js
+//
 /* ****
 //
 // url targets for invoking _crosser.html or _lamigra.html
