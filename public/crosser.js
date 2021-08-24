@@ -959,15 +959,11 @@ function updateStatus(pad){ // tested once per frame
 
 function keyReleased() {
 	if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
-		// need to add here a test for if gamestate === playing (either) then load index.html
-
-
+		//may need to add here a test for if gamestate === playing (either) then load index.html
 		// open the Select url which should be index.html
 		window.open(url, "_self");
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-
-
 		// Start key will reload and hence restart this window
 		window.open(url0, '_self');
 	}
