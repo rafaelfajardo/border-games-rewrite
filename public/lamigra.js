@@ -507,21 +507,8 @@ function preload(){
 
   /*
    * load images for esposas sprite
+   * deprecated in favor of the dynamically generated one in flingEsposas currently in draw()
    */
-/* // deprecated this one in favor of the dynamically generated one in flingEsposas
-  img0 = loadImage('img-lamigra/esposas_0.png');
-  img1 = loadImage('img-lamigra/esposas_1.png');
-  img2 = loadImage('img-lamigra/esposas_2.png');
-  img3 = loadImage('img-lamigra/esposas_3.png');
-  esposas = createSprite (8*32+16, 12*32+16, 32, 32,); // the esposas launch from the front of the vehicle, and so will need to refer to migra.x-position.
-  esposas.addAnimation('lanzar',img0,img0,img1,img1,img2,img2,img3,img3); // this will change later, here for testing purposes
-  esposas.debug = BUGGY; // set the debug flag
-  renderQueue.push(esposas); // add esposas to renderQueue []
-  esposas.name = 'esposas';
-  esposas.animation.playing = true;
-  esposas.movementDir = 'up';
-  esposas.speed = 32;
-*/
 
   /*
    *  to do: load images for bala(s) (or not)
