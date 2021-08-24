@@ -529,6 +529,16 @@ function preload(){
    img8 = loadImage('img-lamigra/counter-2-8.png');
    img9 = loadImage('img-lamigra/counter-2-9.png');
    avisocontador = createSprite (16, 32*14+16, 32, 32);
+   avisocontador.addImage('0',img0);
+   avisocontador.addImage('1',img1);
+   avisocontador.addImage('2',img2);
+   avisocontador.addImage('3',img3);
+   avisocontador.addImage('4',img4);
+   avisocontador.addImage('5',img5);
+   avisocontador.addImage('6',img6);
+   avisocontador.addImage('7',img7);
+   avisocontador.addImage('8',img8);
+   avisocontador.addImage('9',img9);
    avisocontador.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
    avisocontador.debug = BUGGY; // set the debug flag
 
