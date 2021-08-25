@@ -829,7 +829,7 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
 		if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
-		if (pad.buttons[9].value === 1.00){ window.open(url0, '_self'); print('NES Start pressed'); } // NES Start button
+		if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } //window.open(url0, '_self'); // NES Start button
 	}
 
 	/**
@@ -861,7 +861,7 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
 	}
   */
-  
+
 	/**
 	*  This bit is specific to the Exlene SNES style controller,
 	*  USB Gamepad (Vendor: 0079 Product: 0011)
