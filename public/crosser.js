@@ -375,29 +375,6 @@ const ANIM_DELAY = 1;
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
 
-	// create a ui button for game selection for crosser.js
-	img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-	img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-	btn1 = createSprite(224, 160, 180, 180);
-	btn1.addImage('off1', img1);
-	btn1.addImage('on1', img2);
-	btn1.addAnimation('off', img1);
-	btn1.addAnimation('select', img2);
-	btn1.addAnimation('blink', img1,img2,img2,img1);
-	btn1.changeAnimation('select');
-
-	// create a ui button for game selection for lamigra.js
-	img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
-	img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-	btn2 = createSprite(224, 370, 64, 32);
-	btn2.addImage('off2', img1);
-	btn2.addImage('on2', img2);
-	btn2.addAnimation('off', img1);
-	btn2.addAnimation('select', img2);
-	btn2.addAnimation('blink', img1,img2,img2,img1);
-	btn2.changeAnimation('off');
-
-
 	if (BUGGY){
 		img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
 	} else {
