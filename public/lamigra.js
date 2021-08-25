@@ -869,6 +869,7 @@ function preload(){
   deportacioncenter.addImage('gate', img0);
   deportacioncenter.addAnimation('gate activated', img0, img1,img1,img1,img1, img0);
   deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
+  deportacioncenter.setDefaultCollider();
   deportacioncenter.debug = BUGGY; // set the debug flag
 
   /*
