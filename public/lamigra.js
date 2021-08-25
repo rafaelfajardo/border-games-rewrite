@@ -881,6 +881,7 @@ function preload(){
    repatriationcenter.addImage('gate', img0);
    repatriationcenter.addAnimation('gate activated', img0, img1,img1,img1,img1, img0);
    repatriationcenter.changeAnimation('gate activated'); // will change,
+   repatriationcenter.setDefaultCollider();
    repatriationcenter.debug = BUGGY; // set the debug flag
 
    /*
