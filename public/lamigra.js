@@ -964,28 +964,19 @@ function draw() {
 
   // sketch to fling cuffs -- esposas in spanish -- upward
   if (flingEsposas){
-    let newSprite = createSprite(migra.position.x+16, migra.position.y-32,32,32);
-    newSprite.addAnimation('lanzar', 'img-lamigra/esposas_0.png',
+    let newSprite = createSprite(migra.position.x+16, migra.position.y-32,32,32); // create a new sprite above the migra sprite
+    newSprite.setDefaultCollider(); // create collision box for new sprite
+    newSprite.addAnimation('lanzar', 'img-lamigra/esposas_0.png', // add images for animating the cuffs
                                      'img-lamigra/esposas_1.png',
                                      'img-lamigra/esposas_2.png',
                                      'img-lamigra/esposas_3.png');
-    cuffs.add(newSprite); // add new sprite to group cuffs
+    cuffs.add(newSprite); // add new sprite to Play.P5.js group cuffs
     flingEsposas = false;
-    renderQueue.push(newSprite);
-    newSprite.name = 'cuffs['+cuffs.length+']';
-    newSprite.animation.playing = 'true';
+    renderQueue.push(newSprite); // add newSprite to renderQueue
+    newSprite.name = 'cuffs['+cuffs.length+']'; // give the sprite a name that accords with the group identity
+    newSprite.animation.playing = 'true'; // set attributes for cuffs
     newSprite.movementDir = 'up';
     newSprite.speed = 32;
-    /*
-    let cuffsIndex = cuffs.length + 1;
-    cuffs[cuffsIndex] = esposas;
-    cuffs[cuffsIndex].position.x = migra.position.x + 16;
-    cuffs[cuffsIndex].position.y = migra.position.y - 32;
-    cuffs[cuffsIndex].changeAnimation('lanzar');
-    cuffs[cuffsIndex].animation.play();
-    */
-    //createCuff();
-
   }
 /*
   // sketch to move cuffs
