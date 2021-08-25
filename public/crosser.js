@@ -44,10 +44,9 @@ const HEIGHT = 448;
 const FRAME_RATE = 30;
 //
 //
-let btn1; // sprite container for button art
-let btn2; // sprite container for button art
 // counter to toggle between _crosser.html and _lamigra.html
-let ctr0 = 0;
+// let ctr0 = 0; // used in main.js but not in crosser.js nor lamigra.js
+//
 /* ****
 //
 // url targets for invoking _crosser.html or _lamigra.html
@@ -94,10 +93,6 @@ let laMigra; // group, it may be better to call this opponents or hazards becaus
 let img; // a temporary placeholder to preload images for sprites
 let img1; // temp placeholder to preload images for sprites
 let img2; // temp placeholder to preload images for sprites
-
-let spriteCounter = 0; // used in draw loop, along with modulo, to update and draw one sprite per frame.
-// will give background image it's own turn since it is a sprite indexed 0
-//will potentiall cause draw loop to speed up as sprites are removed from list
 
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
@@ -694,7 +689,7 @@ function setup() {
 	laMigra.add(migraMan3);
 
 	//carlosmoreno.changeImage('facedown');
-
+  gameState = 'startup';
 } // end setup
 
 function draw() {
@@ -702,16 +697,21 @@ function draw() {
 
 	/*
 	* I have commented out the switch statement during the early part of coding
-	*
-	switch (gameState) { // switch is not documented in P5.JS but is part of Javascript
-		case "select":
+	*/
+	switch (gameState)
+  { // switch is not documented in P5.JS but is part of Javascript
+    // select, startup','play','win','lose
+		//case "select": //will not use this case since it is handled in keyReleased() and updateStatus(pad)
 		// statements that display select condition, called by keyReleased() 'g'
 		// statements that may alter gameState label and condition
 		// statements that may reload this game
 		// statements that may launch the other game
-		break;
+		//break;
 		case "startup":
 		// statements to display the startup condition
+     tierra.changeAnimation('frontera');
+     laMigra.visible = false;
+     text('Press START to play', width/2, height/2);
 		// statements that may alter gamestate label and condition
 		break;
 		case "play":
@@ -719,77 +719,13 @@ function draw() {
 		break;
 		case "lose":
 		// statements that display loss condition
+    carlosmoreno.changeAnimation ('surprise');
+    carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+    carlosmoreno.position.y = 64*6+32;
 		break;
 		case "win":
 		// statements that display win condition
-		break;
-		default:
-		// statements that catch and redirect in case none of the above is true
-		break; // is there a 'break' after 'default'? I forget
-	} */
-
-
-
-
-	/*
-	// this was the first draft of movement code for carlosmoreno
-	// it executed too fast and did not honor his place in the renderQueue[]
-	if (moveUp){
-		carlosmoreno.changeAnimation ('walkup');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y - 32;
-		if (carlosmoreno.position.y - 32 < 0) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y += 32;
-		}
-		moveUp = false;
-		//carlosmoreno.changeImage ('faceup');
-	}
-	else if (moveDown){
-		carlosmoreno.changeAnimation ('walkdown');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y + 32;
-		if (carlosmoreno.position.y + 32 > HEIGHT) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y -= 32;
-		}
-		moveDown = false;
-		//carlosmoreno.changeImage ('facedown');
-	}
-	else if (moveLeft){
-		carlosmoreno.changeAnimation ('walkleft');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x - 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x < 0) {
-			carlosmoreno.position.x += 32;
-		}
-		moveLeft = false;
-		//carlosmoreno.changeImage ('faceleft');
-	}
-	else if (moveRight){
-		carlosmoreno.changeAnimation ('walkright');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x + 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x > WIDTH) {
-			carlosmoreno.position.x -= 32;
-		}
-		moveRight = false;
-		//carlosmoreno.changeImage ('faceright');
-	}
-	//else {
-	//carlosmoreno.changeAnimation ('facedown');
-	//}
-	*/
-	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
-		carlosmoreno.changeAnimation ('surprise');
-		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-		carlosmoreno.position.y = 64*6+32;
-
-	}
-	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
-		cadaver.visible = false;
+    cadaver.visible = false;
 		waterLog.visible = false;
 		gato1.visible = false;
 		gato2.visible = false;
@@ -803,6 +739,20 @@ function draw() {
 		visa.visible = false;
 		carlosmoreno.visible = false;
 		tierra.changeImage('end');
+		break;
+		default:
+		// statements that catch and redirect in case none of the above is true
+		break; // is there a 'break' after 'default'? I forget
+	} // end gameState switch/case statements
+
+
+
+
+	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
+    gameState = 'lose';
+	}
+	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
+    gameState = 'win';
 	}
 
 	// experimental code for gamepad
@@ -851,30 +801,30 @@ function updateStatus(pad){ // tested once per frame
 	* Regular expressions to search the ID string given to us by the manufacturer
 	* so that we can identify which controller is which and behave accordingly.
 	*/
-	let nintendoId = /Vendor\: 0810 Product\: e501/;
-	let standardID = /Vendor\: 0583 Product\: 2060/;
+	let nintendoId = /Vendor\: 0810 Product\: e501/; // this is our canonical NES controller/gamepad
+	let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 		if (pad.axes[0] === -1.00000)
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'left');
-		} //{ moveLeft = true;} else { moveLeft = false; }
+		}
 		if (pad.axes[0] ===  1.00000)
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'right');
-		} //{ moveRight = true;} else { moveRight = false; }
+		}
 		if (pad.axes[1] === -1.00000)
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'up');
-		} //{ moveUp = true;} else { moveUp = false; }
+		}
 		if (pad.axes[1] ===  1.00000)
 		{
 			readInputAt = time + INPUT_DELAY;
 			addInput(inputQueue, 'down');
-		} //{ moveDown = true;} else { moveDown = false; }
+		}
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
@@ -915,7 +865,7 @@ function updateStatus(pad){ // tested once per frame
 	*  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
 	*/
 	/**
-	let exlene = /Vendor\: 0079 Product\: 0011/;
+	let exlene = /Vendor\: 0079 Product\: 0011/; // this is the Exlene SNES gamepad
 	if (pad.id.match(exlene) ){
 		if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
 		if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
@@ -959,39 +909,11 @@ function updateStatus(pad){ // tested once per frame
 
 function keyReleased() {
 	if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
-		// need to add here a test for if gamestate === playing (either) then load index.html
-
-		// deprecating attempt to get Select UI in this window
-		/*
-		if (ctr0 % 2 === 0){
-			btn1.changeAnimation('off');
-			btn2.changeAnimation('select');
-		} else if (ctr0 % 2 === 1) {
-			btn1.changeAnimation('select');
-			btn2.changeAnimation('off');
-		}
-		ctr0 = ctr0 +1;
-		*/
-
+		//may need to add here a test for if gamestate === playing (either) then load index.html
 		// open the Select url which should be index.html
 		window.open(url, "_self");
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-
-		// deprecating attempt to get Select and Start UI in this window
-		/*
-		if (ctr0 % 2 === 0){
-			btn1.changeAnimation('off');
-			btn2.changeAnimation('blink');
-			window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
-		}
-		else if (ctr0 % 2 === 1){
-			btn1.changeAnimation('blink');
-			btn2.changeAnimation('off');
-			window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
-		}
-		*/
-
 		// Start key will reload and hence restart this window
 		window.open(url0, '_self');
 	}
