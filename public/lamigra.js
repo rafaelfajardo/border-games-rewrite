@@ -1002,18 +1002,10 @@ function draw() {
     moveState = 'idle';
     //migra.position.x = migra.position.x;
   }
-  // */
-  /*
-  if (keyIsPressed){
-    migra.movementDir = moveState; // trying to use movmentDir and renderQueue for player movement
-  } else {
-    migra.movementDir = 'idle';
-  }
-  */
+  //
   updateRendering(renderQueue, renderTime);
   drawSprites();
-  // migra.movementDir = 'idle'; // this doesn't seem to be returning the state to idle after a move
-}
+} // end of draw()
 
 
 /*******************************************************
