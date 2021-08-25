@@ -1014,30 +1014,10 @@ function draw() {
  *
  */
 
-/* *******************
- *  redundant chunk?
-function keyPressed (){
-  if (keyCode === 68){
-    migra.changeAnimation('move');
-  }
-  return false;
-}
-
-function keyReleased (){
-  if (keyCode === 68){
-    migra.changeAnimation('stay');
-  }
-  return false;
-}
-//********************
-*/
-
-
 /**
- *  keyReleased was tested in /public/ui to afford selecting and changing games
+ *  keyReleased affords selecting and changing games by invoking URLs
  *  depends on global var url0 and url1 which are targets
  */
-
 function keyReleased() {
   if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
     window.open(url, "_self");
