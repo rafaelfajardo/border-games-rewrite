@@ -895,6 +895,9 @@ function preload(){
     sombra0.addImage('sombra', img1);
     sombra1.addImage('sombra', img0);
     sombra2.addImage('sombra', img0);
+    sombra0.setDefaultCollider();
+    sombra1.setDefaultCollider();
+    sombra2.setDefaultCollider();
     sombra0.debug = BUGGY; // set the debug flag
     sombra1.debug = BUGGY; // set the debug flag
     sombra2.debug = BUGGY; // set the debug flag
