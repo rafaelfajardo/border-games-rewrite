@@ -915,7 +915,7 @@ function keyReleased() {
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
 		// Start key will reload and hence restart this window
-		window.open(url0, '_self');
+		// window.open(url0, '_self');
 	}
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
@@ -928,7 +928,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	if (time < readInputAt)
 	return;
 
-	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+	if        (
 	key === 'w'          ||
 	key === 'W'          ||
 	key === 'i'          ||
@@ -937,7 +937,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'up')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+	} else if (
 	key === 's'          ||
 	key === 'S'          ||
 	key === 'k'          ||
@@ -946,7 +946,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'down')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	} else if (
 	key === 'a'          ||
 	key === 'A'          ||
 	key === 'j'          ||
@@ -955,7 +955,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'left')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+	} else if (
 	key === 'd'          ||
 	key === 'D'          ||
 	key === 'l'          ||
@@ -964,15 +964,9 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'right')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (key === 't'		||
-	key === 'T') {
-		print('t');
-		START = true;
-	} else if (key === 'y') {
-		print('y');
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
 	}
 	return false;
 
-} // end keyTyped
+} // end keyPressed()
