@@ -978,19 +978,6 @@ function draw() {
     newSprite.movementDir = 'up';
     newSprite.speed = 32;
   }
-/*
-  // sketch to move cuffs
-  if (cuffs.length > 0){
-    for (let i = 0; i < cuffs.length; i++){
-      let oldX = cuffs[i].position.x;
-      let oldY = cuffs[i].position.y;
-      cuffs[i].position.y = oldY-32;
-      if (oldY - 32 < 7*32){
-        cuffs[i].remove();
-      }
-    }
-  }
-  */
   // /*
   // sketch to move player character
   if (moveState === 'left'){
