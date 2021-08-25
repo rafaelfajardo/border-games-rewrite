@@ -837,6 +837,7 @@ function updateStatus(pad){ // tested once per frame
 	*  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
 	*  need a test to enclose it. Axis defaults are 0.00392 (positive values)
 	*/
+  /*
 	if (pad.id.match(standardID)) { // this matches the id against the controller ID value
 		if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
 		if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
@@ -859,6 +860,8 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
 		if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
 	}
+  */
+  
 	/**
 	*  This bit is specific to the Exlene SNES style controller,
 	*  USB Gamepad (Vendor: 0079 Product: 0011)
