@@ -21,8 +21,8 @@
 // declare global variables
 let btn1; // sprite container for button art
 let btn2; // sprite container for button art
-let img1; // temporary container to preload an image
-let img2; // temporary container to preload an image
+// let img1; // temporary container to preload an image
+// let img2; // temporary container to preload an image
 let url;  // container for a target url
 let url0; // container for a target url
 let url1; // container for a target url
@@ -30,8 +30,8 @@ let ctr0; // container for a counter
 
 // preload
 function preload(){
-  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  let img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+  let img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
   btn1 = createSprite(224, 160, 180, 180);
   btn1.addImage('off1', img1);
   btn1.addImage('on1', img2);
