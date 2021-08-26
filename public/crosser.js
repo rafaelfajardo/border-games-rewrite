@@ -621,6 +621,9 @@ function preload() {
 
 } // end preload
 
+/**
+ * SETUP function
+ */
 function setup() {
 	//createCanvas(448, 548);
 	let canvas = createCanvas(448, 448); // suggested by p5js.org reference for parent()
