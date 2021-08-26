@@ -1,3 +1,4 @@
+'use strict';  // enforce some (more) sane behavior from javascript
 /* * * * * * * * * * * * * * * *
 *
 *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
@@ -29,6 +30,8 @@
 *      Tomás Márquez
 *
 */
+
+
 
 //
 //
@@ -99,7 +102,7 @@ let spriteCounter = 0; // used in draw loop, along with modulo, to update and dr
 // will give background image it's own turn since it is a sprite indexed 0
 //will potentiall cause draw loop to speed up as sprites are removed from list
 
-const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
+const BUGGY = false; // boolean, debug flag, used for debug feature of  Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
 const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
@@ -121,10 +124,12 @@ let currentIndex = 0;
 // timestamp for our indexing into the queue
 let timeStamp = 0;
 
+
+
+
 // create an input queue so we can store the last two inputs we received
 let inputQueue = [];
 let maxQueueSize = 2;
-
 /**
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
@@ -378,12 +383,12 @@ function animateSprite(sprite, timing, distance)
 
 const ANIM_DELAY = 1;
 function preload() {
-	timeStamp = millis() / 1000 + renderTime;
+	//timeStamp = millis() / 1000 + renderTime;
 
 	// create a ui button for game selection for crosser.js
-	img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-	img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-	btn1 = createSprite(224, 160, 180, 180);
+	let img1 =  loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+	let img2 =  loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+	btn1 =  createSprite(224, 160, 180, 180);
 	btn1.addImage('off1', img1);
 	btn1.addImage('on1', img2);
 	btn1.addAnimation('off', img1);
@@ -434,7 +439,7 @@ function preload() {
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
-	anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
+	let anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
 
@@ -641,7 +646,7 @@ function preload() {
 	// end load and create migraMan3
 
 	// carlosmoreno should go here, will it feel different if he doesn't?
-  renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
+  	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 
 } // end preload
 
@@ -695,7 +700,16 @@ function setup() {
 
 	//carlosmoreno.changeImage('facedown');
 
+	// now set up the time to delay before reading so that we don't start reading immediately
+	readInputAfter = (millis() / 1000) + 1;
 } // end setup
+
+
+// this is the input delay for reading input--during this delay, we stop reading input, after it's
+// elapsed, we'll start reading input again. The delay should only be set after some input has been
+// read
+const INPUT_DELAY = .5;
+let readInputAfter = 0; // delay by 1 second before reading any input
 
 function draw() {
 	background(255);
@@ -805,16 +819,26 @@ function draw() {
 		tierra.changeImage('end');
 	}
 
-	// experimental code for gamepad
-	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
-	let pad0 = pads[0]; // limit to first pad connected
-	if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
-		console.log(pad0)
-		updateStatus(pad0); // will need an updateStatus() function
-	} else { // what to do if pad0 is null, which is to say there is no gamepad connected
-		// use keyboard
-		// or use touches
-		//console.log("did not find gamepad (probably need to click it so it wakes up)")
+	// get the current time
+	const currentTime = millis() / 1000;
+
+	if (currentTime > readInputAfter) {
+		// experimental code for gamepad
+		// don't get controller input during input delay
+
+
+		//let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
+		//let pad0 = pads[0]; // limit to first pad connected
+		scanGamePads();
+		let pad0 = controllers[0];
+		if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
+			console.log('pad0 is active');
+			updateStatus(pad0); // will need an updateStatus() function
+		} else { // what to do if pad0 is null, which is to say there is no gamepad connected
+			// use keyboard
+			// or use touches
+			//console.log("did not find gamepad (probably need to click it so it wakes up)")
+		}
 	}
 
 	// update what we're rendering and how frequently
@@ -827,19 +851,10 @@ function draw() {
 
 } // end draw loop
 
-// this is the input delay for reading input--during this delay, we stop reading input, after it's
-// elapsed, we'll start reading input again. The delay should only be set after some input has been
-// read
-const INPUT_DELAY = .5;
-let readInputAt = 0;
-function updateStatus(pad){ // tested once per frame
-	// get the current time
-	const time = millis() / 1000;
+let firstIgnored = false; 
+async function updateStatus(pad){ // tested once per frame
 
-	// don't get controller input while we're waiting
-	if (time < readInputAt)
-	return;
-
+	const currentTime = millis() / 1000;
 	/**
 	*  This bit is specific to an NES style controller,
 	*  usb gamepad (Vendor: 0810 Product: e501)
@@ -855,31 +870,68 @@ function updateStatus(pad){ // tested once per frame
 	let standardID = /Vendor\: 0583 Product\: 2060/;
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
+		
 		if (pad.axes[0] === -1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'left');
 		} //{ moveLeft = true;} else { moveLeft = false; }
 		if (pad.axes[0] ===  1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'right');
 		} //{ moveRight = true;} else { moveRight = false; }
 		if (pad.axes[1] === -1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'up');
 		} //{ moveUp = true;} else { moveUp = false; }
 		if (pad.axes[1] ===  1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'down');
 		} //{ moveDown = true;} else { moveDown = false; }
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
-		if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
-		if (pad.buttons[9].value === 1.00){ window.open(url0, '_self'); print('NES Start pressed'); } // NES Start button
+		if (isButtonReleased(0, 8)) {
+			print('NES Select pressed and released');
+			window.open(url, "_self");
+		}
+
+		if (isButtonReleased(0, 9)) {
+			print('NES Start pressed and released');
+			window.open(url0, "_self");
+		}
+		// if (pad.buttons[8].value === 1.00 && firstIgnored)
+		// {  
+		// 	print('NES Select pressed'); 
+		// 	pad.buttons[8].value === 0;
+		// 	readInputAfter = currentTime + INPUT_DELAY;
+		// 	window.open(url, "_self"); 
+
+		// } // NES Select button
+		// else if (pad.buttons[8].value === 1.00 && !firstIgnored)
+		// {
+		// 	firstIgnored = true;
+		// 	console.log('ignored select')
+		// 	await new Promise(r => setTimeout(r, 1000));
+		// }
+		// if (pad.buttons[9].value === 1.00 && firstIgnored)
+		// { 
+		// 	print('NES Start pressed'); 
+		// 	readInputAfter = currentTime + INPUT_DELAY;
+		// 	pad.buttons[9].value === 0;
+		// 	//window.open(url0, '_self'); 
+		// 	location.reload();
+			
+		// } // NES Start button
+		// else if (pad.buttons[9].value === 1.00 && !firstIgnored)
+		// {
+		// 	firstIgnored = true;
+		// 	console.log('ignored start');
+		// 	await new Promise(r => setTimeout(r, 1000));
+		// }
 	}
 
 	/**
@@ -998,12 +1050,13 @@ function keyReleased() {
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
+
 function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
 	const time = millis() / 1000;
 
 	// don't get keyboard input while we're waiting
-	if (time < readInputAt)
+	if (time <  readInputAfter)
 	return;
 
 	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
@@ -1013,7 +1066,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'I') {
 		print('key up');
 		addInput(inputQueue, 'up')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
 	key === 's'          ||
@@ -1022,7 +1075,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'K') {
 		print('key down');
 		addInput(inputQueue, 'down')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
 	key === 'a'          ||
@@ -1031,7 +1084,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'J') {
 		print('key left');
 		addInput(inputQueue, 'left')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
 	key === 'd'          ||
@@ -1040,7 +1093,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'L') {
 		print('key right');
 		addInput(inputQueue, 'right')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else if (key === 't'		||
 	key === 'T') {
@@ -1054,3 +1107,99 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	return false;
 
 } // end keyTyped
+
+
+// Code to deal with game pads
+let lastControllers = []
+let controllers = []
+
+/**
+ * checks two things: controllers and lastControllers, if the button was 
+ * pressed in lastControllers, but not in controllers, we have a "release" event
+ * in essence, which we can check here--note this happens only once per press
+ * @param {Index of the controller} ctrlId 
+ * @param {Index of the button} buttonId 
+ */
+function isButtonReleased(ctrlId, buttonId)
+{
+	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId]) {
+		let val = controllers[ctrlId].buttons[buttonId].value;
+		let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
+		// console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
+		// console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
+		// if the current val is 0, the button is no longer pressed, and if the last value is 
+		// 1, then it was pressed during the last read--this lets us know that it was a released button
+		if (val === 0.0 && lastVal === 1.0) {
+			console.log('key released: ' + buttonId)
+			return true
+		} else {
+			return false
+		}
+	}
+
+	return false
+}
+
+function connectionHandler(e) {
+	addGamePad(e.gamepad)
+}
+  
+function disconnectHandler(e) {
+	removeGamePad(e.gamepad)
+}
+  
+function addGamePad(gamepad) {
+	console.log('gamepad connected on ' + gamepad.index)
+	controllers[gamepad.index] = gamepad	
+	console.log('controllers.length ' + controllers.length)
+}
+  
+function removeGamePad(gamepad) {
+	console.log('gamepad disconnected on ' + gamepad.index)
+	delete controllers[gamepad.index];
+}
+  
+function copyPad(pad) {
+	var p = {};
+	p.buttons = [];
+	for (var i = 0; i < pad.buttons.length; i++)
+	{
+		p.buttons.push({})
+		p.buttons[i].value = pad.buttons[i].value;
+	}
+	return p;
+}
+function copyControllers() {
+	lastControllers = [];
+	lastControllers.length = controllers.length;
+	for (var i = 0; i < controllers.length; i++)
+	{
+		if (controllers[i]) {
+		    lastControllers[i] = copyPad(controllers[i]);
+		}
+	}
+}
+
+function scanGamePads() {
+	// try to get the gamepads, on some browsers, we have to use webkit
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() : 
+	  (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+  
+    controllers.length = gamepads.length;
+	copyControllers();
+	for (var i = 0; i < gamepads.length; i++) 
+	{
+		if (gamepads[i]) 
+	  	{
+			if (gamepads[i].index in controllers) {
+		  		controllers[gamepads[i].index] = gamepads[i];
+			} else {
+				addGamePad(gamepads[i]);
+			}
+		}
+	}
+}
+  
+// add event listeners for game pad connections
+window.addEventListener("gamepadconnected", connectionHandler)
+window.addEventListener("gamepaddisconnected", removeGamePad)
