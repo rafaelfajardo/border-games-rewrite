@@ -372,31 +372,12 @@ function animateSprite(sprite, timing, distance)
 }
 
 const ANIM_DELAY = 1;
+/**
+ *
+ * PRELOAD function
+ */
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
-
-	// create a ui button for game selection for crosser.js
-	img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-	img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-	btn1 = createSprite(224, 160, 180, 180);
-	btn1.addImage('off1', img1);
-	btn1.addImage('on1', img2);
-	btn1.addAnimation('off', img1);
-	btn1.addAnimation('select', img2);
-	btn1.addAnimation('blink', img1,img2,img2,img1);
-	btn1.changeAnimation('select');
-
-	// create a ui button for game selection for lamigra.js
-	img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
-	img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-	btn2 = createSprite(224, 370, 64, 32);
-	btn2.addImage('off2', img1);
-	btn2.addImage('on2', img2);
-	btn2.addAnimation('off', img1);
-	btn2.addAnimation('select', img2);
-	btn2.addAnimation('blink', img1,img2,img2,img1);
-	btn2.changeAnimation('off');
-
 
 	if (BUGGY){
 		img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
@@ -640,6 +621,9 @@ function preload() {
 
 } // end preload
 
+/**
+ * SETUP function
+ */
 function setup() {
 	//createCanvas(448, 548);
 	let canvas = createCanvas(448, 448); // suggested by p5js.org reference for parent()
@@ -692,6 +676,10 @@ function setup() {
   gameState = 'startup';
 } // end setup
 
+
+/**
+ * DRAW function
+ */
 function draw() {
 	background(255);
 
@@ -829,7 +817,7 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
 		if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
-		if (pad.buttons[9].value === 1.00){ window.open(url0, '_self'); print('NES Start pressed'); } // NES Start button
+		if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } //window.open(url0, '_self'); // NES Start button
 	}
 
 	/**
@@ -837,6 +825,7 @@ function updateStatus(pad){ // tested once per frame
 	*  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
 	*  need a test to enclose it. Axis defaults are 0.00392 (positive values)
 	*/
+  /*
 	if (pad.id.match(standardID)) { // this matches the id against the controller ID value
 		if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
 		if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
@@ -859,6 +848,8 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
 		if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
 	}
+  */
+
 	/**
 	*  This bit is specific to the Exlene SNES style controller,
 	*  USB Gamepad (Vendor: 0079 Product: 0011)
@@ -915,7 +906,7 @@ function keyReleased() {
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
 		// Start key will reload and hence restart this window
-		window.open(url0, '_self');
+		// window.open(url0, '_self');
 	}
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
@@ -928,7 +919,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	if (time < readInputAt)
 	return;
 
-	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+	if        (
 	key === 'w'          ||
 	key === 'W'          ||
 	key === 'i'          ||
@@ -937,7 +928,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'up')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+	} else if (
 	key === 's'          ||
 	key === 'S'          ||
 	key === 'k'          ||
@@ -946,7 +937,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'down')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	} else if (
 	key === 'a'          ||
 	key === 'A'          ||
 	key === 'j'          ||
@@ -955,7 +946,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'left')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+	} else if (
 	key === 'd'          ||
 	key === 'D'          ||
 	key === 'l'          ||
@@ -964,15 +955,9 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'right')
 		readInputAt = time + INPUT_DELAY;
 
-	} else if (key === 't'		||
-	key === 'T') {
-		print('t');
-		START = true;
-	} else if (key === 'y') {
-		print('y');
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
 	}
 	return false;
 
-} // end keyTyped
+} // end keyPressed()
