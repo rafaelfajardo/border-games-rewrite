@@ -44,8 +44,6 @@ const HEIGHT = 544;
 //
 let btn1; // sprite container for button art
 let btn2; // sprite container for button art
-// counter to toggle between _crosser.html and _lamigra.html
-let ctr0 = 1;
 /*
 //
 // url targets using absolute paths
@@ -104,7 +102,7 @@ let patricialamachona; // sprite container for non-player character
 let puercoespin; // sprite container for non-player character
 let xrodar; // sprite container for non-player character
 //
-//  define a collection or group identity for non-player character sprites
+//  define a collection or Play.P5.js Group identity for non-player character sprites
 let cacahuates; // will be a group of sprites non-player characters
 //
 //
@@ -416,27 +414,6 @@ function preload(){
 
   timeStamp = millis() / 1000 + renderTime;
 
-  // create a ui button for game selection for crosser.js
-  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-  btn1 = createSprite(224, 160, 180, 180);
-  btn1.addImage('off1', img1);
-  btn1.addImage('on1', img2);
-  btn1.addAnimation('off', img1);
-  btn1.addAnimation('select', img2);
-  btn1.addAnimation('blink', img1,img2,img2,img1);
-  btn1.changeAnimation('select');
-
-  // create a ui button for game selection for lamigra.js
-  img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
-  img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-  btn2 = createSprite(224, 370, 64, 32);
-  btn2.addImage('off2', img1);
-  btn2.addImage('on2', img2);
-  btn2.addAnimation('off', img1);
-  btn2.addAnimation('select', img2);
-  btn2.addAnimation('blink', img1,img2,img2,img1);
-  btn2.changeAnimation('off');
 
   /*
    * load and create tierra
@@ -530,21 +507,8 @@ function preload(){
 
   /*
    * load images for esposas sprite
+   * deprecated in favor of the dynamically generated one in flingEsposas currently in draw()
    */
-/* // deprecated this one in favor of the dynamically generated one in flingEsposas
-  img0 = loadImage('img-lamigra/esposas_0.png');
-  img1 = loadImage('img-lamigra/esposas_1.png');
-  img2 = loadImage('img-lamigra/esposas_2.png');
-  img3 = loadImage('img-lamigra/esposas_3.png');
-  esposas = createSprite (8*32+16, 12*32+16, 32, 32,); // the esposas launch from the front of the vehicle, and so will need to refer to migra.x-position.
-  esposas.addAnimation('lanzar',img0,img0,img1,img1,img2,img2,img3,img3); // this will change later, here for testing purposes
-  esposas.debug = BUGGY; // set the debug flag
-  renderQueue.push(esposas); // add esposas to renderQueue []
-  esposas.name = 'esposas';
-  esposas.animation.playing = true;
-  esposas.movementDir = 'up';
-  esposas.speed = 32;
-*/
 
   /*
    *  to do: load images for bala(s) (or not)
@@ -565,6 +529,16 @@ function preload(){
    img8 = loadImage('img-lamigra/counter-2-8.png');
    img9 = loadImage('img-lamigra/counter-2-9.png');
    avisocontador = createSprite (16, 32*14+16, 32, 32);
+   avisocontador.addImage('0',img0);
+   avisocontador.addImage('1',img1);
+   avisocontador.addImage('2',img2);
+   avisocontador.addImage('3',img3);
+   avisocontador.addImage('4',img4);
+   avisocontador.addImage('5',img5);
+   avisocontador.addImage('6',img6);
+   avisocontador.addImage('7',img7);
+   avisocontador.addImage('8',img8);
+   avisocontador.addImage('9',img9);
    avisocontador.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
    avisocontador.debug = BUGGY; // set the debug flag
 
@@ -582,6 +556,16 @@ function preload(){
   img8 = loadImage('img-lamigra/counter-3-8.png');
   img9 = loadImage('img-lamigra/counter-3-9.png');
   avisocounter = createSprite (14*32+16, 16*32+16, 32, 32);
+  avisocounter.addImage('0',img0);
+  avisocounter.addImage('1',img1);
+  avisocounter.addImage('2',img2);
+  avisocounter.addImage('3',img3);
+  avisocounter.addImage('4',img4);
+  avisocounter.addImage('5',img5);
+  avisocounter.addImage('6',img6);
+  avisocounter.addImage('7',img7);
+  avisocounter.addImage('8',img8);
+  avisocounter.addImage('9',img9);
   avisocounter.addAnimation('test',img0,img1,img2,img3,img4,img5,img6,img7,img8,img9);
   avisocounter.debug = BUGGY; // set the debug flag
 
@@ -885,6 +869,7 @@ function preload(){
   deportacioncenter.addImage('gate', img0);
   deportacioncenter.addAnimation('gate activated', img0, img1,img1,img1,img1, img0);
   deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
+  deportacioncenter.setDefaultCollider();
   deportacioncenter.debug = BUGGY; // set the debug flag
 
   /*
@@ -896,6 +881,7 @@ function preload(){
    repatriationcenter.addImage('gate', img0);
    repatriationcenter.addAnimation('gate activated', img0, img1,img1,img1,img1, img0);
    repatriationcenter.changeAnimation('gate activated'); // will change,
+   repatriationcenter.setDefaultCollider();
    repatriationcenter.debug = BUGGY; // set the debug flag
 
    /*
@@ -909,6 +895,9 @@ function preload(){
     sombra0.addImage('sombra', img1);
     sombra1.addImage('sombra', img0);
     sombra2.addImage('sombra', img0);
+    sombra0.setDefaultCollider();
+    sombra1.setDefaultCollider();
+    sombra2.setDefaultCollider();
     sombra0.debug = BUGGY; // set the debug flag
     sombra1.debug = BUGGY; // set the debug flag
     sombra2.debug = BUGGY; // set the debug flag
@@ -975,42 +964,20 @@ function draw() {
 
   // sketch to fling cuffs -- esposas in spanish -- upward
   if (flingEsposas){
-    let newSprite = createSprite(migra.position.x+16, migra.position.y-32,32,32);
-    newSprite.addAnimation('lanzar', 'img-lamigra/esposas_0.png',
+    let newSprite = createSprite(migra.position.x+16, migra.position.y-32,32,32); // create a new sprite above the migra sprite
+    newSprite.setDefaultCollider(); // create collision box for new sprite
+    newSprite.addAnimation('lanzar', 'img-lamigra/esposas_0.png', // add images for animating the cuffs
                                      'img-lamigra/esposas_1.png',
                                      'img-lamigra/esposas_2.png',
                                      'img-lamigra/esposas_3.png');
-    cuffs.add(newSprite); // add new sprite to group cuffs
+    cuffs.add(newSprite); // add new sprite to Play.P5.js group cuffs
     flingEsposas = false;
-    renderQueue.push(newSprite);
-    newSprite.name = 'cuffs['+cuffs.length+']';
-    newSprite.animation.playing = 'true';
+    renderQueue.push(newSprite); // add newSprite to renderQueue
+    newSprite.name = 'cuffs['+cuffs.length+']'; // give the sprite a name that accords with the group identity
+    newSprite.animation.playing = 'true'; // set attributes for cuffs
     newSprite.movementDir = 'up';
     newSprite.speed = 32;
-    /*
-    let cuffsIndex = cuffs.length + 1;
-    cuffs[cuffsIndex] = esposas;
-    cuffs[cuffsIndex].position.x = migra.position.x + 16;
-    cuffs[cuffsIndex].position.y = migra.position.y - 32;
-    cuffs[cuffsIndex].changeAnimation('lanzar');
-    cuffs[cuffsIndex].animation.play();
-    */
-    //createCuff();
-
   }
-/*
-  // sketch to move cuffs
-  if (cuffs.length > 0){
-    for (let i = 0; i < cuffs.length; i++){
-      let oldX = cuffs[i].position.x;
-      let oldY = cuffs[i].position.y;
-      cuffs[i].position.y = oldY-32;
-      if (oldY - 32 < 7*32){
-        cuffs[i].remove();
-      }
-    }
-  }
-  */
   // /*
   // sketch to move player character
   if (moveState === 'left'){
@@ -1035,18 +1002,10 @@ function draw() {
     moveState = 'idle';
     //migra.position.x = migra.position.x;
   }
-  // */
-  /*
-  if (keyIsPressed){
-    migra.movementDir = moveState; // trying to use movmentDir and renderQueue for player movement
-  } else {
-    migra.movementDir = 'idle';
-  }
-  */
+  //
   updateRendering(renderQueue, renderTime);
   drawSprites();
-  // migra.movementDir = 'idle'; // this doesn't seem to be returning the state to idle after a move
-}
+} // end of draw()
 
 
 /*******************************************************
@@ -1055,31 +1014,10 @@ function draw() {
  *
  */
 
-/* *******************
- *  redundant chunk?
-function keyPressed (){
-  if (keyCode === 68){
-    migra.changeAnimation('move');
-  }
-  return false;
-}
-
-function keyReleased (){
-  if (keyCode === 68){
-    migra.changeAnimation('stay');
-  }
-  return false;
-}
-//********************
-*/
-
-
 /**
- *  keyReleased was tested in /public/ui to afford selecting and changing games
- *  depends on global var ctr0 which is a counter
+ *  keyReleased affords selecting and changing games by invoking URLs
  *  depends on global var url0 and url1 which are targets
  */
-
 function keyReleased() {
   if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
     window.open(url, "_self");

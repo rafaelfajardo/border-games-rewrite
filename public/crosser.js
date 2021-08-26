@@ -47,10 +47,9 @@ const HEIGHT = 448;
 const FRAME_RATE = 30;
 //
 //
-let btn1; // sprite container for button art
-let btn2; // sprite container for button art
 // counter to toggle between _crosser.html and _lamigra.html
-let ctr0 = 0;
+// let ctr0 = 0; // used in main.js but not in crosser.js nor lamigra.js
+//
 /* ****
 //
 // url targets for invoking _crosser.html or _lamigra.html
@@ -98,11 +97,7 @@ let img; // a temporary placeholder to preload images for sprites
 let img1; // temp placeholder to preload images for sprites
 let img2; // temp placeholder to preload images for sprites
 
-let spriteCounter = 0; // used in draw loop, along with modulo, to update and draw one sprite per frame.
-// will give background image it's own turn since it is a sprite indexed 0
-//will potentiall cause draw loop to speed up as sprites are removed from list
-
-const BUGGY = false; // boolean, debug flag, used for debug feature of  Play.JS
+const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
 const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
@@ -382,31 +377,12 @@ function animateSprite(sprite, timing, distance)
 }
 
 const ANIM_DELAY = 1;
+/**
+ *
+ * PRELOAD function
+ */
 function preload() {
 	//timeStamp = millis() / 1000 + renderTime;
-
-	// create a ui button for game selection for crosser.js
-	let img1 =  loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-	let img2 =  loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-	btn1 =  createSprite(224, 160, 180, 180);
-	btn1.addImage('off1', img1);
-	btn1.addImage('on1', img2);
-	btn1.addAnimation('off', img1);
-	btn1.addAnimation('select', img2);
-	btn1.addAnimation('blink', img1,img2,img2,img1);
-	btn1.changeAnimation('select');
-
-	// create a ui button for game selection for lamigra.js
-	img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
-	img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-	btn2 = createSprite(224, 370, 64, 32);
-	btn2.addImage('off2', img1);
-	btn2.addImage('on2', img2);
-	btn2.addAnimation('off', img1);
-	btn2.addAnimation('select', img2);
-	btn2.addAnimation('blink', img1,img2,img2,img1);
-	btn2.changeAnimation('off');
-
 
 	if (BUGGY){
 		img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
@@ -650,6 +626,15 @@ function preload() {
 
 } // end preload
 
+// this is the input delay for reading input--during this delay, we stop reading input, after it's
+// elapsed, we'll start reading input again. The delay should only be set after some input has been
+// read
+const INPUT_DELAY = .5;
+let readInputAfter = 0; 
+
+/**
+ * SETUP function
+ */
 function setup() {
 	//createCanvas(448, 548);
 	let canvas = createCanvas(448, 448); // suggested by p5js.org reference for parent()
@@ -702,30 +687,35 @@ function setup() {
 
 	// now set up the time to delay before reading so that we don't start reading immediately
 	readInputAfter = (millis() / 1000) + 1;
+
+
+  	gameState = 'startup';
 } // end setup
 
 
-// this is the input delay for reading input--during this delay, we stop reading input, after it's
-// elapsed, we'll start reading input again. The delay should only be set after some input has been
-// read
-const INPUT_DELAY = .5;
-let readInputAfter = 0; // delay by 1 second before reading any input
-
+/**
+ * DRAW function
+ */
 function draw() {
 	background(255);
 
 	/*
 	* I have commented out the switch statement during the early part of coding
-	*
-	switch (gameState) { // switch is not documented in P5.JS but is part of Javascript
-		case "select":
+	*/
+	switch (gameState)
+  { // switch is not documented in P5.JS but is part of Javascript
+    // select, startup','play','win','lose
+		//case "select": //will not use this case since it is handled in keyReleased() and updateStatus(pad)
 		// statements that display select condition, called by keyReleased() 'g'
 		// statements that may alter gameState label and condition
 		// statements that may reload this game
 		// statements that may launch the other game
-		break;
+		//break;
 		case "startup":
 		// statements to display the startup condition
+     tierra.changeAnimation('frontera');
+     laMigra.visible = false;
+     text('Press START to play', width/2, height/2);
 		// statements that may alter gamestate label and condition
 		break;
 		case "play":
@@ -733,77 +723,13 @@ function draw() {
 		break;
 		case "lose":
 		// statements that display loss condition
+    carlosmoreno.changeAnimation ('surprise');
+    carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+    carlosmoreno.position.y = 64*6+32;
 		break;
 		case "win":
 		// statements that display win condition
-		break;
-		default:
-		// statements that catch and redirect in case none of the above is true
-		break; // is there a 'break' after 'default'? I forget
-	} */
-
-
-
-
-	/*
-	// this was the first draft of movement code for carlosmoreno
-	// it executed too fast and did not honor his place in the renderQueue[]
-	if (moveUp){
-		carlosmoreno.changeAnimation ('walkup');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y - 32;
-		if (carlosmoreno.position.y - 32 < 0) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y += 32;
-		}
-		moveUp = false;
-		//carlosmoreno.changeImage ('faceup');
-	}
-	else if (moveDown){
-		carlosmoreno.changeAnimation ('walkdown');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y + 32;
-		if (carlosmoreno.position.y + 32 > HEIGHT) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y -= 32;
-		}
-		moveDown = false;
-		//carlosmoreno.changeImage ('facedown');
-	}
-	else if (moveLeft){
-		carlosmoreno.changeAnimation ('walkleft');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x - 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x < 0) {
-			carlosmoreno.position.x += 32;
-		}
-		moveLeft = false;
-		//carlosmoreno.changeImage ('faceleft');
-	}
-	else if (moveRight){
-		carlosmoreno.changeAnimation ('walkright');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x + 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x > WIDTH) {
-			carlosmoreno.position.x -= 32;
-		}
-		moveRight = false;
-		//carlosmoreno.changeImage ('faceright');
-	}
-	//else {
-	//carlosmoreno.changeAnimation ('facedown');
-	//}
-	*/
-	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
-		carlosmoreno.changeAnimation ('surprise');
-		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-		carlosmoreno.position.y = 64*6+32;
-
-	}
-	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
-		cadaver.visible = false;
+    cadaver.visible = false;
 		waterLog.visible = false;
 		gato1.visible = false;
 		gato2.visible = false;
@@ -817,6 +743,20 @@ function draw() {
 		visa.visible = false;
 		carlosmoreno.visible = false;
 		tierra.changeImage('end');
+		break;
+		default:
+		// statements that catch and redirect in case none of the above is true
+		break; // is there a 'break' after 'default'? I forget
+	} // end gameState switch/case statements
+
+
+
+
+	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
+    gameState = 'lose';
+	}
+	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
+    gameState = 'win';
 	}
 
 	// get the current time
@@ -866,8 +806,8 @@ async function updateStatus(pad){ // tested once per frame
 	* Regular expressions to search the ID string given to us by the manufacturer
 	* so that we can identify which controller is which and behave accordingly.
 	*/
-	let nintendoId = /Vendor\: 0810 Product\: e501/;
-	let standardID = /Vendor\: 0583 Product\: 2060/;
+	let nintendoId = /Vendor\: 0810 Product\: e501/; // this is our canonical NES controller/gamepad
+	let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 		
@@ -875,22 +815,22 @@ async function updateStatus(pad){ // tested once per frame
 		{
 			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'left');
-		} //{ moveLeft = true;} else { moveLeft = false; }
+		}
 		if (pad.axes[0] ===  1.00000)
 		{
 			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'right');
-		} //{ moveRight = true;} else { moveRight = false; }
+		}
 		if (pad.axes[1] === -1.00000)
 		{
 			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'up');
-		} //{ moveUp = true;} else { moveUp = false; }
+		}
 		if (pad.axes[1] ===  1.00000)
 		{
 			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'down');
-		} //{ moveDown = true;} else { moveDown = false; }
+		}
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
@@ -903,35 +843,6 @@ async function updateStatus(pad){ // tested once per frame
 			print('NES Start pressed and released');
 			window.open(url0, "_self");
 		}
-		// if (pad.buttons[8].value === 1.00 && firstIgnored)
-		// {  
-		// 	print('NES Select pressed'); 
-		// 	pad.buttons[8].value === 0;
-		// 	readInputAfter = currentTime + INPUT_DELAY;
-		// 	window.open(url, "_self"); 
-
-		// } // NES Select button
-		// else if (pad.buttons[8].value === 1.00 && !firstIgnored)
-		// {
-		// 	firstIgnored = true;
-		// 	console.log('ignored select')
-		// 	await new Promise(r => setTimeout(r, 1000));
-		// }
-		// if (pad.buttons[9].value === 1.00 && firstIgnored)
-		// { 
-		// 	print('NES Start pressed'); 
-		// 	readInputAfter = currentTime + INPUT_DELAY;
-		// 	pad.buttons[9].value === 0;
-		// 	//window.open(url0, '_self'); 
-		// 	location.reload();
-			
-		// } // NES Start button
-		// else if (pad.buttons[9].value === 1.00 && !firstIgnored)
-		// {
-		// 	firstIgnored = true;
-		// 	console.log('ignored start');
-		// 	await new Promise(r => setTimeout(r, 1000));
-		// }
 	}
 
 	/**
@@ -939,6 +850,7 @@ async function updateStatus(pad){ // tested once per frame
 	*  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
 	*  need a test to enclose it. Axis defaults are 0.00392 (positive values)
 	*/
+  /*
 	if (pad.id.match(standardID)) { // this matches the id against the controller ID value
 		if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
 		if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
@@ -961,13 +873,15 @@ async function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
 		if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
 	}
+  */
+
 	/**
 	*  This bit is specific to the Exlene SNES style controller,
 	*  USB Gamepad (Vendor: 0079 Product: 0011)
 	*  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
 	*/
 	/**
-	let exlene = /Vendor\: 0079 Product\: 0011/;
+	let exlene = /Vendor\: 0079 Product\: 0011/; // this is the Exlene SNES gamepad
 	if (pad.id.match(exlene) ){
 		if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
 		if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
@@ -1011,41 +925,13 @@ async function updateStatus(pad){ // tested once per frame
 
 function keyReleased() {
 	if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
-		// need to add here a test for if gamestate === playing (either) then load index.html
-
-		// deprecating attempt to get Select UI in this window
-		/*
-		if (ctr0 % 2 === 0){
-			btn1.changeAnimation('off');
-			btn2.changeAnimation('select');
-		} else if (ctr0 % 2 === 1) {
-			btn1.changeAnimation('select');
-			btn2.changeAnimation('off');
-		}
-		ctr0 = ctr0 +1;
-		*/
-
+		//may need to add here a test for if gamestate === playing (either) then load index.html
 		// open the Select url which should be index.html
 		window.open(url, "_self");
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-
-		// deprecating attempt to get Select and Start UI in this window
-		/*
-		if (ctr0 % 2 === 0){
-			btn1.changeAnimation('off');
-			btn2.changeAnimation('blink');
-			window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
-		}
-		else if (ctr0 % 2 === 1){
-			btn1.changeAnimation('blink');
-			btn2.changeAnimation('off');
-			window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
-		}
-		*/
-
 		// Start key will reload and hence restart this window
-		window.open(url0, '_self');
+		// window.open(url0, '_self');
 	}
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
@@ -1059,7 +945,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	if (time <  readInputAfter)
 	return;
 
-	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+	if        (
 	key === 'w'          ||
 	key === 'W'          ||
 	key === 'i'          ||
@@ -1068,7 +954,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'up')
 		 readInputAfter = time + INPUT_DELAY;
 
-	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+	} else if (
 	key === 's'          ||
 	key === 'S'          ||
 	key === 'k'          ||
@@ -1077,7 +963,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'down')
 		 readInputAfter = time + INPUT_DELAY;
 
-	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+	} else if (
 	key === 'a'          ||
 	key === 'A'          ||
 	key === 'j'          ||
@@ -1086,7 +972,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'left')
 		 readInputAfter = time + INPUT_DELAY;
 
-	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+	} else if (
 	key === 'd'          ||
 	key === 'D'          ||
 	key === 'l'          ||
@@ -1095,18 +981,12 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 		addInput(inputQueue, 'right')
 		 readInputAfter = time + INPUT_DELAY;
 
-	} else if (key === 't'		||
-	key === 'T') {
-		print('t');
-		START = true;
-	} else if (key === 'y') {
-		print('y');
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
 	}
 	return false;
 
-} // end keyTyped
+} // end keyPressed
 
 
 // Code to deal with game pads
@@ -1140,25 +1020,46 @@ function isButtonReleased(ctrlId, buttonId)
 	return false
 }
 
+/** Called by the web page whenever a new controller is connected (or wakes up) */
 function connectionHandler(e) {
+	// just add it
 	addGamePad(e.gamepad)
 }
   
+/** Called by the web page whenever a game controller is disconnected */
 function disconnectHandler(e) {
+	// just remove it
 	removeGamePad(e.gamepad)
 }
   
+/**
+ * Called whenever we need to add a gamepad to our list of gamepads. The parameter
+ * is of the GamePad object type, so it has an index, etc. 
+ * @param {The gamepad we're adding} gamepad 
+ */
 function addGamePad(gamepad) {
 	console.log('gamepad connected on ' + gamepad.index)
 	controllers[gamepad.index] = gamepad	
 	console.log('controllers.length ' + controllers.length)
 }
   
+/** 
+ * Used to remove a given gamepad from our array of GamePad objects.
+ * @param {The gamepad we're removing} gamepad
+ */
 function removeGamePad(gamepad) {
 	console.log('gamepad disconnected on ' + gamepad.index)
+	// i.e., set it to undefined at that given index
 	delete controllers[gamepad.index];
 }
   
+/**
+ * This does a partial copy of the information we want from a gamepad, and 
+ * in particular, the button states. It doesn't copy anything else! Javascript
+ * requires this because it only has referential copies
+ * @param {The GamePad we're copying} pad 
+ * @returns 
+ */
 function copyPad(pad) {
 	var p = {};
 	p.buttons = [];
@@ -1169,6 +1070,11 @@ function copyPad(pad) {
 	}
 	return p;
 }
+
+/**
+ * Copies our controllers to lastControllers by doing a slightly deep copy of 
+ * the button states so that we can look for button releases later
+ */
 function copyControllers() {
 	lastControllers = [];
 	lastControllers.length = controllers.length;
@@ -1180,12 +1086,19 @@ function copyControllers() {
 	}
 }
 
+/**
+ * Used to get the latest set of gamepads from the browser. On Chrome,
+ * we have to do this every time we want new state, because it's an entirely
+ * new object. 
+ */
 function scanGamePads() {
 	// try to get the gamepads, on some browsers, we have to use webkit
 	var gamepads = navigator.getGamepads ? navigator.getGamepads() : 
 	  (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
   
+	// make sure our controllers object has a length property
     controllers.length = gamepads.length;
+	// now do the slightly deep copy of the set of controllers
 	copyControllers();
 	for (var i = 0; i < gamepads.length; i++) 
 	{
