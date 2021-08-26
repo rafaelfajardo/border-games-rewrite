@@ -461,5 +461,15 @@ I've been distracted by home maintenance and student needs.
 It looks as though we will be running a Dell micro pc: https://www.dell.com/en-us/work/shop/cty/pdp/spd/optiplex-3080-micro
 
 I've been deleting cruft. Chris is trying to figure out why the NES controller always reloads as though it is caching an "h" key.
+
 ======
+2021 08 26
+gonna try to be finished by September 07, 2021 and install that week.
+Chrome will depend on Kiosk browser extention by the Cook Company
+https://chrome.google.com/webstore/detail/kiosk/afhcomalholahplbjhnmahkoekoijban/
+https://kiosk.cook.company/
+which I tested today and set to a specific URL
+http://localhost:8080/
+and which can be exited via an escape key press on the keyboard.
+a mouse is needed at first to focus the kiosk.
 */
