@@ -372,6 +372,10 @@ function animateSprite(sprite, timing, distance)
 }
 
 const ANIM_DELAY = 1;
+/**
+ *
+ * PRELOAD function
+ */
 function preload() {
 	timeStamp = millis() / 1000 + renderTime;
 
