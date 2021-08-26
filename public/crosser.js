@@ -630,7 +630,7 @@ function preload() {
 // elapsed, we'll start reading input again. The delay should only be set after some input has been
 // read
 const INPUT_DELAY = .5;
-let readInputAfter = 0; 
+let readInputAfter = 0;
 
 /**
  * SETUP function
@@ -726,6 +726,7 @@ function draw() {
 			carlosmoreno.changeAnimation ('surprise');
 			carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
 			carlosmoreno.position.y = 64*6+32;
+      gameState = 'play'; // change gameState or carlos gets stuck
 			break;
 		case "win":
 			// statements that display win condition
@@ -767,7 +768,7 @@ function draw() {
 		// grab controller 0, since that's all we'll have
 		let pad0 = controllers[0];
 		// test that pad0 is not null or undefined (i.e., it exists)
-		if (pad0) { 
+		if (pad0) {
 			// just log it so we know
 			console.log('pad0 is active');
 			// now update the game with the status of the game pad
@@ -791,7 +792,7 @@ function draw() {
 
 } // end draw loop
 
-let firstIgnored = false; 
+let firstIgnored = false;
 async function updateStatus(pad){ // tested once per frame
 
 	const currentTime = millis() / 1000;
@@ -810,7 +811,7 @@ async function updateStatus(pad){ // tested once per frame
 	let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
-		
+
 		if (pad.axes[0] === -1.00000)
 		{
 			readInputAfter = currentTime + INPUT_DELAY;
@@ -994,11 +995,11 @@ let lastControllers = []
 let controllers = []
 
 /**
- * checks two things: controllers and lastControllers, if the button was 
+ * checks two things: controllers and lastControllers, if the button was
  * pressed in lastControllers, but not in controllers, we have a "release" event
  * in essence, which we can check here--note this happens only once per press
- * @param {Index of the controller} ctrlId 
- * @param {Index of the button} buttonId 
+ * @param {Index of the controller} ctrlId
+ * @param {Index of the button} buttonId
  */
 function isButtonReleased(ctrlId, buttonId)
 {
@@ -1007,7 +1008,7 @@ function isButtonReleased(ctrlId, buttonId)
 		let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
 		// console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
 		// console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
-		// if the current val is 0, the button is no longer pressed, and if the last value is 
+		// if the current val is 0, the button is no longer pressed, and if the last value is
 		// 1, then it was pressed during the last read--this lets us know that it was a released button
 		if (val === 0.0 && lastVal === 1.0) {
 			console.log('key released: ' + buttonId)
@@ -1025,25 +1026,25 @@ function connectionHandler(e) {
 	// just add it
 	addGamePad(e.gamepad)
 }
-  
+
 /** Called by the web page whenever a game controller is disconnected */
 function disconnectHandler(e) {
 	// just remove it
 	removeGamePad(e.gamepad)
 }
-  
+
 /**
  * Called whenever we need to add a gamepad to our list of gamepads. The parameter
- * is of the GamePad object type, so it has an index, etc. 
- * @param {The gamepad we're adding} gamepad 
+ * is of the GamePad object type, so it has an index, etc.
+ * @param {The gamepad we're adding} gamepad
  */
 function addGamePad(gamepad) {
 	console.log('gamepad connected on ' + gamepad.index)
-	controllers[gamepad.index] = gamepad	
+	controllers[gamepad.index] = gamepad
 	console.log('controllers.length ' + controllers.length)
 }
-  
-/** 
+
+/**
  * Used to remove a given gamepad from our array of GamePad objects.
  * @param {The gamepad we're removing} gamepad
  */
@@ -1052,13 +1053,13 @@ function removeGamePad(gamepad) {
 	// i.e., set it to undefined at that given index
 	delete controllers[gamepad.index];
 }
-  
+
 /**
- * This does a partial copy of the information we want from a gamepad, and 
+ * This does a partial copy of the information we want from a gamepad, and
  * in particular, the button states. It doesn't copy anything else! Javascript
  * requires this because it only has referential copies
- * @param {The GamePad we're copying} pad 
- * @returns 
+ * @param {The GamePad we're copying} pad
+ * @returns
  */
 function copyPad(pad) {
 	var p = {};
@@ -1072,7 +1073,7 @@ function copyPad(pad) {
 }
 
 /**
- * Copies our controllers to lastControllers by doing a slightly deep copy of 
+ * Copies our controllers to lastControllers by doing a slightly deep copy of
  * the button states so that we can look for button releases later
  */
 function copyControllers() {
@@ -1089,20 +1090,20 @@ function copyControllers() {
 /**
  * Used to get the latest set of gamepads from the browser. On Chrome,
  * we have to do this every time we want new state, because it's an entirely
- * new object. 
+ * new object.
  */
 function scanGamePads() {
 	// try to get the gamepads, on some browsers, we have to use webkit
-	var gamepads = navigator.getGamepads ? navigator.getGamepads() : 
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() :
 	  (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-  
+
 	// make sure our controllers object has a length property
     controllers.length = gamepads.length;
 	// now do the slightly deep copy of the set of controllers
 	copyControllers();
-	for (var i = 0; i < gamepads.length; i++) 
+	for (var i = 0; i < gamepads.length; i++)
 	{
-		if (gamepads[i]) 
+		if (gamepads[i])
 	  	{
 			if (gamepads[i].index in controllers) {
 		  		controllers[gamepads[i].index] = gamepads[i];
@@ -1112,7 +1113,7 @@ function scanGamePads() {
 		}
 	}
 }
-  
+
 // add event listeners for game pad connections
 window.addEventListener("gamepadconnected", connectionHandler)
 window.addEventListener("gamepaddisconnected", removeGamePad)
