@@ -21,8 +21,8 @@
 // declare global variables
 let btn1; // sprite container for button art
 let btn2; // sprite container for button art
-let img1; // temporary container to preload an image
-let img2; // temporary container to preload an image
+// let img1; // temporary container to preload an image
+// let img2; // temporary container to preload an image
 let url;  // container for a target url
 let url0; // container for a target url
 let url1; // container for a target url
@@ -30,8 +30,8 @@ let ctr0; // container for a counter
 
 // preload
 function preload(){
-  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  let img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+  let img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
   btn1 = createSprite(224, 160, 180, 180);
   btn1.addImage('off1', img1);
   btn1.addImage('on1', img2);
@@ -81,6 +81,9 @@ function setup(){
 
 }
 
+
+const INPUT_DELAY = .5;
+let nextInputAfter = 0;
 // draw
 function draw(){
   background(128); // overwrite last frame
@@ -88,17 +91,25 @@ function draw(){
     // if selecting to play Crosser then show Crosser and hide others
     // if selecting to play La Migra then show La Migra and hide others
 
-    // experimental code for gamepad
-  	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
-  	let pad0 = pads[0]; // limit to first pad connected
-  	if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
-  		console.log(pad0)
-  		updateStatus(pad0); // will need an updateStatus() function
-  	} else { // what to do if pad0 is null, which is to say there is no gamepad connected
-  		// use keyboard
-  		// or use touches
-  		console.log("did not find gamepad (probably need to click it so it wakes up)")
-  	}
+    // add a delay to how frequently we poll input
+    const currentTime = millis() / 1000;
+    if (currentTime >= nextInputAfter) {
+      console.log('scanning input');
+      // experimental code for gamepad
+      let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
+      let pad0 = pads[0]; // limit to first pad connected
+      if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
+        console.log('pad0 is active');
+        updateStatus(pad0); // will need an updateStatus() function
+      } else { // what to do if pad0 is null, which is to say there is no gamepad connected
+        // use keyboard
+        // or use touches
+        console.log("did not find gamepad (probably need to click it so it wakes up)")
+      }
+
+      // now reset the time when we check for input again
+      nextInputAfter = currentTime + INPUT_DELAY;
+    }
 
     /* * * *
      * This test is necessary for DAM installation for ReVisión in 2021
@@ -132,13 +143,17 @@ function mouseClicked(){
   return false;
 }
 
-function updateStatus(pad){ // tested once per frame
+
+function updateStatus(pad){  // tested once per frame
+
   /**
    *  This bit is specific to an NES style controller,
    *  usb gamepad (Vendor: 0810 Product: e501)
    *  axis default values are -0.00392 so can test for greater and less than that.
    *  need a test to enclose it
    */
+  
+
 
   /*
    * Regular expressions to search the ID string given to us by the manufacturer
@@ -199,30 +214,31 @@ function updateStatus(pad){ // tested once per frame
        if (pad.buttons[5].value === 1){ print('Buffalo SNES R-button pressed');}
        if (pad.buttons[6].value === 1){ print('Buffalo SNES L-button pressed');} // redundant mapping
        if (pad.buttons[7].value === 1){ print('Buffalo SNES R-button pressed');} // redundant mapping
-       if (pad.buttons[8].value === 1){
-         if (ctr0 % 2 === 0){
-           btn1.changeAnimation('off');
-           btn2.changeAnimation('select');
-         } else if (ctr0 % 2 === 1) {
+       if (pad.buttons[8].value === 1)
+       {
+          if (ctr0 % 2 === 0)
+          {
+            btn1.changeAnimation('off');
+            btn2.changeAnimation('select');
+          } else if (ctr0 % 2 === 1) {
            btn1.changeAnimation('select');
            btn2.changeAnimation('off');
-         }
-         ctr0 = ctr0 +1;
-         print('Buffalo SNES SELECT button pressed');
+          }
+          ctr0 = ctr0 +1;
+          print('Buffalo SNES SELECT button pressed');
+      }
+      if (pad.buttons[9].value === 1){
+        if (ctr0 % 2 === 0){
+          btn1.changeAnimation('off');
+          btn2.changeAnimation('blink');
+          window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+        } else if (ctr0 % 2 === 1) {
+          btn1.changeAnimation('blink');
+          btn2.changeAnimation('off');
+          window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
         }
-       if (pad.buttons[9].value === 1){
-         if (ctr0 % 2 === 0){
-           btn1.changeAnimation('off');
-           btn2.changeAnimation('blink');
-           window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
-         }
-         else if (ctr0 % 2 === 1){
-           btn1.changeAnimation('blink');
-           btn2.changeAnimation('off');
-           window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
-         }
-         print('Buffalo SNES START button pressed');
-         }
+        print('Buffalo SNES START button pressed');
+      }
        if (pad.buttons[10].value === 1){ print('Buffalo unmapped button 10');} // I haven't found a signal on this button[index]
        if (pad.buttons[11].value === 1){ print('Buffalo unmapped button 11');} // I haven't found a signal on this button[index]
        if (pad.buttons[12].value === 1){ print('Buffalo SNES D-pad up pressed');} // redundant with axes 1 (Y-value)

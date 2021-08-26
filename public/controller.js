@@ -236,3 +236,48 @@ function touchStarted(){
 
   *
   */
+
+export var haveEvents = 'ongamepadconnected' in window;
+export var controllers = {}
+
+export function connectionHandler(e) {
+  addGamePad(e.gamepad)
+}
+
+export function disconnectHandler(e) {
+  removeGamePad(e.gamepad)
+}
+
+function addGamePad(gamepad) {
+  console.log('gamepad connected on ' + gamepad.index)
+  controllers[gamepad.index] = gamepad
+}
+
+function removeGamePad(gamepad) {
+  console.log('gamepad disconnected on ' + gamepad.index)
+  delete controllers[gamepad.index];
+}
+
+export function scanGamePads() {
+  // try to get the gamepads, on some browsers, we have to use webkit
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : 
+    (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+
+  for (var i = 0; i < gamepads.length; i++) 
+  {
+    if (gamepads[i]) 
+    {
+      if (gamepads[i].index in controllers) {
+        controllers[gamepads[i].index] = gamepads[i];
+      } else {
+        addGamePad(gamepads[i]);
+      }
+    }
+  }
+}
+
+
+
+// add event listeners for game pad connections
+window.addEventListener("gamepadconnected", connectionHandler)
+window.addEventListener("gamepaddisconnected", removeGamePad)

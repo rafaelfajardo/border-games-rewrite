@@ -10,4 +10,4 @@ app.use('/', express.static(__dirname + '/public'))
 
 
 // and start listening
-app.listen(port, () => console.log('example app listening on port %s!', port))
+app.listen(port, () => console.log('Crosser and La Migra web server listening on port %s', port))

@@ -1,3 +1,4 @@
+'use strict';  // enforce some (more) sane behavior from javascript
 /* * * * * * * * * * * * * * * *
 *
 *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
@@ -29,6 +30,8 @@
 *      Tomás Márquez
 *
 */
+
+
 
 //
 //
@@ -116,10 +119,12 @@ let currentIndex = 0;
 // timestamp for our indexing into the queue
 let timeStamp = 0;
 
+
+
+
 // create an input queue so we can store the last two inputs we received
 let inputQueue = [];
 let maxQueueSize = 2;
-
 /**
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
@@ -377,7 +382,7 @@ const ANIM_DELAY = 1;
  * PRELOAD function
  */
 function preload() {
-	timeStamp = millis() / 1000 + renderTime;
+	//timeStamp = millis() / 1000 + renderTime;
 
 	if (BUGGY){
 		img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
@@ -410,7 +415,7 @@ function preload() {
 
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
-	anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
+	let anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
 
@@ -617,9 +622,15 @@ function preload() {
 	// end load and create migraMan3
 
 	// carlosmoreno should go here, will it feel different if he doesn't?
-  renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
+  	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 
 } // end preload
+
+// this is the input delay for reading input--during this delay, we stop reading input, after it's
+// elapsed, we'll start reading input again. The delay should only be set after some input has been
+// read
+const INPUT_DELAY = .5;
+let readInputAfter = 0; 
 
 /**
  * SETUP function
@@ -673,7 +684,12 @@ function setup() {
 	laMigra.add(migraMan3);
 
 	//carlosmoreno.changeImage('facedown');
-  gameState = 'startup';
+
+	// now set up the time to delay before reading so that we don't start reading immediately
+	readInputAfter = (millis() / 1000) + 1;
+
+
+  	gameState = 'startup';
 } // end setup
 
 
@@ -687,8 +703,8 @@ function draw() {
 	* I have commented out the switch statement during the early part of coding
 	*/
 	switch (gameState)
-  { // switch is not documented in P5.JS but is part of Javascript
-    // select, startup','play','win','lose
+  	{ 	// switch is not documented in P5.JS but is part of Javascript
+    	// select, startup','play','win','lose
 		//case "select": //will not use this case since it is handled in keyReleased() and updateStatus(pad)
 		// statements that display select condition, called by keyReleased() 'g'
 		// statements that may alter gameState label and condition
@@ -696,67 +712,77 @@ function draw() {
 		// statements that may launch the other game
 		//break;
 		case "startup":
-		// statements to display the startup condition
-     tierra.changeAnimation('frontera');
-     laMigra.visible = false;
-     text('Press START to play', width/2, height/2);
-		// statements that may alter gamestate label and condition
-		break;
+			// statements to display the startup condition
+			tierra.changeAnimation('frontera');
+			laMigra.visible = false;
+			text('Press START to play', width/2, height/2);
+			// statements that may alter gamestate label and condition
+			break;
 		case "play":
-		// statements that display gameplay
-		break;
+			// statements that display gameplay
+			break;
 		case "lose":
-		// statements that display loss condition
-    carlosmoreno.changeAnimation ('surprise');
-    carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-    carlosmoreno.position.y = 64*6+32;
-		break;
+			// statements that display loss condition
+			carlosmoreno.changeAnimation ('surprise');
+			carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+			carlosmoreno.position.y = 64*6+32;
+			break;
 		case "win":
-		// statements that display win condition
-    cadaver.visible = false;
-		waterLog.visible = false;
-		gato1.visible = false;
-		gato2.visible = false;
-		llanta.visible = false;
-		migraMan1.visible = false;
-		migraMan2.visible = false;
-		migraMan3.visible = false;
-		migraSUV.visible = false;
-		migraHelo1.visible = false;
-		migraHelo2.visible = false;
-		visa.visible = false;
-		carlosmoreno.visible = false;
-		tierra.changeImage('end');
-		break;
+			// statements that display win condition
+    		cadaver.visible = false;
+			waterLog.visible = false;
+			gato1.visible = false;
+			gato2.visible = false;
+			llanta.visible = false;
+			migraMan1.visible = false;
+			migraMan2.visible = false;
+			migraMan3.visible = false;
+			migraSUV.visible = false;
+			migraHelo1.visible = false;
+			migraHelo2.visible = false;
+			visa.visible = false;
+			carlosmoreno.visible = false;
+			tierra.changeImage('end');
+			break;
 		default:
-		// statements that catch and redirect in case none of the above is true
-		break; // is there a 'break' after 'default'? I forget
+			// statements that catch and redirect in case none of the above is true
+			break; // is there a 'break' after 'default'? I forget
 	} // end gameState switch/case statements
 
 
-
-
 	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
-    gameState = 'lose';
+    	gameState = 'lose';
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
-    gameState = 'win';
+    	gameState = 'win';
 	}
 
-	// experimental code for gamepad
-	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
-	let pad0 = pads[0]; // limit to first pad connected
-	if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
-		console.log(pad0)
-		updateStatus(pad0); // will need an updateStatus() function
-	} else { // what to do if pad0 is null, which is to say there is no gamepad connected
-		// use keyboard
-		// or use touches
-		//console.log("did not find gamepad (probably need to click it so it wakes up)")
+	// get the current time so we can decide if it's time to read input, and in particular, the controller
+	const currentTime = millis() / 1000;
+
+	// if the time is after our readInputAfter timestamp, we'll process input from the controller
+	if (currentTime > readInputAfter) {
+		// scan the game pads to see which ones are active
+		scanGamePads();
+		// grab controller 0, since that's all we'll have
+		let pad0 = controllers[0];
+		// test that pad0 is not null or undefined (i.e., it exists)
+		if (pad0) { 
+			// just log it so we know
+			console.log('pad0 is active');
+			// now update the game with the status of the game pad
+			updateStatus(pad0); // will need an updateStatus() function
+		} else { // what to do if pad0 is null, which is to say there is no gamepad connected
+			// use keyboard
+			// or use touches
+			//console.log("did not find gamepad (probably need to click it so it wakes up)")
+		}
 	}
 
 	// update what we're rendering and how frequently
 	updateRendering(renderQueue, renderTime);
+
+	// now tell p5.play to draw all the sprites it knows about
 	drawSprites();
 
 	// returns carlosmoreno to idle state after an update
@@ -765,19 +791,10 @@ function draw() {
 
 } // end draw loop
 
-// this is the input delay for reading input--during this delay, we stop reading input, after it's
-// elapsed, we'll start reading input again. The delay should only be set after some input has been
-// read
-const INPUT_DELAY = .5;
-let readInputAt = 0;
-function updateStatus(pad){ // tested once per frame
-	// get the current time
-	const time = millis() / 1000;
+let firstIgnored = false; 
+async function updateStatus(pad){ // tested once per frame
 
-	// don't get controller input while we're waiting
-	if (time < readInputAt)
-	return;
-
+	const currentTime = millis() / 1000;
 	/**
 	*  This bit is specific to an NES style controller,
 	*  usb gamepad (Vendor: 0810 Product: e501)
@@ -793,31 +810,39 @@ function updateStatus(pad){ // tested once per frame
 	let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
+		
 		if (pad.axes[0] === -1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'left');
 		}
 		if (pad.axes[0] ===  1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'right');
 		}
 		if (pad.axes[1] === -1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'up');
 		}
 		if (pad.axes[1] ===  1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'down');
 		}
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
-		if (pad.buttons[8].value === 1.00){ window.open(url, "_self"); print('NES Select pressed'); } // NES Select button
-		if (pad.buttons[9].value === 1.00){ print('NES Start pressed'); } //window.open(url0, '_self'); // NES Start button
+		if (isButtonReleased(0, 8)) {
+			print('NES Select pressed and released');
+			window.open(url, "_self");
+		}
+
+		if (isButtonReleased(0, 9)) {
+			print('NES Start pressed and released');
+			window.open(url0, "_self");
+		}
 	}
 
 	/**
@@ -911,12 +936,13 @@ function keyReleased() {
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
+
 function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
 	const time = millis() / 1000;
 
 	// don't get keyboard input while we're waiting
-	if (time < readInputAt)
+	if (time <  readInputAfter)
 	return;
 
 	if        (
@@ -926,7 +952,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'I') {
 		print('key up');
 		addInput(inputQueue, 'up')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else if (
 	key === 's'          ||
@@ -935,7 +961,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'K') {
 		print('key down');
 		addInput(inputQueue, 'down')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else if (
 	key === 'a'          ||
@@ -944,7 +970,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'J') {
 		print('key left');
 		addInput(inputQueue, 'left')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else if (
 	key === 'd'          ||
@@ -953,11 +979,140 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'L') {
 		print('key right');
 		addInput(inputQueue, 'right')
-		readInputAt = time + INPUT_DELAY;
+		 readInputAfter = time + INPUT_DELAY;
 
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
 	}
 	return false;
 
-} // end keyPressed()
+} // end keyPressed
+
+
+// Code to deal with game pads
+let lastControllers = []
+let controllers = []
+
+/**
+ * checks two things: controllers and lastControllers, if the button was 
+ * pressed in lastControllers, but not in controllers, we have a "release" event
+ * in essence, which we can check here--note this happens only once per press
+ * @param {Index of the controller} ctrlId 
+ * @param {Index of the button} buttonId 
+ */
+function isButtonReleased(ctrlId, buttonId)
+{
+	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId]) {
+		let val = controllers[ctrlId].buttons[buttonId].value;
+		let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
+		// console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
+		// console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
+		// if the current val is 0, the button is no longer pressed, and if the last value is 
+		// 1, then it was pressed during the last read--this lets us know that it was a released button
+		if (val === 0.0 && lastVal === 1.0) {
+			console.log('key released: ' + buttonId)
+			return true
+		} else {
+			return false
+		}
+	}
+
+	return false
+}
+
+/** Called by the web page whenever a new controller is connected (or wakes up) */
+function connectionHandler(e) {
+	// just add it
+	addGamePad(e.gamepad)
+}
+  
+/** Called by the web page whenever a game controller is disconnected */
+function disconnectHandler(e) {
+	// just remove it
+	removeGamePad(e.gamepad)
+}
+  
+/**
+ * Called whenever we need to add a gamepad to our list of gamepads. The parameter
+ * is of the GamePad object type, so it has an index, etc. 
+ * @param {The gamepad we're adding} gamepad 
+ */
+function addGamePad(gamepad) {
+	console.log('gamepad connected on ' + gamepad.index)
+	controllers[gamepad.index] = gamepad	
+	console.log('controllers.length ' + controllers.length)
+}
+  
+/** 
+ * Used to remove a given gamepad from our array of GamePad objects.
+ * @param {The gamepad we're removing} gamepad
+ */
+function removeGamePad(gamepad) {
+	console.log('gamepad disconnected on ' + gamepad.index)
+	// i.e., set it to undefined at that given index
+	delete controllers[gamepad.index];
+}
+  
+/**
+ * This does a partial copy of the information we want from a gamepad, and 
+ * in particular, the button states. It doesn't copy anything else! Javascript
+ * requires this because it only has referential copies
+ * @param {The GamePad we're copying} pad 
+ * @returns 
+ */
+function copyPad(pad) {
+	var p = {};
+	p.buttons = [];
+	for (var i = 0; i < pad.buttons.length; i++)
+	{
+		p.buttons.push({})
+		p.buttons[i].value = pad.buttons[i].value;
+	}
+	return p;
+}
+
+/**
+ * Copies our controllers to lastControllers by doing a slightly deep copy of 
+ * the button states so that we can look for button releases later
+ */
+function copyControllers() {
+	lastControllers = [];
+	lastControllers.length = controllers.length;
+	for (var i = 0; i < controllers.length; i++)
+	{
+		if (controllers[i]) {
+		    lastControllers[i] = copyPad(controllers[i]);
+		}
+	}
+}
+
+/**
+ * Used to get the latest set of gamepads from the browser. On Chrome,
+ * we have to do this every time we want new state, because it's an entirely
+ * new object. 
+ */
+function scanGamePads() {
+	// try to get the gamepads, on some browsers, we have to use webkit
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() : 
+	  (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+  
+	// make sure our controllers object has a length property
+    controllers.length = gamepads.length;
+	// now do the slightly deep copy of the set of controllers
+	copyControllers();
+	for (var i = 0; i < gamepads.length; i++) 
+	{
+		if (gamepads[i]) 
+	  	{
+			if (gamepads[i].index in controllers) {
+		  		controllers[gamepads[i].index] = gamepads[i];
+			} else {
+				addGamePad(gamepads[i]);
+			}
+		}
+	}
+}
+  
+// add event listeners for game pad connections
+window.addEventListener("gamepadconnected", connectionHandler)
+window.addEventListener("gamepaddisconnected", removeGamePad)
