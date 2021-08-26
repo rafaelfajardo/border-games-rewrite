@@ -676,6 +676,10 @@ function setup() {
   gameState = 'startup';
 } // end setup
 
+
+/**
+ * DRAW function
+ */
 function draw() {
 	background(255);
 
