@@ -703,8 +703,8 @@ function draw() {
 	* I have commented out the switch statement during the early part of coding
 	*/
 	switch (gameState)
-  { // switch is not documented in P5.JS but is part of Javascript
-    // select, startup','play','win','lose
+  	{ 	// switch is not documented in P5.JS but is part of Javascript
+    	// select, startup','play','win','lose
 		//case "select": //will not use this case since it is handled in keyReleased() and updateStatus(pad)
 		// statements that display select condition, called by keyReleased() 'g'
 		// statements that may alter gameState label and condition
@@ -712,67 +712,65 @@ function draw() {
 		// statements that may launch the other game
 		//break;
 		case "startup":
-		// statements to display the startup condition
-     tierra.changeAnimation('frontera');
-     laMigra.visible = false;
-     text('Press START to play', width/2, height/2);
-		// statements that may alter gamestate label and condition
-		break;
+			// statements to display the startup condition
+			tierra.changeAnimation('frontera');
+			laMigra.visible = false;
+			text('Press START to play', width/2, height/2);
+			// statements that may alter gamestate label and condition
+			break;
 		case "play":
-		// statements that display gameplay
-		break;
+			// statements that display gameplay
+			break;
 		case "lose":
-		// statements that display loss condition
-    carlosmoreno.changeAnimation ('surprise');
-    carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-    carlosmoreno.position.y = 64*6+32;
-		break;
+			// statements that display loss condition
+			carlosmoreno.changeAnimation ('surprise');
+			carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+			carlosmoreno.position.y = 64*6+32;
+			break;
 		case "win":
-		// statements that display win condition
-    cadaver.visible = false;
-		waterLog.visible = false;
-		gato1.visible = false;
-		gato2.visible = false;
-		llanta.visible = false;
-		migraMan1.visible = false;
-		migraMan2.visible = false;
-		migraMan3.visible = false;
-		migraSUV.visible = false;
-		migraHelo1.visible = false;
-		migraHelo2.visible = false;
-		visa.visible = false;
-		carlosmoreno.visible = false;
-		tierra.changeImage('end');
-		break;
+			// statements that display win condition
+    		cadaver.visible = false;
+			waterLog.visible = false;
+			gato1.visible = false;
+			gato2.visible = false;
+			llanta.visible = false;
+			migraMan1.visible = false;
+			migraMan2.visible = false;
+			migraMan3.visible = false;
+			migraSUV.visible = false;
+			migraHelo1.visible = false;
+			migraHelo2.visible = false;
+			visa.visible = false;
+			carlosmoreno.visible = false;
+			tierra.changeImage('end');
+			break;
 		default:
-		// statements that catch and redirect in case none of the above is true
-		break; // is there a 'break' after 'default'? I forget
+			// statements that catch and redirect in case none of the above is true
+			break; // is there a 'break' after 'default'? I forget
 	} // end gameState switch/case statements
 
 
-
-
 	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
-    gameState = 'lose';
+    	gameState = 'lose';
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
-    gameState = 'win';
+    	gameState = 'win';
 	}
 
-	// get the current time
+	// get the current time so we can decide if it's time to read input, and in particular, the controller
 	const currentTime = millis() / 1000;
 
+	// if the time is after our readInputAfter timestamp, we'll process input from the controller
 	if (currentTime > readInputAfter) {
-		// experimental code for gamepad
-		// don't get controller input during input delay
-
-
-		//let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
-		//let pad0 = pads[0]; // limit to first pad connected
+		// scan the game pads to see which ones are active
 		scanGamePads();
+		// grab controller 0, since that's all we'll have
 		let pad0 = controllers[0];
-		if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
+		// test that pad0 is not null or undefined (i.e., it exists)
+		if (pad0) { 
+			// just log it so we know
 			console.log('pad0 is active');
+			// now update the game with the status of the game pad
 			updateStatus(pad0); // will need an updateStatus() function
 		} else { // what to do if pad0 is null, which is to say there is no gamepad connected
 			// use keyboard
@@ -783,6 +781,8 @@ function draw() {
 
 	// update what we're rendering and how frequently
 	updateRendering(renderQueue, renderTime);
+
+	// now tell p5.play to draw all the sprites it knows about
 	drawSprites();
 
 	// returns carlosmoreno to idle state after an update
