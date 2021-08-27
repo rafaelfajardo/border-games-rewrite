@@ -226,6 +226,8 @@ function updateRendering(queue, timing) {
 		// we want to move the sprite at the end of its time frame,
 		// so it animates in place first, then moves
 		updateSprite(queue[currentIndex]);
+		// after updating, the sprite has moved so it's no longer moved
+		queue[currentIndex].hasMoved = false;
 		// stop the sprite animations
 		if (currentIndex >= 0) {
 			// only stop the sprite (animation) if the next index is
@@ -239,15 +241,17 @@ function updateRendering(queue, timing) {
 		currentIndex = nextIdx;
 		const sprite = queue[currentIndex];
 
-		// // now start the animation of this sprite
-		if (sprite.animation && !sprite.animation.playing) {
+		// now start the animation of this next sprite
+		if (sprite.animation) {
 			//sprite.animation.goToFrame(0);
-			if (sprite.isPlayer && sprite.movementDir !== 'idle')
+			if (sprite.isPlayer)
 			{
 				//sprite.animation.play();
-				manuallyAnimate(sprite);
+				// if there's input, then animate
+				if (inputQueue.length > 0)
+					manuallyAnimate(sprite);
 			}
-			else if (!sprite.isPlayer) {
+			else {
 				manuallyAnimate(sprite);
 			}
 		}
@@ -263,7 +267,18 @@ function updateRendering(queue, timing) {
  * @param {The sprite we're animating} sprite 
  */
 function manuallyAnimate(sprite, looping) {
-	sprite.animation.nextFrame();
+	// first, test if it's the player, if it's not, just animate it
+	if (sprite.isPlayer) {
+		// now if the player has moved, we'll run the animation
+		if (sprite.hasMoved || inputQueue.length > 0)
+		{
+			sprite.animation.nextFrame();
+		} else {
+			sprite.animation.goToFrame(0);
+		}
+	} else {
+		sprite.animation.nextFrame();
+	}
 }
 
 /**
@@ -296,13 +311,13 @@ function updateSprite(sprite) {
 		if (dir)
 		{
 			sprite.movementDir = dir;
-			
-			sprite.animation.goToFrame(1);
-			sprite.animation.play();
+			sprite.animation.goToFrame(0);
+			sprite.hasMoved = true;
+			//sprite.animation.play();
 		} else {
 			// and if there's no movement, then just be idle
 			sprite.movementDir = 'idle';
-			sprite.animation.stop();
+			//sprite.animation.stop();
 		}
 		
 		// now we'll update the direction that Carlos is facing based on the next movement
@@ -337,8 +352,6 @@ function updateSprite(sprite) {
 			sprite.position.y = sprite.position.y + sprite.speed;
 			break;	
 		case 'idle':
-			sprite.position.x = sprite.position.x;
-			sprite.position.y = sprite.position.y;
 			break;
 		default:
 			console.log('movementDir of ' + sprite.name + ' is undefined as \'' + sprite.movementDir + '\'');
@@ -453,6 +466,7 @@ function preload() {
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
+	carlosmoreno.hasMoved = false;
 	
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
