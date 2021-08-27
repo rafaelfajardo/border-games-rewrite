@@ -671,10 +671,11 @@ function setup() {
 	frameRate(FRAME_RATE); // tried as slow as 1fps
 	background(255);
 
-	tierra.changeImage('frontera'); // this image should change to 'asarco' to default to gamestate='startup'
+	tierra.changeImage('asarco'); // this image should change to 'asarco' to default to gamestate='startup'
 
 
 	carlosmoreno.debug = DRAW_COLLIDER;
+	carlosmoreno.depth = 1;
 	cadaver.debug = DRAW_COLLIDER;
 	gato1.debug = DRAW_COLLIDER;
 	gato2.debug = DRAW_COLLIDER;
@@ -733,12 +734,14 @@ function draw() {
 		//break;
 		case "startup":
 			// statements to display the startup condition
-			tierra.changeAnimation('frontera');
-			laMigra.visible = false;
-			text('Press START to play', width/2, height/2);
+			tierra.changeImage('asarco');
+			tierra.depth = 100;
+			//laMigra.visible = false;
 			// statements that may alter gamestate label and condition
 			break;
 		case "play":
+			tierra.changeImage('frontera');
+			tierra.depth = 0;
 			// statements that display gameplay
 			break;
 		case "lose":
@@ -806,6 +809,13 @@ function draw() {
 	// now tell p5.play to draw all the sprites it knows about
 	drawSprites();
 
+	if (gameState === 'startup') {
+		strokeWeight(5);
+  		fill(128 + sin(frameCount*0.1) * 128);
+  		textSize(14);
+  		text('Press START to play', 2*width/3, 4*height/5);
+	}
+
 	// returns carlosmoreno to idle state after an update
 	// effectively slows down carlos and makes him take his turn in the queue
 	if (!keyIsPressed){carlosmoreno.movementDir = 'idle';}
@@ -833,24 +843,34 @@ async function updateStatus(pad){ // tested once per frame
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 
 		if (pad.axes[0] === -1.00000)
-		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'left');
+		{	// check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'left');
+			}
 		}
 		if (pad.axes[0] ===  1.00000)
-		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'right');
+		{  // check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'right');
+			}
 		}
 		if (pad.axes[1] === -1.00000)
 		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'up');
+			// check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'up');
+			}
 		}
 		if (pad.axes[1] ===  1.00000)
 		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'down');
+			// check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'down');
+			}
 		}
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
@@ -862,7 +882,13 @@ async function updateStatus(pad){ // tested once per frame
 
 		if (isButtonReleased(0, 9)) {
 			print('NES Start pressed and released');
-			window.open(url0, "_self");
+			// now behave differently depending on where we are
+			if (gameState === 'startup')
+			{
+				gameState = 'play';
+			} else {
+				window.open(url0, "_self");
+			}
 		}
 	}
 
