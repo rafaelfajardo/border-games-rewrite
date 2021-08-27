@@ -82,7 +82,7 @@ function setup(){
 }
 
 
-const INPUT_DELAY = .5;
+const INPUT_DELAY = .1;
 let nextInputAfter = 0;
 // draw
 function draw(){
@@ -96,8 +96,9 @@ function draw(){
     if (currentTime >= nextInputAfter) {
       console.log('scanning input');
       // experimental code for gamepad
-      let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
-      let pad0 = pads[0]; // limit to first pad connected
+      scanGamePads();
+      //let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
+      let pad0 = controllers[0]; // limit to first pad connected
       if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
         console.log('pad0 is active');
         updateStatus(pad0); // will need an updateStatus() function
@@ -171,7 +172,8 @@ function updateStatus(pad){  // tested once per frame
     	if (pad.buttons[0].value === 1.00){ print('NES B button pressed'); } // NES B button
     	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
       // does not have buttons 2-7 inclusive
-    	if (pad.buttons[8].value === 1.00){
+
+    	if (isButtonReleased(0, 8)) {
         if (ctr0 % 2 === 0){
           btn1.changeAnimation('off');
           btn2.changeAnimation('select');
@@ -181,7 +183,7 @@ function updateStatus(pad){  // tested once per frame
         }
         ctr0 = ctr0 +1;
         print('NES Select pressed'); } // NES Select button
-    	if (pad.buttons[9].value === 1.00){
+      if (isButtonReleased(0, 9)) {
         if (ctr0 % 2 === 0){
           btn1.changeAnimation('off');
           btn2.changeAnimation('blink');
@@ -378,3 +380,132 @@ function keyReleased() {
     }
   }
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
+
+
+// Code to deal with game pads
+let lastControllers = []
+let controllers = []
+
+/**
+ * checks two things: controllers and lastControllers, if the button was
+ * pressed in lastControllers, but not in controllers, we have a "release" event
+ * in essence, which we can check here--note this happens only once per press
+ * @param {Index of the controller} ctrlId
+ * @param {Index of the button} buttonId
+ */
+function isButtonReleased(ctrlId, buttonId)
+{
+	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId]) {
+		let val = controllers[ctrlId].buttons[buttonId].value;
+		let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
+		// console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
+		// console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
+		// if the current val is 0, the button is no longer pressed, and if the last value is
+		// 1, then it was pressed during the last read--this lets us know that it was a released button
+		if (val === 0.0 && lastVal === 1.0) {
+			console.log('key released: ' + buttonId)
+			return true
+		} else {
+			return false
+		}
+	}
+
+	return false
+}
+
+/** Called by the web page whenever a new controller is connected (or wakes up) */
+function connectionHandler(e) {
+	// just add it
+	addGamePad(e.gamepad)
+}
+
+/** Called by the web page whenever a game controller is disconnected */
+function disconnectHandler(e) {
+	// just remove it
+	removeGamePad(e.gamepad)
+}
+
+/**
+ * Called whenever we need to add a gamepad to our list of gamepads. The parameter
+ * is of the GamePad object type, so it has an index, etc.
+ * @param {The gamepad we're adding} gamepad
+ */
+function addGamePad(gamepad) {
+	console.log('gamepad connected on ' + gamepad.index)
+	controllers[gamepad.index] = gamepad
+	console.log('controllers.length ' + controllers.length)
+}
+
+/**
+ * Used to remove a given gamepad from our array of GamePad objects.
+ * @param {The gamepad we're removing} gamepad
+ */
+function removeGamePad(gamepad) {
+	console.log('gamepad disconnected on ' + gamepad.index)
+	// i.e., set it to undefined at that given index
+	delete controllers[gamepad.index];
+}
+
+/**
+ * This does a partial copy of the information we want from a gamepad, and
+ * in particular, the button states. It doesn't copy anything else! Javascript
+ * requires this because it only has referential copies
+ * @param {The GamePad we're copying} pad
+ * @returns
+ */
+function copyPad(pad) {
+	var p = {};
+	p.buttons = [];
+	for (var i = 0; i < pad.buttons.length; i++)
+	{
+		p.buttons.push({})
+		p.buttons[i].value = pad.buttons[i].value;
+	}
+	return p;
+}
+
+/**
+ * Copies our controllers to lastControllers by doing a slightly deep copy of
+ * the button states so that we can look for button releases later
+ */
+function copyControllers() {
+	lastControllers = [];
+	lastControllers.length = controllers.length;
+	for (var i = 0; i < controllers.length; i++)
+	{
+		if (controllers[i]) {
+		    lastControllers[i] = copyPad(controllers[i]);
+		}
+	}
+}
+
+/**
+ * Used to get the latest set of gamepads from the browser. On Chrome,
+ * we have to do this every time we want new state, because it's an entirely
+ * new object.
+ */
+function scanGamePads() {
+	// try to get the gamepads, on some browsers, we have to use webkit
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() :
+	  (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+
+	// make sure our controllers object has a length property
+    controllers.length = gamepads.length;
+	// now do the slightly deep copy of the set of controllers
+	copyControllers();
+	for (var i = 0; i < gamepads.length; i++)
+	{
+		if (gamepads[i])
+	  	{
+			if (gamepads[i].index in controllers) {
+		  		controllers[gamepads[i].index] = gamepads[i];
+			} else {
+				addGamePad(gamepads[i]);
+			}
+		}
+	}
+}
+
+// add event listeners for game pad connections
+window.addEventListener("gamepadconnected", connectionHandler)
+window.addEventListener("gamepaddisconnected", removeGamePad)
