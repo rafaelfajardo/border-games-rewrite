@@ -119,7 +119,10 @@ let currentIndex = 0;
 // timestamp for our indexing into the queue
 let timeStamp = 0;
 
-
+// this is a timeout for no input which will then go back to the main screen
+let lastInputAt = 0;
+// this is the timeout before going back to the selection screent
+const BACK_TO_SELECTION_TIMEOUT = 120;
 
 
 // create an input queue so we can store the last two inputs we received
@@ -137,6 +140,9 @@ function addInput(inputQueue, item) {
 		inputQueue.shift();
 		inputQueue.push(item);
 	}
+
+	// now timestamp when we received this input last
+	lastInputAt = millis() / 1000;
 }
 
 /**
@@ -742,6 +748,12 @@ function draw() {
 	background(255);
 
 	const currentTime = millis() / 1000;
+
+	// if we've been doing nothing without input for BACK_TO_SELECTION seconds,
+	// we'll just reopen the main selection window
+	if (currentTime > lastInputAt + BACK_TO_SELECTION_TIMEOUT) {
+		open(url, '_self');
+	}
 	/*
 	* I have commented out the switch statement during the early part of coding
 	*/
