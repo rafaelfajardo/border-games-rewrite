@@ -99,9 +99,9 @@ let img2; // temp placeholder to preload images for sprites
 
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
-const DRAW_COLLIDER = BUGGY ? BUGGY : true;
+const DRAW_COLLIDER = BUGGY ? BUGGY : false;
 
-const COLLISIONS_OFF = true;
+const COLLISIONS_OFF = false;
 
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
@@ -232,7 +232,7 @@ function updateRendering(queue, timing) {
 			{
 				//sprite.animation.play();
 				// if there's input, then animate
-				if (inputQueue.length > 0)
+				if (inputQueue.length > 0 || gameState === 'lose')
 					manuallyAnimate(sprite);
 			}
 			else {
@@ -292,7 +292,7 @@ function updateSprite(sprite) {
 	{
 		// if so, get the next movement that's been queued up
 		let dir = dequeueInput(inputQueue)
-		if (dir)
+		if (dir && gameState === 'play')
 		{
 			sprite.movementDir = dir;
 			sprite.animation.goToFrame(0);
@@ -424,11 +424,13 @@ function preload() {
 	tierra.addImage('end',img2);
 
 	// load images and create sprite for player character Carlos Moreno
-	img = loadImage('img/carlos-moreno-3_09.png');
+	let surprise_img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	// changed the order only so that idle is the starting image
-	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
-	carlosmoreno.addImage('surprise',img);
+	let idle_img = loadImage('img/carlos-moreno-3_01.png');
+	carlosmoreno.addImage('idle', idle_img);
+	
+	carlosmoreno.addAnimation('surprise', surprise_img,idle_img,surprise_img,idle_img,surprise_img);
 
 	//renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
@@ -671,7 +673,6 @@ function preload() {
 // read
 const INPUT_DELAY = .5;
 let readInputAfter = 0;
-
 /**
  * SETUP function
  */
@@ -732,13 +733,15 @@ function setup() {
   	gameState = 'startup';
 } // end setup
 
-
+const TIME_DEATH_FLASH = 1;
+let endDeathFlash = 0;
 /**
  * DRAW function
  */
 function draw() {
 	background(255);
 
+	const currentTime = millis() / 1000;
 	/*
 	* I have commented out the switch statement during the early part of coding
 	*/
@@ -766,10 +769,17 @@ function draw() {
 		case "lose":
 			// statements that display loss condition
 			carlosmoreno.changeAnimation ('surprise');
-			carlosmoreno.depth = 16;
-			carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-			carlosmoreno.position.y = 64*6+32;
-      gameState = 'play'; // change gameState or carlos gets stuck
+			carlosmoreno.depth = 50;
+
+			// only switch state after death flash has played a bit
+			if (currentTime > endDeathFlash) {
+				carlosmoreno.depth = 16;
+				carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+				carlosmoreno.position.y = 64*6+32;
+      			gameState = 'play'; // change gameState or carlos gets stuck
+				// and reset image
+				carlosmoreno.changeImage('idle');
+			}
 			break;
 		case "win":
 			// statements that display win condition
@@ -796,13 +806,12 @@ function draw() {
 
 	if (!COLLISIONS_OFF && carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
     	gameState = 'lose';
+		endDeathFlash = currentTime + TIME_DEATH_FLASH;
+		inputQueue = [];
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
     	gameState = 'win';
 	}
-
-	// get the current time so we can decide if it's time to read input, and in particular, the controller
-	const currentTime = millis() / 1000;
 
 	// if the time is after our readInputAfter timestamp, we'll process input from the controller
 	if (currentTime > readInputAfter) {
@@ -1006,10 +1015,10 @@ function keyReleased() {
 
 function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
-	const time = millis() / 1000;
+	const currentTime = millis() / 1000;
 
 	// don't get keyboard input while we're waiting
-	if (time <  readInputAfter)
+	if (currentTime <  readInputAfter)
 	return;
 
 	if        (
@@ -1019,7 +1028,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'I') {
 		print('key up');
 		addInput(inputQueue, 'up')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else if (
 	key === 's'          ||
@@ -1028,7 +1037,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'K') {
 		print('key down');
 		addInput(inputQueue, 'down')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else if (
 	key === 'a'          ||
@@ -1037,7 +1046,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'J') {
 		print('key left');
 		addInput(inputQueue, 'left')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else if (
 	key === 'd'          ||
@@ -1046,7 +1055,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'L') {
 		print('key right');
 		addInput(inputQueue, 'right')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
