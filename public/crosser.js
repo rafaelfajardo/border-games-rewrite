@@ -103,9 +103,9 @@ let img2; // temp placeholder to preload images for sprites
 
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
-const DRAW_COLLIDER = BUGGY ? BUGGY : true;
+const DRAW_COLLIDER = BUGGY ? BUGGY : false;
 
-
+const COLLISIONS_OFF = false;
 
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
@@ -123,7 +123,10 @@ let currentIndex = 0;
 // timestamp for our indexing into the queue
 let timeStamp = 0;
 
-
+// this is a timeout for no input which will then go back to the main screen
+let lastInputAt = 0;
+// this is the timeout before going back to the selection screent
+const BACK_TO_SELECTION_TIMEOUT = 120;
 
 
 // create an input queue so we can store the last two inputs we received
@@ -141,6 +144,9 @@ function addInput(inputQueue, item) {
 		inputQueue.shift();
 		inputQueue.push(item);
 	}
+
+	// now timestamp when we received this input last
+	lastInputAt = millis() / 1000;
 }
 
 /**
@@ -236,7 +242,7 @@ function updateRendering(queue, timing) {
 			{
 				//sprite.animation.play();
 				// if there's input, then animate
-				if (inputQueue.length > 0)
+				if (inputQueue.length > 0 || gameState === 'lose')
 					manuallyAnimate(sprite);
 			}
 			else {
@@ -296,7 +302,7 @@ function updateSprite(sprite) {
 	{
 		// if so, get the next movement that's been queued up
 		let dir = dequeueInput(inputQueue)
-		if (dir)
+		if (dir && gameState === 'play')
 		{
 			sprite.movementDir = dir;
 			sprite.animation.goToFrame(0);
@@ -334,10 +340,16 @@ function updateSprite(sprite) {
 			}
 			break;
 		case 'up':
-			sprite.position.y = sprite.position.y - sprite.speed;
+			if (sprite.position.y > 0 + ONE_UNIT) {
+				sprite.position.y = sprite.position.y - sprite.speed;
+				sprite.position.depth -= 1;
+			}
 			break;
 		case 'down':
-			sprite.position.y = sprite.position.y + sprite.speed;
+			if (sprite.position.y < HEIGHT - ONE_UNIT) {
+				sprite.position.y = sprite.position.y + sprite.speed;
+				sprite.position.depth += 1;
+			}
 			break;
 		case 'idle':
 			break;
@@ -365,9 +377,11 @@ function updateCarlosDirection(carlos)
 			break;
 		case 'up':
 			carlos.changeAnimation('walkup');
+			carlos.depth -= 1;
 			break;
 		case 'down':
 			carlos.changeAnimation('walkdown');
+			carlos.depth += 1;
 			break;
 		case 'surprise':
 			carlos.changeAnimation('surprise');
@@ -420,11 +434,13 @@ function preload() {
 	tierra.addImage('end',img2);
 
 	// load images and create sprite for player character Carlos Moreno
-	img = loadImage('img/carlos-moreno-3_09.png');
+	let surprise_img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	// changed the order only so that idle is the starting image
-	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
-	carlosmoreno.addImage('surprise',img);
+	let idle_img = loadImage('img/carlos-moreno-3_01.png');
+	carlosmoreno.addImage('idle', idle_img);
+	
+	carlosmoreno.addAnimation('surprise', surprise_img,idle_img,surprise_img,idle_img,surprise_img);
 
 	//renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
@@ -432,6 +448,7 @@ function preload() {
 	carlosmoreno.movementDir = 'idle';
 	carlosmoreno.speed = 32;
 	carlosmoreno.setCollider('rectangle',0,-16,28,30)
+	carlosmoreno.depth = 16;
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
@@ -473,6 +490,7 @@ function preload() {
 	cadaver.animation.playing = false;
 	cadaver.movementDir = 'right';
 	cadaver.speed = ONE_UNIT;
+	cadaver.depth = 15;
 	// add the cadaver to the queue
 	renderQueue.push(cadaver);
 	cadaver.name = 'cadaver';
@@ -488,6 +506,7 @@ function preload() {
 	gato1.setCollider('rectangle',0,-16,30,30);
 	gato1.animation.playing = false;
 	gato1.movementDir = 'right';
+	gato1.depth = 12;
 	//gato1.speed = 32*2;
 	gato1.speed = ONE_UNIT;
 	// add gato1 to the queue
@@ -504,6 +523,7 @@ function preload() {
 	gato2.animation.playing = false;
 	gato2.setCollider('rectangle',0,-16,30,30);
 	gato2.movementDir = 'right';
+	gato2.depth = 12;
 	//gato2.speed = 32*2;
 	gato2.speed = ONE_UNIT;
 	// add gato1 to the queue twice so that it moves two units
@@ -524,6 +544,7 @@ function preload() {
 	// add waterlog to the queue
 	renderQueue.push(waterLog);
 	waterLog.name = 'waterlog';
+	waterLog.depth = 15;
 	// end load and create waterLog
 
 	// load and create llanta
@@ -533,6 +554,7 @@ function preload() {
 	llanta.addAnimation('float',img1,img2,img1,img2,img1,img2);
 	llanta.animation.playing = false;
 	llanta.movementDir = 'right';
+	llanta.depth = 12;
 	//llanta.speed = 32*2;
 	llanta.speed = ONE_UNIT;
 	llanta.setCollider('rectangle',0,-14,60,28);
@@ -550,6 +572,7 @@ function preload() {
 	migraMan2.animation.playing = false;
 	migraMan2.setCollider('rectangle',0,-16,30,30);
 	migraMan2.movementDir = 'right';
+	migraMan2.depth = 10;
 	migraMan2.speed = ONE_UNIT;
 	// migra hombre 2
 	renderQueue.push(migraMan2);
@@ -564,6 +587,7 @@ function preload() {
 	migraMan1.animation.playing = false;
 	migraMan1.setCollider('rectangle',0,-16,30,30);
 	migraMan1.movementDir = 'right';
+	migraMan1.depth = 10;
 	migraMan1.speed = ONE_UNIT;
 	// migra hombre 1
 	renderQueue.push(migraMan1);
@@ -579,6 +603,7 @@ function preload() {
 	// migraSUV.mirrorX(-1); // this line is no longer needed, art has been corrected
 	migraSUV.setCollider('rectangle', 0,0,64,48); // with corrected art this should be 64x64
 	migraSUV.movementDir = 'left';
+	migraSUV.depth = 8;
 	//migraSUV.speed = 32*3;
 	migraSUV.speed = ONE_UNIT;
 	// added migra SUV to the queue
@@ -596,6 +621,7 @@ function preload() {
 	migraHelo1.animation.playing = false;
 	migraHelo1.setCollider('rectangle', 0,-16,62,30);
 	migraHelo1.movementDir = 'left';
+	migraHelo1.depth = 6;
 	//migraHelo1.speed = 32*4;
 	migraHelo1.speed = ONE_UNIT;
 	// added migra heli 1 to the queue
@@ -621,6 +647,7 @@ function preload() {
 	migraHelo2.animation.playing = false;
 	migraHelo2.setCollider('rectangle', 0,-16,60,30);
 	migraHelo2.movementDir = 'left';
+	migraHelo2.depth = 6;
 	//migraHelo2.speed = 32*4;
 	migraHelo2.speed = ONE_UNIT;
 	// added migra heli 2 to the queue
@@ -639,6 +666,7 @@ function preload() {
 	migraMan3.animation.playing = false;
 	migraMan3.setCollider('rectangle',0,-16,30,30);
 	migraMan3.movementDir = 'right';
+	migraMan3.depth = 10;
 	migraMan3.speed = ONE_UNIT;
 	// migra hombre 3
 	renderQueue.push(migraMan3);
@@ -657,7 +685,6 @@ function preload() {
 // read
 const INPUT_DELAY = .5;
 let readInputAfter = 0;
-
 /**
  * SETUP function
  */
@@ -681,7 +708,6 @@ function setup() {
 
 
 	carlosmoreno.debug = DRAW_COLLIDER;
-	carlosmoreno.depth = 1;
 	cadaver.debug = DRAW_COLLIDER;
 	gato1.debug = DRAW_COLLIDER;
 	gato2.debug = DRAW_COLLIDER;
@@ -723,13 +749,21 @@ function setup() {
   	gameState = 'startup';
 } // end setup
 
-
+const TIME_DEATH_FLASH = 1;
+let endDeathFlash = 0;
 /**
  * DRAW function
  */
 function draw() {
 	background(255);
 
+	const currentTime = millis() / 1000;
+
+	// if we've been doing nothing without input for BACK_TO_SELECTION seconds,
+	// we'll just reopen the main selection window
+	if (currentTime > lastInputAt + BACK_TO_SELECTION_TIMEOUT) {
+		open(url, '_self');
+	}
 	/*
 	* I have commented out the switch statement during the early part of coding
 	*/
@@ -757,9 +791,17 @@ function draw() {
 		case "lose":
 			// statements that display loss condition
 			carlosmoreno.changeAnimation ('surprise');
-			carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-			carlosmoreno.position.y = 64*6+32;
-      gameState = 'play'; // change gameState or carlos gets stuck
+			carlosmoreno.depth = 50;
+
+			// only switch state after death flash has played a bit
+			if (currentTime > endDeathFlash) {
+				carlosmoreno.depth = 16;
+				carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+				carlosmoreno.position.y = 64*6+32;
+      			gameState = 'play'; // change gameState or carlos gets stuck
+				// and reset image
+				carlosmoreno.changeImage('idle');
+			}
 			break;
 		case "win":
 			// statements that display win condition
@@ -784,15 +826,14 @@ function draw() {
 	} // end gameState switch/case statements
 
 
-	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
+	if (!COLLISIONS_OFF && carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
     	gameState = 'lose';
+		endDeathFlash = currentTime + TIME_DEATH_FLASH;
+		inputQueue = [];
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
     	gameState = 'win';
 	}
-
-	// get the current time so we can decide if it's time to read input, and in particular, the controller
-	const currentTime = millis() / 1000;
 
 	// if the time is after our readInputAfter timestamp, we'll process input from the controller
 	if (currentTime > readInputAfter) {
@@ -996,10 +1037,10 @@ function keyReleased() {
 
 function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
-	const time = millis() / 1000;
+	const currentTime = millis() / 1000;
 
 	// don't get keyboard input while we're waiting
-	if (time <  readInputAfter)
+	if (currentTime <  readInputAfter)
 	return;
 
 	if        (
@@ -1009,7 +1050,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'I') {
 		print('key up');
 		addInput(inputQueue, 'up')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else if (
 	key === 's'          ||
@@ -1018,7 +1059,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'K') {
 		print('key down');
 		addInput(inputQueue, 'down')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else if (
 	key === 'a'          ||
@@ -1027,7 +1068,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'J') {
 		print('key left');
 		addInput(inputQueue, 'left')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else if (
 	key === 'd'          ||
@@ -1036,7 +1077,7 @@ function keyPressed() { // tested once per frame, triggered on keystroke
 	key === 'L') {
 		print('key right');
 		addInput(inputQueue, 'right')
-		 readInputAfter = time + INPUT_DELAY;
+		 readInputAfter = currentTime + INPUT_DELAY;
 
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
