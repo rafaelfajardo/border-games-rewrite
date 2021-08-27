@@ -295,15 +295,9 @@ function updateSprite(sprite) {
 		if (dir)
 		{
 			sprite.movementDir = dir;
-<<<<<<< HEAD
 			sprite.animation.goToFrame(0);
 			sprite.hasMoved = true;
 			//sprite.animation.play();
-=======
-
-			sprite.animation.goToFrame(1);
-			sprite.animation.play();
->>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 		} else {
 			// and if there's no movement, then just be idle
 			sprite.movementDir = 'idle';
@@ -312,16 +306,8 @@ function updateSprite(sprite) {
 
 		// now we'll update the direction that Carlos is facing based on the next movement
 		updateCarlosDirection(sprite);
-<<<<<<< HEAD
 	} 
 	
-=======
-	}
-	// } else if (sprite.animation) {
-	// 	sprite.animation.play();
-	// }
-
->>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 	switch (sprite.movementDir) {
 		case 'left':
 			sprite.position.x = sprite.position.x - sprite.speed;
@@ -445,12 +431,8 @@ function preload() {
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
-<<<<<<< HEAD
 	carlosmoreno.hasMoved = false;
 	
-=======
-
->>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
 	let anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
@@ -873,18 +855,6 @@ async function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
-<<<<<<< HEAD
-		if (pad.buttons[8].value === 1.00) { 
-			window.open(url, "_self"); 
-			print('NES Select pressed'); 
-			inputQueue = [];
-		} // NES Select button
-		if (pad.buttons[9].value === 1.00) { 
-			window.open(url0, '_self'); 
-			print('NES Start pressed'); 
-			inputQueue = [];
-		} // NES Start button
-=======
 		if (isButtonReleased(0, 8)) {
 			print('NES Select pressed and released');
 			window.open(url, "_self");
@@ -894,7 +864,6 @@ async function updateStatus(pad){ // tested once per frame
 			print('NES Start pressed and released');
 			window.open(url0, "_self");
 		}
->>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 	}
 
 	/**
