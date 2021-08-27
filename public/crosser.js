@@ -210,6 +210,8 @@ function updateRendering(queue, timing) {
 		// we want to move the sprite at the end of its time frame,
 		// so it animates in place first, then moves
 		updateSprite(queue[currentIndex]);
+		// after updating, the sprite has moved so it's no longer moved
+		queue[currentIndex].hasMoved = false;
 		// stop the sprite animations
 		if (currentIndex >= 0) {
 			// only stop the sprite (animation) if the next index is
@@ -223,21 +225,43 @@ function updateRendering(queue, timing) {
 		currentIndex = nextIdx;
 		const sprite = queue[currentIndex];
 
-		// // now start the animation of this sprite
-		if (sprite.animation && !sprite.animation.playing) {
+		// now start the animation of this next sprite
+		if (sprite.animation) {
 			//sprite.animation.goToFrame(0);
-			if (sprite.isPlayer && sprite.movementDir !== 'idle')
+			if (sprite.isPlayer)
 			{
-				sprite.animation.play();
+				//sprite.animation.play();
+				// if there's input, then animate
+				if (inputQueue.length > 0)
+					manuallyAnimate(sprite);
 			}
-			else if (!sprite.isPlayer) {
-				sprite.animation.play();
+			else {
+				manuallyAnimate(sprite);
 			}
 		}
 	} else {
 		// in this case, we can do things to the current sprite since
 		// which resides in queue[currentIndex]
-		queue[currentIndex].animation.play();
+		manuallyAnimate(queue[currentIndex]);
+	}
+}
+
+/**
+ * Manually animates the sprite by moving to the next frame
+ * @param {The sprite we're animating} sprite 
+ */
+function manuallyAnimate(sprite, looping) {
+	// first, test if it's the player, if it's not, just animate it
+	if (sprite.isPlayer) {
+		// now if the player has moved, we'll run the animation
+		if (sprite.hasMoved || inputQueue.length > 0)
+		{
+			sprite.animation.nextFrame();
+		} else {
+			sprite.animation.goToFrame(0);
+		}
+	} else {
+		sprite.animation.nextFrame();
 	}
 }
 
@@ -271,22 +295,19 @@ function updateSprite(sprite) {
 		if (dir)
 		{
 			sprite.movementDir = dir;
-
-			sprite.animation.goToFrame(1);
-			sprite.animation.play();
+			sprite.animation.goToFrame(0);
+			sprite.hasMoved = true;
+			//sprite.animation.play();
 		} else {
 			// and if there's no movement, then just be idle
 			sprite.movementDir = 'idle';
-			sprite.animation.stop();
+			//sprite.animation.stop();
 		}
 
 		// now we'll update the direction that Carlos is facing based on the next movement
 		updateCarlosDirection(sprite);
-	}
-	// } else if (sprite.animation) {
-	// 	sprite.animation.play();
-	// }
-
+	} 
+	
 	switch (sprite.movementDir) {
 		case 'left':
 			sprite.position.x = sprite.position.x - sprite.speed;
@@ -315,8 +336,6 @@ function updateSprite(sprite) {
 			sprite.position.y = sprite.position.y + sprite.speed;
 			break;
 		case 'idle':
-			sprite.position.x = sprite.position.x;
-			sprite.position.y = sprite.position.y;
 			break;
 		default:
 			console.log('movementDir of ' + sprite.name + ' is undefined as \'' + sprite.movementDir + '\'');
@@ -412,7 +431,8 @@ function preload() {
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
-
+	carlosmoreno.hasMoved = false;
+	
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
 	let anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
@@ -506,7 +526,7 @@ function preload() {
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
 	llanta = createSprite(32*12,32*9-2);
-	llanta.addAnimation('float',img1,img1,img1,img2,img2,img2);
+	llanta.addAnimation('float',img1,img2,img1,img2,img1,img2);
 	llanta.animation.playing = false;
 	llanta.movementDir = 'right';
 	//llanta.speed = 32*2;
@@ -522,7 +542,7 @@ function preload() {
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
 	migraMan2 = createSprite(32*7+16,32*7);
-	migraMan2.addAnimation('marchright',img1,img1,img2,img2);
+	migraMan2.addAnimation('marchright',img1,img2,img1,img2,img1,img2);
 	migraMan2.animation.playing = false;
 	migraMan2.setCollider('rectangle',0,-16,30,30);
 	migraMan2.movementDir = 'right';
@@ -651,10 +671,11 @@ function setup() {
 	frameRate(FRAME_RATE); // tried as slow as 1fps
 	background(255);
 
-	tierra.changeImage('frontera'); // this image should change to 'asarco' to default to gamestate='startup'
+	tierra.changeImage('asarco'); // this image should change to 'asarco' to default to gamestate='startup'
 
 
 	carlosmoreno.debug = DRAW_COLLIDER;
+	carlosmoreno.depth = 1;
 	cadaver.debug = DRAW_COLLIDER;
 	gato1.debug = DRAW_COLLIDER;
 	gato2.debug = DRAW_COLLIDER;
@@ -713,12 +734,14 @@ function draw() {
 		//break;
 		case "startup":
 			// statements to display the startup condition
-			tierra.changeAnimation('frontera');
-			laMigra.visible = false;
-			text('Press START to play', width/2, height/2);
+			tierra.changeImage('asarco');
+			tierra.depth = 100;
+			//laMigra.visible = false;
 			// statements that may alter gamestate label and condition
 			break;
 		case "play":
+			tierra.changeImage('frontera');
+			tierra.depth = 0;
 			// statements that display gameplay
 			break;
 		case "lose":
@@ -786,6 +809,13 @@ function draw() {
 	// now tell p5.play to draw all the sprites it knows about
 	drawSprites();
 
+	if (gameState === 'startup') {
+		strokeWeight(5);
+  		fill(128 + sin(frameCount*0.1) * 128);
+  		textSize(14);
+  		text('Press START to play', 2*width/3, 4*height/5);
+	}
+
 	// returns carlosmoreno to idle state after an update
 	// effectively slows down carlos and makes him take his turn in the queue
 	if (!keyIsPressed){carlosmoreno.movementDir = 'idle';}
@@ -813,24 +843,34 @@ async function updateStatus(pad){ // tested once per frame
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 
 		if (pad.axes[0] === -1.00000)
-		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'left');
+		{	// check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'left');
+			}
 		}
 		if (pad.axes[0] ===  1.00000)
-		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'right');
+		{  // check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'right');
+			}
 		}
 		if (pad.axes[1] === -1.00000)
 		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'up');
+			// check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'up');
+			}
 		}
 		if (pad.axes[1] ===  1.00000)
 		{
-			readInputAfter = currentTime + INPUT_DELAY;
-			addInput(inputQueue, 'down');
+			// check that we're in play state
+			if (gameState === 'play') {
+				readInputAfter = currentTime + INPUT_DELAY;
+				addInput(inputQueue, 'down');
+			}
 		}
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
@@ -842,7 +882,13 @@ async function updateStatus(pad){ // tested once per frame
 
 		if (isButtonReleased(0, 9)) {
 			print('NES Start pressed and released');
-			window.open(url0, "_self");
+			// now behave differently depending on where we are
+			if (gameState === 'startup')
+			{
+				gameState = 'play';
+			} else {
+				window.open(url0, "_self");
+			}
 		}
 	}
 
