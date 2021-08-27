@@ -439,7 +439,7 @@ function preload() {
 	// changed the order only so that idle is the starting image
 	let idle_img = loadImage('img/carlos-moreno-3_01.png');
 	carlosmoreno.addImage('idle', idle_img);
-	
+
 	carlosmoreno.addAnimation('surprise', surprise_img,idle_img,surprise_img,idle_img,surprise_img);
 
 	//renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
@@ -740,7 +740,6 @@ function setup() {
 
   // setup the font parameters to be used by text in 'startup' and 'win' state
   textFont(arcadeFont);
-  textSize(51); // our font is best in multiples of 17
 
 	// now set up the time to delay before reading so that we don't start reading immediately
 	readInputAfter = (millis() / 1000) + 1;
@@ -805,7 +804,7 @@ function draw() {
 			break;
 		case "win":
 			// statements that display win condition
-    		cadaver.visible = false;
+    	cadaver.visible = false;
 			waterLog.visible = false;
 			gato1.visible = false;
 			gato2.visible = false;
@@ -819,6 +818,7 @@ function draw() {
 			visa.visible = false;
 			carlosmoreno.visible = false;
 			tierra.changeImage('end');
+      tierra.depth = 100;
 			break;
 		default:
 			// statements that catch and redirect in case none of the above is true
@@ -861,11 +861,24 @@ function draw() {
 	drawSprites();
 
 	if (gameState === 'startup') {
-		strokeWeight(5);
+		//strokeWeight(5);
   		fill(128 + sin(frameCount*0.1) * 128,128 + cos(frameCount*0.1) * 128,128 + sin(frameCount*0.1) * 128);
   		textSize(14);
-  		text('Press START to play', 200, 370);
+  		text('Press START to play', 190, 370);
 	}
+
+  if (gameState === 'win') {
+    //fill(128 + sin(frameCount*0.1) * 128,128 + cos(frameCount*0.1) * 128,128 + sin(frameCount*0.1) * 128);
+    fill(0);
+    textSize(14);
+    text('Press START to go back', WIDTH/4 +10, 3*HEIGHT/4 + 62);
+    text('or press SELECT',        WIDTH/4 +10, 3*HEIGHT/4 + 82);
+    text('to choose another game', WIDTH/4 +10, 3*HEIGHT/4 + 102);
+    fill(255);
+    text('Press START to go back', WIDTH/4 +10-2, 3*HEIGHT/4 + 62-2);
+    text('or press SELECT',        WIDTH/4 +10-2, 3*HEIGHT/4 + 82-2);
+    text('to choose another game', WIDTH/4 +10-2, 3*HEIGHT/4 + 102-2);
+  }
 
 	// returns carlosmoreno to idle state after an update
 	// effectively slows down carlos and makes him take his turn in the queue
