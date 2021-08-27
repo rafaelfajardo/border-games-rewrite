@@ -1,3 +1,4 @@
+'use strict';  // enforce some (more) sane behavior from javascript
 /* * * * * * * * * * * * * * * *
 *
 *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
@@ -30,6 +31,8 @@
 *
 */
 
+
+
 //
 //
 // global variables
@@ -44,10 +47,9 @@ const HEIGHT = 448;
 const FRAME_RATE = 30;
 //
 //
-let btn1; // sprite container for button art
-let btn2; // sprite container for button art
 // counter to toggle between _crosser.html and _lamigra.html
-let ctr0 = 0;
+// let ctr0 = 0; // used in main.js but not in crosser.js nor lamigra.js
+//
 /* ****
 //
 // url targets for invoking _crosser.html or _lamigra.html
@@ -69,22 +71,6 @@ let url1 = '_lamigra.html';
 //
 let gameState = "startup"; // string variable should only contain 'select, startup','play','win','lose'
 let moveState = 'idle'; // can be invoked from keyPressed to let carlosmoreno movement be guided by updateSprite
-/*
-// deprecated state variables, still used by controller.js and draw()
-
-let START = false; // to use for button SNES maybe need a reSTART
-//var SELECT = false; // use button for SNES
-//var shoulderLeft = false; // unused button for SNES
-//var shoulderRight = false; // unused button for SNES
-//var GAMEOVER = false; // may not be best option because a gameover state isn't really what we do
-let moveLeft = false; // boolean, used for player character interaction map to dPad
-let moveRight = false; // boolean
-let moveUp = false; // boolean
-let moveDown = false; // boolean
-let moveIdle = true; // boolean, used for player character idle
-//var dPad; // sprite, container for d pad image, used for touch interaction
-//var start; // sprite, container for start button image
-*/
 
 //
 //
@@ -111,12 +97,8 @@ let img; // a temporary placeholder to preload images for sprites
 let img1; // temp placeholder to preload images for sprites
 let img2; // temp placeholder to preload images for sprites
 
-let spriteCounter = 0; // used in draw loop, along with modulo, to update and draw one sprite per frame.
-// will give background image it's own turn since it is a sprite indexed 0
-//will potentiall cause draw loop to speed up as sprites are removed from list
-
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
-// turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value 
+// turning on BUGGY will turn on DRAW_COLLIDER, otherwise it's the last value
 const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
 
@@ -137,14 +119,16 @@ let currentIndex = 0;
 // timestamp for our indexing into the queue
 let timeStamp = 0;
 
+
+
+
 // create an input queue so we can store the last two inputs we received
 let inputQueue = [];
 let maxQueueSize = 2;
-
 /**
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
- * @param {The next input to add} item 
+ * @param {The next input to add} item
  */
 function addInput(inputQueue, item) {
 	if (inputQueue.length < maxQueueSize) {
@@ -157,7 +141,7 @@ function addInput(inputQueue, item) {
 
 /**
  * This function removes the next item (i.e., the oldest) in the queue
- * @param {The input queue we're using (which should be an array)} inputQueue 
+ * @param {The input queue we're using (which should be an array)} inputQueue
  * @returns {The item we just removed from the queue}
  */
 function dequeueInput(inputQueue) {
@@ -176,7 +160,7 @@ function getNextIndex(queue, idx, timing) {
 	// get the time in seconds, with subsecond accuracy
 	const seconds = millis() / 1000;
 	const len = queue.length;
-	
+
 	if (seconds > timeStamp)
 	{
 		// first, update our timeStamp to be in the future
@@ -219,7 +203,7 @@ function calculateSubtiming(sprite, timing)
 function updateRendering(queue, timing) {
 	// calculate the next index
 	const nextIdx = getNextIndex(queue, currentIndex, timing);
-	
+
 	// if the index has changed, then we need to update the sprite
 	if (nextIdx !== currentIndex)
 	{
@@ -236,7 +220,7 @@ function updateRendering(queue, timing) {
 				stopSprite(queue[currentIndex]);
 			}
 		}
-		
+
 		// update our index
 		currentIndex = nextIdx;
 		const sprite = queue[currentIndex];
@@ -283,7 +267,7 @@ function manuallyAnimate(sprite, looping) {
 
 /**
  * Turns off the animations on the sprite and rewinds them to the first frame
- * @param {The sprite we're working with} sprite 
+ * @param {The sprite we're working with} sprite
  */
 function stopSprite(sprite) {
 	//console.log('stopping ' + sprite.name);
@@ -293,7 +277,7 @@ function stopSprite(sprite) {
 	}
 }
 /***********************************************************************
- * 
+ *
  * is called by updateRendering() and receives a sprite in the render queue
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
@@ -302,7 +286,7 @@ function updateSprite(sprite) {
 	// if (sprite.animation) {
 	// 	sprite.animation.play();
 	// }
-	
+
 	// here we check to see if the sprite is actually the player that we're updating
 	if (sprite.isPlayer == true)
 	{
@@ -311,19 +295,33 @@ function updateSprite(sprite) {
 		if (dir)
 		{
 			sprite.movementDir = dir;
+<<<<<<< HEAD
 			sprite.animation.goToFrame(0);
 			sprite.hasMoved = true;
 			//sprite.animation.play();
+=======
+
+			sprite.animation.goToFrame(1);
+			sprite.animation.play();
+>>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 		} else {
 			// and if there's no movement, then just be idle
 			sprite.movementDir = 'idle';
 			//sprite.animation.stop();
 		}
-		
+
 		// now we'll update the direction that Carlos is facing based on the next movement
 		updateCarlosDirection(sprite);
+<<<<<<< HEAD
 	} 
 	
+=======
+	}
+	// } else if (sprite.animation) {
+	// 	sprite.animation.play();
+	// }
+
+>>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 	switch (sprite.movementDir) {
 		case 'left':
 			sprite.position.x = sprite.position.x - sprite.speed;
@@ -350,7 +348,7 @@ function updateSprite(sprite) {
 			break;
 		case 'down':
 			sprite.position.y = sprite.position.y + sprite.speed;
-			break;	
+			break;
 		case 'idle':
 			break;
 		default:
@@ -363,11 +361,11 @@ function updateSprite(sprite) {
 /**
  * This function changes the direction that Carlos is facing and is
  * called by updateSprite whenever the player (Carlos) is being drawn
- * @param {A Sprite (play.p5) that has animations for Carlos} carlos 
+ * @param {A Sprite (play.p5) that has animations for Carlos} carlos
  */
 function updateCarlosDirection(carlos)
 {
-	switch (carlos.movementDir) 
+	switch (carlos.movementDir)
 	{
 		case 'left':
 			carlos.changeAnimation('walkleft');
@@ -384,7 +382,7 @@ function updateCarlosDirection(carlos)
 		case 'surprise':
 			carlos.changeAnimation('surprise');
 			break;
-		default: 
+		default:
 			// do nothing in the default state so the last animation remains
 			break;
 	}
@@ -403,7 +401,7 @@ function animateSprite(sprite, timing, distance)
 	const subtiming = calculateSubtiming(sprite, timing);
 	// grab elapsed time
 	const seconds = millis() / 1000;
-	
+
 	if (seconds > subTimestamp) {
 		// slap a new subtimestamp down
 		subTimestamp = seconds + subtiming;
@@ -412,32 +410,13 @@ function animateSprite(sprite, timing, distance)
 }
 
 const ANIM_DELAY = 1;
+/**
+ *
+ * PRELOAD function
+ */
 function preload() {
-	timeStamp = millis() / 1000 + renderTime;
-	
-	// create a ui button for game selection for crosser.js
-	img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-	img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
-	btn1 = createSprite(224, 160, 180, 180);
-	btn1.addImage('off1', img1);
-	btn1.addImage('on1', img2);
-	btn1.addAnimation('off', img1);
-	btn1.addAnimation('select', img2);
-	btn1.addAnimation('blink', img1,img2,img2,img1);
-	btn1.changeAnimation('select');
-	
-	// create a ui button for game selection for lamigra.js
-	img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
-	img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-	btn2 = createSprite(224, 370, 64, 32);
-	btn2.addImage('off2', img1);
-	btn2.addImage('on2', img2);
-	btn2.addAnimation('off', img1);
-	btn2.addAnimation('select', img2);
-	btn2.addAnimation('blink', img1,img2,img2,img1);
-	btn2.changeAnimation('off');
-	
-	
+	//timeStamp = millis() / 1000 + renderTime;
+
 	if (BUGGY){
 		img = loadImage('img/frontera-2grid.png'); // this image has a grid superimposed over the play field for development and debugging
 	} else {
@@ -449,28 +428,32 @@ function preload() {
 	tierra.addImage('frontera',img);
 	tierra.addImage('asarco',img1);
 	tierra.addImage('end',img2);
-	
+
 	// load images and create sprite for player character Carlos Moreno
 	img = loadImage('img/carlos-moreno-3_09.png');
 	carlosmoreno = createSprite(32*7+16,64*6+32); // carlosmoreno is the player character
 	// changed the order only so that idle is the starting image
 	carlosmoreno.addImage('idle', loadImage('img/carlos-moreno-3_01.png'));
 	carlosmoreno.addImage('surprise',img);
-	
-	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
+
+	//renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 	carlosmoreno.name = 'carlosmoreno';
 	carlosmoreno.animation.playing = false;
 	carlosmoreno.movementDir = 'idle';
 	carlosmoreno.speed = 32;
-	carlosmoreno.setCollider('rectangle',0,-8,30,48)
+	carlosmoreno.setCollider('rectangle',0,-16,28,30)
 	// added an isPlayer field so we can easily detect when we're working with the player
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
+<<<<<<< HEAD
 	carlosmoreno.hasMoved = false;
 	
+=======
+
+>>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
-	anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
+	let anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
 
@@ -479,22 +462,22 @@ function preload() {
 	anim = carlosmoreno.addAnimation('walkup',img1,img2);
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
-	
+
 	img1 = loadImage('img/carlos-moreno-3_05.png');
 	img2 = loadImage('img/carlos-moreno-3_06.png');
 	anim = carlosmoreno.addAnimation('walkright',img1,img2);
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
-	
+
 	img1 = loadImage('img/carlos-moreno-3_07.png');
 	img2 = loadImage('img/carlos-moreno-3_08.png');
 	anim = carlosmoreno.addAnimation('walkleft',img2,img1);
 	anim.looping = false;
 	anim.frameDelay = ANIM_DELAY;
 	// end load images for player character Carlos Moreno
-	
+
 	carlosmoreno.addAnimation('surprise', 'img/carlos-moreno-3_09.png');
-	
+
 	// load and create cadaver
 	img1 = loadImage('img/cadaverA.png');
 	img2 = loadImage('img/cadaverB.png');
@@ -508,7 +491,7 @@ function preload() {
 	renderQueue.push(cadaver);
 	cadaver.name = 'cadaver';
 	// end load and create cadaver
-	
+
 	// load and create gato1
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
@@ -516,7 +499,7 @@ function preload() {
 	// createSprite takes the initial x, y position and the width height
 	gato1 = createSprite(32 * 2 + 16, 32 * 9, 32, 64);
 	gato1.addAnimation('float',img1,img2,img1,img2,img1,img2);
-	gato1.setCollider('rectangle',0,-8,30,46);
+	gato1.setCollider('rectangle',0,-16,30,30);
 	gato1.animation.playing = false;
 	gato1.movementDir = 'right';
 	//gato1.speed = 32*2;
@@ -526,14 +509,14 @@ function preload() {
 	renderQueue.push(gato1);
 	gato1.name = 'gato1';
 	// end load and create gato1
-	
+
 	// load and create gato2
 	img1 = loadImage('img/gatoA.png');
 	img2 = loadImage('img/gatoB.png');
 	gato2 = createSprite(32*7+16,32*9);
 	gato2.addAnimation('float',img2,img2,img1);
 	gato2.animation.playing = false;
-	gato2.setCollider('rectangle',0,-8,30,46);
+	gato2.setCollider('rectangle',0,-16,30,30);
 	gato2.movementDir = 'right';
 	//gato2.speed = 32*2;
 	gato2.speed = ONE_UNIT;
@@ -542,13 +525,13 @@ function preload() {
 	renderQueue.push(gato2);
 	gato2.name = 'gato2';
 	// end load and create gato2
-	
+
 	// load and create waterLog
 	img1 = loadImage('img/waterlogA.png');
 	img2 = loadImage('img/waterlogB.png');
 	waterLog = createSprite(32*8,32*11);
 	waterLog.addAnimation('float',img1,img1,img2,img2);
-	waterLog.setCollider('rectangle',0,-16,62,30);
+	waterLog.setCollider('rectangle',0,-16,60,28);
 	waterLog.animation.playing = false;
 	waterLog.movementDir = 'right';
 	waterLog.speed = ONE_UNIT;
@@ -556,7 +539,7 @@ function preload() {
 	renderQueue.push(waterLog);
 	waterLog.name = 'waterlog';
 	// end load and create waterLog
-	
+
 	// load and create llanta
 	img1 = loadImage('img/llantaA.png');
 	img2 = loadImage('img/llantaB.png');
@@ -566,41 +549,41 @@ function preload() {
 	llanta.movementDir = 'right';
 	//llanta.speed = 32*2;
 	llanta.speed = ONE_UNIT;
-	llanta.setCollider('rectangle',0,-14,62,28);
+	llanta.setCollider('rectangle',0,-14,60,28);
 	// added the tire to the queue, we add it twice so it moves twice in a row
 	renderQueue.push(llanta);
 	renderQueue.push(llanta);
 	llanta.name = 'llanta';
 	// end load and create llanta
-	
+
 	// load and create migraMan2
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
 	migraMan2 = createSprite(32*7+16,32*7);
 	migraMan2.addAnimation('marchright',img1,img2,img1,img2,img1,img2);
 	migraMan2.animation.playing = false;
-	migraMan2.setCollider('rectangle',0,0,30,62);
+	migraMan2.setCollider('rectangle',0,-16,30,30);
 	migraMan2.movementDir = 'right';
 	migraMan2.speed = ONE_UNIT;
 	// migra hombre 2
 	renderQueue.push(migraMan2);
 	migraMan2.name = 'migraHombre2';
 	// end load and create migraman2
-	
+
 	// load and create migraMan1
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
 	migraMan1 = createSprite(32*2+16,32*7);
 	migraMan1.addAnimation('marchright',img1,img2,img2,img1);
 	migraMan1.animation.playing = false;
-	migraMan1.setCollider('rectangle',0,0,30,62);
+	migraMan1.setCollider('rectangle',0,-16,30,30);
 	migraMan1.movementDir = 'right';
 	migraMan1.speed = ONE_UNIT;
 	// migra hombre 1
 	renderQueue.push(migraMan1);
 	migraMan1.name = 'migraHombre1';
 	// end load and create migraMan1
-	
+
 	// load and create migraSUV
 	img1 = loadImage('img/migra_car-1.png');
 	img2 = loadImage('img/migra_car-2.png');
@@ -618,14 +601,14 @@ function preload() {
 	renderQueue.push(migraSUV);
 	migraSUV.name = 'migraSUV';
 	// end load and create migraSUV
-	
+
 	// load and create migraHelo1
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
 	migraHelo1 = createSprite(32*5,32*3);
 	migraHelo1.addAnimation('fly',img1,img2,img2,img1,img2);
 	migraHelo1.animation.playing = false;
-	migraHelo1.setDefaultCollider();
+	migraHelo1.setCollider('rectangle', 0,-16,62,30);
 	migraHelo1.movementDir = 'left';
 	//migraHelo1.speed = 32*4;
 	migraHelo1.speed = ONE_UNIT;
@@ -636,21 +619,21 @@ function preload() {
 	renderQueue.push(migraHelo1);
 	migraHelo1.name = 'migraHeli1';
 	// end load and create migraHelo1
-	
+
 	// load and create visa
 	img = loadImage('img/visa.png');
 	visa = createSprite(32*5+16,16);
 	visa.addImage('visa',img);
 	visa.setDefaultCollider();
 	// end load and create visa
-	
+
 	// load and create migraHelo2
 	img1 = loadImage('img/migra_helo-1.png');
 	img2 = loadImage('img/migra_helo-2.png');
 	migraHelo2 = createSprite(32*10,32*3);
 	migraHelo2.addAnimation('fly',img1,img2,img1,img2,img2);
 	migraHelo2.animation.playing = false;
-	migraHelo2.setDefaultCollider();
+	migraHelo2.setCollider('rectangle', 0,-16,60,30);
 	migraHelo2.movementDir = 'left';
 	//migraHelo2.speed = 32*4;
 	migraHelo2.speed = ONE_UNIT;
@@ -661,25 +644,35 @@ function preload() {
 	renderQueue.push(migraHelo2);
 	migraHelo2.name = 'migraHeli2';
 	// end load and create migraHelo2
-	
+
 	// load and create migraMan3
 	img1 = loadImage('img/migraman_1.png');
 	img2 = loadImage('img/migraman_2.png');
 	migraMan3 = createSprite(32*12+16,32*7)
 	migraMan3.addAnimation('marchright',img2,img2,img1,img1);
 	migraMan3.animation.playing = false;
-	migraMan3.setCollider('rectangle',0,0,30,62);
+	migraMan3.setCollider('rectangle',0,-16,30,30);
 	migraMan3.movementDir = 'right';
 	migraMan3.speed = ONE_UNIT;
 	// migra hombre 3
 	renderQueue.push(migraMan3);
 	migraMan3.name = 'migraHombre3';
 	// end load and create migraMan3
-	
+
 	// carlosmoreno should go here, will it feel different if he doesn't?
-	
+  	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
+
 } // end preload
 
+// this is the input delay for reading input--during this delay, we stop reading input, after it's
+// elapsed, we'll start reading input again. The delay should only be set after some input has been
+// read
+const INPUT_DELAY = .5;
+let readInputAfter = 0;
+
+/**
+ * SETUP function
+ */
 function setup() {
 	//createCanvas(448, 548);
 	let canvas = createCanvas(448, 448); // suggested by p5js.org reference for parent()
@@ -695,10 +688,10 @@ function setup() {
 	//
 	frameRate(FRAME_RATE); // tried as slow as 1fps
 	background(255);
-	
+
 	tierra.changeImage('frontera'); // this image should change to 'asarco' to default to gamestate='startup'
-	
-	
+
+
 	carlosmoreno.debug = DRAW_COLLIDER;
 	cadaver.debug = DRAW_COLLIDER;
 	gato1.debug = DRAW_COLLIDER;
@@ -712,8 +705,8 @@ function setup() {
 	visa.debug = DRAW_COLLIDER;
 	migraHelo2.debug = DRAW_COLLIDER;
 	migraMan3.debug = DRAW_COLLIDER;
-	
-	
+
+
 	// I've reordered the adds to match the render queue order
 	laMigra = new Group();
 	laMigra.add(cadaver);
@@ -727,192 +720,160 @@ function setup() {
 	laMigra.add(migraHelo1);
 	laMigra.add(migraHelo2);
 	laMigra.add(migraMan3);
-	
+
 	//carlosmoreno.changeImage('facedown');
-	
+
+	// now set up the time to delay before reading so that we don't start reading immediately
+	readInputAfter = (millis() / 1000) + 1;
+
+
+  	gameState = 'startup';
 } // end setup
 
+
+/**
+ * DRAW function
+ */
 function draw() {
 	background(255);
-	
+
 	/*
 	* I have commented out the switch statement during the early part of coding
-	*
-	switch (gameState) { // switch is not documented in P5.JS but is part of Javascript
-		case "select":
+	*/
+	switch (gameState)
+  	{ 	// switch is not documented in P5.JS but is part of Javascript
+    	// select, startup','play','win','lose
+		//case "select": //will not use this case since it is handled in keyReleased() and updateStatus(pad)
 		// statements that display select condition, called by keyReleased() 'g'
 		// statements that may alter gameState label and condition
 		// statements that may reload this game
 		// statements that may launch the other game
-		break;
+		//break;
 		case "startup":
-		// statements to display the startup condition
-		// statements that may alter gamestate label and condition
-		break;
+			// statements to display the startup condition
+			tierra.changeAnimation('frontera');
+			laMigra.visible = false;
+			text('Press START to play', width/2, height/2);
+			// statements that may alter gamestate label and condition
+			break;
 		case "play":
-		// statements that display gameplay
-		break;
+			// statements that display gameplay
+			break;
 		case "lose":
-		// statements that display loss condition
-		break;
+			// statements that display loss condition
+			carlosmoreno.changeAnimation ('surprise');
+			carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
+			carlosmoreno.position.y = 64*6+32;
+      gameState = 'play'; // change gameState or carlos gets stuck
+			break;
 		case "win":
-		// statements that display win condition
-		break;
+			// statements that display win condition
+    		cadaver.visible = false;
+			waterLog.visible = false;
+			gato1.visible = false;
+			gato2.visible = false;
+			llanta.visible = false;
+			migraMan1.visible = false;
+			migraMan2.visible = false;
+			migraMan3.visible = false;
+			migraSUV.visible = false;
+			migraHelo1.visible = false;
+			migraHelo2.visible = false;
+			visa.visible = false;
+			carlosmoreno.visible = false;
+			tierra.changeImage('end');
+			break;
 		default:
-		// statements that catch and redirect in case none of the above is true
-		break; // is there a 'break' after 'default'? I forget
-	} */
-	
-	
-	
-	
-	/*
-	// this was the first draft of movement code for carlosmoreno
-	// it executed too fast and did not honor his place in the renderQueue[]
-	if (moveUp){
-		carlosmoreno.changeAnimation ('walkup');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y - 32;
-		if (carlosmoreno.position.y - 32 < 0) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y += 32;
-		}
-		moveUp = false;
-		//carlosmoreno.changeImage ('faceup');
-	}
-	else if (moveDown){
-		carlosmoreno.changeAnimation ('walkdown');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.y = carlosmoreno.position.y + 32;
-		if (carlosmoreno.position.y + 32 > HEIGHT) {
-			// bound the mvoement of carlos
-			carlosmoreno.position.y -= 32;
-		}
-		moveDown = false;
-		//carlosmoreno.changeImage ('facedown');
-	}
-	else if (moveLeft){
-		carlosmoreno.changeAnimation ('walkleft');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x - 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x < 0) {
-			carlosmoreno.position.x += 32;
-		}
-		moveLeft = false;
-		//carlosmoreno.changeImage ('faceleft');
-	}
-	else if (moveRight){
-		carlosmoreno.changeAnimation ('walkright');
-		carlosmoreno.animation.play();
-		carlosmoreno.position.x = carlosmoreno.position.x + 32;
-		// bound the movement of carlos
-		if (carlosmoreno.position.x > WIDTH) {
-			carlosmoreno.position.x -= 32;
-		}
-		moveRight = false;
-		//carlosmoreno.changeImage ('faceright');
-	}
-	//else {
-	//carlosmoreno.changeAnimation ('facedown');
-	//}
-	*/
+			// statements that catch and redirect in case none of the above is true
+			break; // is there a 'break' after 'default'? I forget
+	} // end gameState switch/case statements
+
+
 	if (carlosmoreno.overlap(laMigra)){ // am setting la migra group members velocity to 0 as a temporary response
-		carlosmoreno.changeAnimation ('surprise');
-		carlosmoreno.position.x = 224+16; // next lines added to create a 'startup' condition
-		carlosmoreno.position.y = 64*6+32;
-		
+    	gameState = 'lose';
 	}
 	if (carlosmoreno.overlap(visa)){ // make all the moving sprites disappear
-		cadaver.visible = false;
-		waterLog.visible = false;
-		gato1.visible = false;
-		gato2.visible = false;
-		llanta.visible = false;
-		migraMan1.visible = false;
-		migraMan2.visible = false;
-		migraMan3.visible = false;
-		migraSUV.visible = false;
-		migraHelo1.visible = false;
-		migraHelo2.visible = false;
-		visa.visible = false;
-		carlosmoreno.visible = false;
-		tierra.changeImage('end');
+    	gameState = 'win';
 	}
-	
-	// experimental code for gamepad
-	let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
-	let pad0 = pads[0]; // limit to first pad connected
-	if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
-		console.log(pad0)
-		updateStatus(pad0); // will need an updateStatus() function
-	} else { // what to do if pad0 is null, which is to say there is no gamepad connected
-		// use keyboard
-		// or use touches
-		//console.log("did not find gamepad (probably need to click it so it wakes up)")
+
+	// get the current time so we can decide if it's time to read input, and in particular, the controller
+	const currentTime = millis() / 1000;
+
+	// if the time is after our readInputAfter timestamp, we'll process input from the controller
+	if (currentTime > readInputAfter) {
+		// scan the game pads to see which ones are active
+		scanGamePads();
+		// grab controller 0, since that's all we'll have
+		let pad0 = controllers[0];
+		// test that pad0 is not null or undefined (i.e., it exists)
+		if (pad0) {
+			// just log it so we know
+			console.log('pad0 is active');
+			// now update the game with the status of the game pad
+			updateStatus(pad0); // will need an updateStatus() function
+		} else { // what to do if pad0 is null, which is to say there is no gamepad connected
+			// use keyboard
+			// or use touches
+			//console.log("did not find gamepad (probably need to click it so it wakes up)")
+		}
 	}
-	
+
 	// update what we're rendering and how frequently
 	updateRendering(renderQueue, renderTime);
+
+	// now tell p5.play to draw all the sprites it knows about
 	drawSprites();
-	
+
 	// returns carlosmoreno to idle state after an update
 	// effectively slows down carlos and makes him take his turn in the queue
 	if (!keyIsPressed){carlosmoreno.movementDir = 'idle';}
-	
+
 } // end draw loop
 
-// this is the input delay for reading input--during this delay, we stop reading input, after it's
-// elapsed, we'll start reading input again. The delay should only be set after some input has been
-// read
-const INPUT_DELAY = .5;
-let readInputAt = 0; 
-function updateStatus(pad){ // tested once per frame
-	// get the current time
-	const time = millis() / 1000;
-	
-	// don't get controller input while we're waiting
-	if (time < readInputAt)
-	return;
-	
+let firstIgnored = false;
+async function updateStatus(pad){ // tested once per frame
+
+	const currentTime = millis() / 1000;
 	/**
 	*  This bit is specific to an NES style controller,
 	*  usb gamepad (Vendor: 0810 Product: e501)
 	*  axis default values are -0.00392 so can test for greater and less than that.
 	*  need a test to enclose it
 	*/
-	
+
 	/*
 	* Regular expressions to search the ID string given to us by the manufacturer
 	* so that we can identify which controller is which and behave accordingly.
 	*/
-	let nintendoId = /Vendor\: 0810 Product\: e501/;
-	let standardID = /Vendor\: 0583 Product\: 2060/;
-	
+	let nintendoId = /Vendor\: 0810 Product\: e501/; // this is our canonical NES controller/gamepad
+	let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
+
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
+
 		if (pad.axes[0] === -1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'left');
-		} //{ moveLeft = true;} else { moveLeft = false; }
+		}
 		if (pad.axes[0] ===  1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'right');
-		} //{ moveRight = true;} else { moveRight = false; }
+		}
 		if (pad.axes[1] === -1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'up');
-		} //{ moveUp = true;} else { moveUp = false; }
+		}
 		if (pad.axes[1] ===  1.00000)
 		{
-			readInputAt = time + INPUT_DELAY;
+			readInputAfter = currentTime + INPUT_DELAY;
 			addInput(inputQueue, 'down');
-		} //{ moveDown = true;} else { moveDown = false; }
+		}
 		if (pad.buttons[0].value === 1.00){ console.log(pad.buttons); print('NES B button pressed'); } // NES B button
 		if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
 		// does not have buttons 2-7 inclusive
+<<<<<<< HEAD
 		if (pad.buttons[8].value === 1.00) { 
 			window.open(url, "_self"); 
 			print('NES Select pressed'); 
@@ -923,13 +884,25 @@ function updateStatus(pad){ // tested once per frame
 			print('NES Start pressed'); 
 			inputQueue = [];
 		} // NES Start button
+=======
+		if (isButtonReleased(0, 8)) {
+			print('NES Select pressed and released');
+			window.open(url, "_self");
+		}
+
+		if (isButtonReleased(0, 9)) {
+			print('NES Start pressed and released');
+			window.open(url0, "_self");
+		}
+>>>>>>> 2239577a1d2fb0695ce5b6fc45a464768329e6a5
 	}
-	
+
 	/**
 	*  This bit is specific to the Buffalo SNES style controller,
 	*  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
 	*  need a test to enclose it. Axis defaults are 0.00392 (positive values)
 	*/
+  /*
 	if (pad.id.match(standardID)) { // this matches the id against the controller ID value
 		if (pad.axes[0] === -1.00000){carlosmoreno.movementDir = 'left'; print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
 		if (pad.axes[0] ===  1.00000){carlosmoreno.movementDir = 'right'; print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
@@ -952,13 +925,15 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[14].value === 1){ print('SNES D-pad left pressed');} // redundant with axes 0 (X-value)
 		if (pad.buttons[15].value === 1){ print('SNES D-pad right pressed');} // redundant with axes 0 (X-value)
 	}
+  */
+
 	/**
 	*  This bit is specific to the Exlene SNES style controller,
 	*  USB Gamepad (Vendor: 0079 Product: 0011)
 	*  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
 	*/
 	/**
-	let exlene = /Vendor\: 0079 Product\: 0011/;
+	let exlene = /Vendor\: 0079 Product\: 0011/; // this is the Exlene SNES gamepad
 	if (pad.id.match(exlene) ){
 		if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
 		if (pad.axis[0] ===  1.0000){carlosmoreno.movementDir = 'right';} // this axis is not registering at present
@@ -976,7 +951,7 @@ function updateStatus(pad){ // tested once per frame
 		if (pad.buttons[9] === 1.000){carlosmoreno.movementDir = '';} // SNES start button
 	}
 	*/
-	
+
 	/**
 	* This bit is specific to the Sony PS3 contoller,
 	* PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)
@@ -1002,98 +977,194 @@ function updateStatus(pad){ // tested once per frame
 
 function keyReleased() {
 	if ((key === 'g') || (key === 'G')){ // g on most keyboards using here as a select or highlight
-		// need to add here a test for if gamestate === playing (either) then load index.html
-		
-		// deprecating attempt to get Select UI in this window
-		/*
-		if (ctr0 % 2 === 0){
-			btn1.changeAnimation('off');
-			btn2.changeAnimation('select');
-		} else if (ctr0 % 2 === 1) {
-			btn1.changeAnimation('select');
-			btn2.changeAnimation('off');
-		}
-		ctr0 = ctr0 +1;
-		*/
-		
+		//may need to add here a test for if gamestate === playing (either) then load index.html
 		// open the Select url which should be index.html
 		window.open(url, "_self");
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-		
-		// deprecating attempt to get Select and Start UI in this window
-		/*
-		if (ctr0 % 2 === 0){
-			btn1.changeAnimation('off');
-			btn2.changeAnimation('blink');
-			window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
-		}
-		else if (ctr0 % 2 === 1){
-			btn1.changeAnimation('blink');
-			btn2.changeAnimation('off');
-			window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
-		}
-		*/
-		
 		// Start key will reload and hence restart this window
-		window.open(url0, '_self');
+		// window.open(url0, '_self');
 	}
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
+
 
 
 function keyPressed() { // tested once per frame, triggered on keystroke
 	// get the current time
 	const time = millis() / 1000;
-	
+
 	// don't get keyboard input while we're waiting
-	if (time < readInputAt)
+	if (time <  readInputAfter)
 	return;
-	
-	if        (keyCode === '38'     || //keyDown(UP_ARROW) || // arrow keys are not responding, also poorly documented
+
+	if        (
 	key === 'w'          ||
 	key === 'W'          ||
 	key === 'i'          ||
 	key === 'I') {
 		print('key up');
 		addInput(inputQueue, 'up')
-		readInputAt = time + INPUT_DELAY;
-		
-	} else if (keyCode === '40'     || //keyCode === 'ArrowDown'  ||
+		 readInputAfter = time + INPUT_DELAY;
+
+	} else if (
 	key === 's'          ||
 	key === 'S'          ||
 	key === 'k'          ||
 	key === 'K') {
 		print('key down');
 		addInput(inputQueue, 'down')
-		readInputAt = time + INPUT_DELAY;
-		
-	} else if (keyCode === '37'     || //key === 'ArrowLeft'  ||
+		 readInputAfter = time + INPUT_DELAY;
+
+	} else if (
 	key === 'a'          ||
 	key === 'A'          ||
 	key === 'j'          ||
 	key === 'J') {
 		print('key left');
 		addInput(inputQueue, 'left')
-		readInputAt = time + INPUT_DELAY;
-		
-	} else if (keyCode === '39'     || //key === 'ArrowRight'  ||
+		 readInputAfter = time + INPUT_DELAY;
+
+	} else if (
 	key === 'd'          ||
 	key === 'D'          ||
 	key === 'l'          ||
 	key === 'L') {
 		print('key right');
 		addInput(inputQueue, 'right')
-		readInputAt = time + INPUT_DELAY;
-		
-	} else if (key === 't'		||
-	key === 'T') {
-		print('t');
-		START = true;
-	} else if (key === 'y') {
-		print('y');
+		 readInputAfter = time + INPUT_DELAY;
+
 	} else {
 		carlosmoreno.movementDir = 'idle'; // create an idle state for carlos
 	}
-	return false;	
-	
-} // end keyTyped
+	return false;
+
+} // end keyPressed
+
+
+// Code to deal with game pads
+let lastControllers = []
+let controllers = []
+
+/**
+ * checks two things: controllers and lastControllers, if the button was
+ * pressed in lastControllers, but not in controllers, we have a "release" event
+ * in essence, which we can check here--note this happens only once per press
+ * @param {Index of the controller} ctrlId
+ * @param {Index of the button} buttonId
+ */
+function isButtonReleased(ctrlId, buttonId)
+{
+	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId]) {
+		let val = controllers[ctrlId].buttons[buttonId].value;
+		let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
+		// console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
+		// console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
+		// if the current val is 0, the button is no longer pressed, and if the last value is
+		// 1, then it was pressed during the last read--this lets us know that it was a released button
+		if (val === 0.0 && lastVal === 1.0) {
+			console.log('key released: ' + buttonId)
+			return true
+		} else {
+			return false
+		}
+	}
+
+	return false
+}
+
+/** Called by the web page whenever a new controller is connected (or wakes up) */
+function connectionHandler(e) {
+	// just add it
+	addGamePad(e.gamepad)
+}
+
+/** Called by the web page whenever a game controller is disconnected */
+function disconnectHandler(e) {
+	// just remove it
+	removeGamePad(e.gamepad)
+}
+
+/**
+ * Called whenever we need to add a gamepad to our list of gamepads. The parameter
+ * is of the GamePad object type, so it has an index, etc.
+ * @param {The gamepad we're adding} gamepad
+ */
+function addGamePad(gamepad) {
+	console.log('gamepad connected on ' + gamepad.index)
+	controllers[gamepad.index] = gamepad
+	console.log('controllers.length ' + controllers.length)
+}
+
+/**
+ * Used to remove a given gamepad from our array of GamePad objects.
+ * @param {The gamepad we're removing} gamepad
+ */
+function removeGamePad(gamepad) {
+	console.log('gamepad disconnected on ' + gamepad.index)
+	// i.e., set it to undefined at that given index
+	delete controllers[gamepad.index];
+}
+
+/**
+ * This does a partial copy of the information we want from a gamepad, and
+ * in particular, the button states. It doesn't copy anything else! Javascript
+ * requires this because it only has referential copies
+ * @param {The GamePad we're copying} pad
+ * @returns
+ */
+function copyPad(pad) {
+	var p = {};
+	p.buttons = [];
+	for (var i = 0; i < pad.buttons.length; i++)
+	{
+		p.buttons.push({})
+		p.buttons[i].value = pad.buttons[i].value;
+	}
+	return p;
+}
+
+/**
+ * Copies our controllers to lastControllers by doing a slightly deep copy of
+ * the button states so that we can look for button releases later
+ */
+function copyControllers() {
+	lastControllers = [];
+	lastControllers.length = controllers.length;
+	for (var i = 0; i < controllers.length; i++)
+	{
+		if (controllers[i]) {
+		    lastControllers[i] = copyPad(controllers[i]);
+		}
+	}
+}
+
+/**
+ * Used to get the latest set of gamepads from the browser. On Chrome,
+ * we have to do this every time we want new state, because it's an entirely
+ * new object.
+ */
+function scanGamePads() {
+	// try to get the gamepads, on some browsers, we have to use webkit
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() :
+	  (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+
+	// make sure our controllers object has a length property
+    controllers.length = gamepads.length;
+	// now do the slightly deep copy of the set of controllers
+	copyControllers();
+	for (var i = 0; i < gamepads.length; i++)
+	{
+		if (gamepads[i])
+	  	{
+			if (gamepads[i].index in controllers) {
+		  		controllers[gamepads[i].index] = gamepads[i];
+			} else {
+				addGamePad(gamepads[i]);
+			}
+		}
+	}
+}
+
+// add event listeners for game pad connections
+window.addEventListener("gamepadconnected", connectionHandler)
+window.addEventListener("gamepaddisconnected", removeGamePad)

@@ -447,4 +447,43 @@ I also realized that it would be simpler to invoke index.html any time a player 
 I have closed some issues on gitHub and opened many more. These have been focused on the collision detections that need to be added to lamigra.js. I've tried to be detailed, but see that I'm fatiguing and getting sloppy so I'm going to pursue another task for a while.
 
 ======
+2021 08 19
+Chris and I have been working on completing Crosser.
+I have been asked if we still want to use the iBuffalo Classic SNES controller. The answer is "No, not anymore." We have solved how to invoke URLs from within the JavaScript and so don't need a mouse and mouse-click. This allows us to reduce the number of user control elements. We can now use an NES-style gamepad/controller.
+We are using something similar to: https://www.amazon.com/Controller-suily-Joystick-RetroPie-Emulators/dp/B07M7SYX11/
+
+Chris has been working on fixing and refining the animations in Crosser. This caused a hiccup in the placement of some of the sprites in the river.
+
+I've been distracted by home maintenance and student needs.
+
+======
+2021 08 23
+It looks as though we will be running a Dell micro pc: https://www.dell.com/en-us/work/shop/cty/pdp/spd/optiplex-3080-micro
+
+I've been deleting cruft. Chris is trying to figure out why the NES controller always reloads as though it is caching an "h" key.
+
+======
+2021 08 26
+gonna try to be finished by September 07, 2021 and install that week.
+Chrome will depend on Kiosk browser extention by the Cook Company
+https://chrome.google.com/webstore/detail/kiosk/afhcomalholahplbjhnmahkoekoijban/
+https://kiosk.cook.company/
+which I tested today and set to a specific URL
+http://localhost:8080/
+and which can be exited via an escape key press on the keyboard.
+a mouse is needed at first to focus the kiosk.
+
+The Denver Art Museum says it will use this ViewSonic LCD panel:
+https://www.viewsonic.com/us/cde4320.html#specs
+which states its resolution as
+3840 px x 2160 px (nominally 4K)
+the Dell PC has a list of resolutions on another monitor that include:
+1280 px x 768 px
+1280 px x 720 px
+1280 px x 600 px
+
+I believe that 1280 x 720 is the sweet spot for our purposes.
+
+1280 x 3 = 3840
+720 x 3 = 2160
 */
