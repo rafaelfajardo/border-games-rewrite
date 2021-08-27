@@ -66,6 +66,10 @@ let url0 = '_crosser.html';
 let url1 = '_lamigra.html';
 
 //
+// declare a variable to contain our font
+let arcadeFont;
+
+//
 //
 //  declare state variables
 //
@@ -248,7 +252,7 @@ function updateRendering(queue, timing) {
 
 /**
  * Manually animates the sprite by moving to the next frame
- * @param {The sprite we're animating} sprite 
+ * @param {The sprite we're animating} sprite
  */
 function manuallyAnimate(sprite, looping) {
 	// first, test if it's the player, if it's not, just animate it
@@ -306,8 +310,8 @@ function updateSprite(sprite) {
 
 		// now we'll update the direction that Carlos is facing based on the next movement
 		updateCarlosDirection(sprite);
-	} 
-	
+	}
+
 	switch (sprite.movementDir) {
 		case 'left':
 			sprite.position.x = sprite.position.x - sprite.speed;
@@ -432,7 +436,7 @@ function preload() {
 	// sprite--this is needed to handle the input queue
 	carlosmoreno.isPlayer = true;
 	carlosmoreno.hasMoved = false;
-	
+
 	img1 = loadImage('img/carlos-moreno-3_01.png');
 	img2 = loadImage('img/carlos-moreno-3_02.png');
 	let anim = carlosmoreno.addAnimation('walkdown',img1,img2); // may need to add or repeat anim frames for carlos
@@ -644,6 +648,8 @@ function preload() {
 	// carlosmoreno should go here, will it feel different if he doesn't?
   	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 
+  // preload our font into arcadeFont
+  arcadeFont = loadFont('assets/04b30.otf');
 } // end preload
 
 // this is the input delay for reading input--during this delay, we stop reading input, after it's
@@ -705,6 +711,10 @@ function setup() {
 	laMigra.add(migraMan3);
 
 	//carlosmoreno.changeImage('facedown');
+
+  // setup the font parameters to be used by text in 'startup' and 'win' state
+  textFont(arcadeFont);
+  textSize(51); // our font is best in multiples of 17
 
 	// now set up the time to delay before reading so that we don't start reading immediately
 	readInputAfter = (millis() / 1000) + 1;
@@ -811,9 +821,9 @@ function draw() {
 
 	if (gameState === 'startup') {
 		strokeWeight(5);
-  		fill(128 + sin(frameCount*0.1) * 128);
+  		fill(128 + sin(frameCount*0.1) * 128,128 + cos(frameCount*0.1) * 128,128 + sin(frameCount*0.1) * 128);
   		textSize(14);
-  		text('Press START to play', 2*width/3, 4*height/5);
+  		text('Press START to play', 200, 370);
 	}
 
 	// returns carlosmoreno to idle state after an update
