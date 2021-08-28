@@ -677,7 +677,7 @@ function preload() {
   	renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 
   // preload our font into arcadeFont
-  arcadeFont = loadFont('assets/04b30.otf');
+  arcadeFont = loadFont('assets/04b30.otf'); // this is a freeware font from http://www.04.jp.org/ 
 } // end preload
 
 // this is the input delay for reading input--during this delay, we stop reading input, after it's
