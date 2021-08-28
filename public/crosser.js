@@ -991,7 +991,7 @@ async function updateStatus(pad){ // tested once per frame
 	*  USB Gamepad (Vendor: 0079 Product: 0011)
 	*  The Exlene controller worked on older MacOS X and Mac Mini, with middleware. Is not working here.
 	*/
-	/**
+	/*
 	let exlene = /Vendor\: 0079 Product\: 0011/; // this is the Exlene SNES gamepad
 	if (pad.id.match(exlene) ){
 		if (pad.axis[0] === -1.0000){carlosmoreno.movementDir = 'left';} // this axis is not registering at present
@@ -1041,8 +1041,12 @@ function keyReleased() {
 		window.open(url, "_self");
 	}
 	if ((key === 'h') || (key === 'H')){ // h on most keyboards using here as start the selected choice
-		// Start key will reload and hence restart this window
-		// window.open(url0, '_self');
+    if (gameState === 'startup')
+    {
+      gameState = 'play';
+    } else {
+      window.open(url0, "_self");
+    }
 	}
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
