@@ -117,8 +117,19 @@ let sombra2; // sprite container for environment set piece
 //
 //  define a boolean to set play.p5.js library debug function state
 //
-let BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
-//
+const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
+// turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below 
+const DRAW_COLLIDER = BUGGY ? BUGGY : false;
+
+// this is a timeout for no input which will then go back to the main screen
+let lastInputAt = 0;
+// this is the timeout before going back to the selection screent
+const BACK_TO_SELECTION_TIMEOUT = 120;
+
+// create an input queue so we can store the last two inputs we received
+let inputQueue = [];
+let maxQueueSize = 2;
+
 // queue to render things, they'll be drawn in this order so it's important
 // to have the order we want. This order will be handled in preload. To deal
 // with an object moving more than ONE_UNIT, we simply add the object multiple
@@ -132,14 +143,41 @@ let renderTime = .0909;
 // indicates where we are in the render queue
 let currentIndex = 0;
 
-// timestamp for our indexing into the queue
+// timestamp for our indexing into the render queue
 let timeStamp = 0;
+
+/**
+ * Adds an input into our queue, which we can remove with dequeueInput
+ * @param {The input queue (which should be an array) that we're using} inputQueue
+ * @param {The next input to add} item
+ */
+function addInput(inputQueue, item) {
+    if (inputQueue.length < maxQueueSize) {
+        inputQueue.push(item);
+    } else {
+        inputQueue.shift();
+        inputQueue.push(item);
+    }
+
+    // now timestamp when we received this input last
+    lastInputAt = millis() / 1000;
+}
+
+/**
+ * This function removes the next item (i.e., the oldest) in the queue
+ * @param {The input queue we're using (which should be an array)} inputQueue
+ * @returns {The item we just removed from the queue}
+ */
+function dequeueInput(inputQueue) {
+    return inputQueue.shift();
+}
+
 
 // we put a unique number on each sprite element, though obviously this will overflow if the 
 // game runs a veeeeery long time while being played--typically longer than is possible for a human to play.
 // we increment this value each time we call createSprite
 let spriteId = 0;
-function removeFromQueue(item) {
+function removeFromRenderQueue(item) {
     // find the index in the queue where this sprite is
     let index = renderQueue.findIndex((sprite) => sprite.spriteId === item.spriteId)
     // remove the element from the queue
@@ -262,7 +300,7 @@ function checkCuffsJurisdiction(sprite) {
     if (sprite.isEsposa && sprite.position.y < BORDER) {
         // remove from the render queue
         console.log(sprite.name + ' is out of jurisdiction');
-        removeFromQueue(sprite);
+        removeFromRenderQueue(sprite);
         sprite.visible = false;
     }
 }
@@ -345,8 +383,7 @@ function manuallyAnimate(sprite, looping) {
     // first, test if it's the player, if it's not, just animate it
     if (sprite.isPlayer) {
         // now if the player has moved, we'll run the animation
-        if (sprite.hasMoved)// needed when we have the input queue || inputQueue.length > 0)
-        {
+        if (sprite.hasMoved || inputQueue.length > 0) {
             sprite.animation.nextFrame();
         } else {
             sprite.animation.goToFrame(0);
@@ -375,9 +412,24 @@ const BORDER = 7 * 32;
  */
 function updateSprite(sprite) {
     //console.log('updating ' + sprite.name);
-    if (sprite.animation) {
-        sprite.animation.play();
+    // if (sprite.animation) {
+    //     sprite.animation.play();
+    // }
+
+    // now we deal with user input
+    if (sprite.isPlayer == true) {
+        // if so, get the next movement that's been queued up
+        let dir = dequeueInput(inputQueue)
+        if (dir && gameState === 'play') {
+            sprite.movementDir = dir;
+            sprite.animation.goToFrame(0);
+            sprite.hasMoved = true;
+        } else {
+            // and if there's no movement, just be idle
+            sprite.movementDir = 'idle';
+        }
     }
+
     // how a sprite moves if it is a non-player character
     switch (sprite.movementDir) {
         case 'left':
@@ -422,6 +474,9 @@ function updateSprite(sprite) {
         case 'idle':
             sprite.position.x = sprite.position.x;
             sprite.position.y = sprite.position.y;
+            break;
+        case 'esposas':
+            makeEsposas(migra.position.x + 16, migra.position.y - 32, 32, 32);
             break;
         default:
             console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
@@ -561,12 +616,13 @@ function preload() {
     migra.addAnimation('move', img0, img0, img0, img0, img1, img1, img0, img0);
     migra.addAnimation('stay', img0, img0);
     migra.changeAnimation('stay');
-    migra.debug = BUGGY; // set the debug flag
+    migra.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(migra); // add migra to renderQueue []
     migra.name = 'migra';
     migra.animation.playing = false;
     migra.movementDir = 'idle';
     migra.speed = 32;
+    migra.isPlayer = true;
 
     /*
      * load images for esposas sprite
@@ -981,6 +1037,10 @@ function preload() {
 
 } // end preload()
 
+
+const INPUT_DELAY = .5;
+let readInputAfter = 0;
+
 /***********************************************************
  *
  *
@@ -1010,65 +1070,98 @@ function draw() {
     // put drawing code here
     background(128);
 
+    // get the current time
+    const currentTime = millis() / 1000;
+
+    // if we've been doing nothing without input for BACK_TO_SELECTION seconds,
+    // we'll just reopen the main selection window
+    if (currentTime > lastInputAt + BACK_TO_SELECTION_TIMEOUT) {
+        open(url, '_self');
+    }
     /*
      * I have commented out the switch statement during the early part of coding
-     *
+     */
     switch (gameState) { // switch is not documented in P5.JS but is part of Javascript
-      case "select":
-        // statements that display select condition, called by keyReleased() 'g'
-        // statements that may alter gameState label and condition
-        // statements that may reload this game
-        // statements that may launch the other game
-        break;
-      case "startup":
-        // statements to display the startup condition
-        // statements that may alter gamestate label and condition
-        break;
-      case "play":
-        // statements that display gameplay
-        break;
-      case "lose":
-        // statements that display loss condition
-        break;
-      case "win":
-        // statements that display win condition
-        break;
-      default:
-        // statements that catch and redirect in case none of the above is true
-        break; // is there a 'break' after 'default'? I forget
-    } */
+        // case "select":
+        //     // statements that display select condition, called by keyReleased() 'g'
+        //     // statements that may alter gameState label and condition
+        //     // statements that may reload this game
+        //     // statements that may launch the other game
+        //     break;
+        case "startup":
+            // temporarily just fall through to play
+            // statements to display the startup condition
+            // statements that may alter gamestate label and condition
+            gameState = "play";
+            break;
+        case "play":
+            // statements that display gameplay
+            break;
+        case "lose":
+            // statements that display loss condition
+            break;
+        case "win":
+            // statements that display win condition
+            break;
+        default:
+            // statements that catch and redirect in case none of the above is true
+            break; // is there a 'break' after 'default'? I forget
+    }
 
     // sketch to fling cuffs -- esposas in spanish -- upward, if we're flinging them,
     // first we make them, and this sets them on their upward trajectory
-    if (flingEsposas) {
-        makeEsposas(migra.position.x + 16, migra.position.y - 32, 32, 32);
-    }
+    // if (flingEsposas) {
+    //     makeEsposas(migra.position.x + 16, migra.position.y - 32, 32, 32);
+    // }
     // /*
     // sketch to move player character
-    if (moveState === 'left') {
-        migra.changeAnimation('move');
-        migra.animation.play();
-        migra.position.x = migra.position.x - 32;
-        if (migra.position.x - 32 < 0) {
-            migra.position.x += 32; // create bounds on movement
-        }
-        moveState = 'idle'
-        migra.animation.stop();
-    } else if (moveState === 'right') {
-        migra.changeAnimation('move');
-        migra.animation.play();
-        migra.position.x = migra.position.x + 32;
-        if (migra.position.x + 32 > WIDTH) {
-            migra.position.x -= 32;
-        }
-        moveState = 'idle'
-        migra.animation.stop();
-    } else {
-        moveState = 'idle';
-        //migra.position.x = migra.position.x;
-    }
+    // if (moveState === 'left') {
+    //     migra.changeAnimation('move');
+    //     migra.animation.play();
+    //     migra.position.x = migra.position.x - 32;
+    //     if (migra.position.x - 32 < 0) {
+    //         migra.position.x += 32; // create bounds on movement
+    //     }
+    //     moveState = 'idle'
+    //     migra.animation.stop();
+    // } else if (moveState === 'right') {
+    //     migra.changeAnimation('move');
+    //     migra.animation.play();
+    //     migra.position.x = migra.position.x + 32;
+    //     if (migra.position.x + 32 > WIDTH) {
+    //         migra.position.x -= 32;
+    //     }
+    //     moveState = 'idle'
+    //     migra.animation.stop();
+    // } else {
+    //     moveState = 'idle';
+    //     //migra.position.x = migra.position.x;
+    // }
     //
+
+    // if the time is after our readInputAfter timestamp, we'll process input from the controller
+    if (currentTime > readInputAfter) {
+        // scan the game pads to see which ones are active
+        scanGamePads();
+        // grab controller 0, since that's all we'll have
+        let pad0 = controllers[0];
+        // test that pad0 is not null or undefined (i.e., it exists)
+        if (pad0) {
+            // just log it so we know
+            console.log('pad0 is active');
+            // now update the game with the status of the game pad
+            updateStatus(pad0); // will need an updateStatus() function
+        } else { // what to do if pad0 is null, which is to say there is no gamepad connected
+            // use keyboard
+            // or use touches
+            //console.log("did not find gamepad (probably need to click it so it wakes up)")
+        }
+    }
+
+    // update what we're rendering and how frequently
     updateRendering(renderQueue, renderTime);
+
+    // now tell p5.play to draw all the sprites it knows about
     drawSprites();
 } // end of draw()
 
@@ -1094,6 +1187,7 @@ function makeEsposas(x, y) {
     newSprite.movementDir = 'up';
     newSprite.speed = 32;
     newSprite.isEsposa = true;
+    newSprite.debug = DRAW_COLLIDER;
     return newSprite;
 }
 
@@ -1118,12 +1212,21 @@ function keyReleased() {
 
 
 function keyTyped() { // tested once per frame, triggered on keystroke
+    // grab the current time
+    const currentTime = millis() / 1000;
+
+    // don't get the keyboard input while we're waiting
+    if (currentTime < readInputAfter)
+        return;
+
     if (key === 'w' ||
         key === 'W' ||
         key === 'i' ||
         key === 'I') {
         print('upward key pressed');
-        flingEsposas = true;
+        addInput(inputQueue, 'esposas');
+        //flingEsposas = true;
+        readInputAfter = currentTime + INPUT_DELAY;
 
     } else if (key === 's' ||
         key === 'S' ||
@@ -1136,14 +1239,18 @@ function keyTyped() { // tested once per frame, triggered on keystroke
         key === 'j' ||
         key === 'J') {
         print('leftward key pressed');
-        moveState = 'left';
+        addInput(inputQueue, 'left');
+        readInputAfter = currentTime + INPUT_DELAY;
+        //moveState = 'left';
 
     } else if (key === 'd' ||
         key === 'D' ||
         key === 'l' ||
         key === 'L') {
         print('rightward key pressed');
-        moveState = 'right';
+        addInput(inputQueue, 'right');
+        readInputAfter = currentTime + INPUT_DELAY;
+        //moveState = 'right';
 
     } else {
         moveState = 'idle'; // create an idle state for player character
@@ -1151,3 +1258,190 @@ function keyTyped() { // tested once per frame, triggered on keystroke
     return false;
 
 } // end keyTyped
+
+
+/**
+ * Reads the current status of the game pad and processes input
+ * @param {The gamepad that's being read} pad 
+ */
+function updateStatus(pad) {
+    // get the current time
+    const currentTime = millis() / 1000;
+
+    /*
+    * Regular expressions to search the ID string given to us by the manufacturer
+    * so that we can identify which controller is which and behave accordingly.
+    */
+    let nintendoId = /Vendor\: 0810 Product\: e501/; // this is our canonical NES controller/gamepad
+    let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
+
+    if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
+
+        if (pad.axes[0] === -1.00000) {	// check that we're in play state
+            if (gameState === 'play') {
+                readInputAfter = currentTime + INPUT_DELAY;
+                addInput(inputQueue, 'left');
+            }
+        }
+        if (pad.axes[0] === 1.00000) {  // check that we're in play state
+            if (gameState === 'play') {
+                readInputAfter = currentTime + INPUT_DELAY;
+                addInput(inputQueue, 'right');
+            }
+        }
+        if (pad.axes[1] === -1.00000) {
+            // check that we're in play state
+            if (gameState === 'play') {
+                readInputAfter = currentTime + INPUT_DELAY;
+                addInput(inputQueue, 'esposas');
+            }
+        }
+        if (pad.axes[1] === 1.00000) {
+            // check that we're in play state
+            if (gameState === 'play') {
+                // do nothing for down 
+            }
+        }
+        if (pad.buttons[0].value === 1.00) { console.log(pad.buttons); print('NES B button pressed'); } // NES B button
+        if (pad.buttons[1].value === 1.00) { print('NES A button pressed'); } // NES A button
+        // does not have buttons 2-7 inclusive
+        if (isButtonReleased(0, 8)) {
+            print('NES Select pressed and released');
+            window.open(url, "_self");
+        }
+
+        if (isButtonReleased(0, 9)) {
+            print('NES Start pressed and released');
+            // now behave differently depending on where we are
+            if (gameState === 'startup') {
+                gameState = 'play';
+            } else {
+                window.open(url1, "_self");
+            }
+        }
+    }
+}
+
+
+// Code to deal with game pads
+let lastControllers = []
+let controllers = []
+
+/**
+ * checks two things: controllers and lastControllers, if the button was
+ * pressed in lastControllers, but not in controllers, we have a "release" event
+ * in essence, which we can check here--note this happens only once per press
+ * @param {Index of the controller} ctrlId
+ * @param {Index of the button} buttonId
+ */
+function isButtonReleased(ctrlId, buttonId) {
+    if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId]) {
+        let val = controllers[ctrlId].buttons[buttonId].value;
+        let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
+        // console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
+        // console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
+        // if the current val is 0, the button is no longer pressed, and if the last value is
+        // 1, then it was pressed during the last read--this lets us know that it was a released button
+        if (val === 0.0 && lastVal === 1.0) {
+            console.log('key released: ' + buttonId)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    return false
+}
+
+/** Called by the web page whenever a new controller is connected (or wakes up) */
+function connectionHandler(e) {
+    // just add it
+    addGamePad(e.gamepad)
+}
+
+/** Called by the web page whenever a game controller is disconnected */
+function disconnectHandler(e) {
+    // just remove it
+    removeGamePad(e.gamepad)
+}
+
+/**
+ * Called whenever we need to add a gamepad to our list of gamepads. The parameter
+ * is of the GamePad object type, so it has an index, etc.
+ * @param {The gamepad we're adding} gamepad
+ */
+function addGamePad(gamepad) {
+    console.log('gamepad connected on ' + gamepad.index)
+    controllers[gamepad.index] = gamepad
+    console.log('controllers.length ' + controllers.length)
+}
+
+/**
+ * Used to remove a given gamepad from our array of GamePad objects.
+ * @param {The gamepad we're removing} gamepad
+ */
+function removeGamePad(gamepad) {
+    console.log('gamepad disconnected on ' + gamepad.index)
+    // i.e., set it to undefined at that given index
+    delete controllers[gamepad.index];
+}
+
+/**
+ * This does a partial copy of the information we want from a gamepad, and
+ * in particular, the button states. It doesn't copy anything else! Javascript
+ * requires this because it only has referential copies
+ * @param {The GamePad we're copying} pad
+ * @returns
+ */
+function copyPad(pad) {
+    var p = {};
+    p.buttons = [];
+    for (var i = 0; i < pad.buttons.length; i++) {
+        p.buttons.push({})
+        p.buttons[i].value = pad.buttons[i].value;
+    }
+    return p;
+}
+
+/**
+ * Copies our controllers to lastControllers by doing a slightly deep copy of
+ * the button states so that we can look for button releases later
+ */
+function copyControllers() {
+    lastControllers = [];
+    lastControllers.length = controllers.length;
+    for (var i = 0; i < controllers.length; i++) {
+        if (controllers[i]) {
+            lastControllers[i] = copyPad(controllers[i]);
+        }
+    }
+}
+
+/**
+ * Used to get the latest set of gamepads from the browser. On Chrome,
+ * we have to do this every time we want new state, because it's an entirely
+ * new object.
+ */
+function scanGamePads() {
+    // try to get the gamepads, on some browsers, we have to use webkit
+    var gamepads = navigator.getGamepads ? navigator.getGamepads() :
+        (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+
+    // make sure our controllers object has a length property
+    controllers.length = gamepads.length;
+    // now do the slightly deep copy of the set of controllers
+    copyControllers();
+    for (var i = 0; i < gamepads.length; i++) {
+        if (gamepads[i]) {
+            if (gamepads[i].index in controllers) {
+                controllers[gamepads[i].index] = gamepads[i];
+            } else {
+                addGamePad(gamepads[i]);
+            }
+        }
+    }
+}
+
+// add event listeners for game pad connections
+window.addEventListener("gamepadconnected", connectionHandler)
+window.addEventListener("gamepaddisconnected", removeGamePad)
