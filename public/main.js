@@ -197,12 +197,12 @@ function updateStatus(pad){  // tested once per frame
         print('NES Start pressed'); } // NES Start button
   }
 
-  /**
+  /*
    *  This bit is specific to the Buffalo SNES style controller,
    *  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
    *  need a test to enclose it. Axis defaults are 0.00392 (positive values)
    */
-  /**
+  /*
    if (pad.id.match(standardID)) { // this matches the id against the controller ID value
        if (pad.axes[0] === -1.00000){print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
        if (pad.axes[0] ===  1.00000){print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
