@@ -124,8 +124,8 @@ function draw(){
     drawSprites();
 } // end draw
 
-
-//
+/*
+//  Deprecate mouse clickable UI
 //  implementing button clickable UI in index.html + main.js
 //  it's not working yet
 function mouseClicked(){
@@ -143,7 +143,7 @@ function mouseClicked(){
   }
   return false;
 }
-
+*/
 
 function updateStatus(pad){  // tested once per frame
 
@@ -153,7 +153,7 @@ function updateStatus(pad){  // tested once per frame
    *  axis default values are -0.00392 so can test for greater and less than that.
    *  need a test to enclose it
    */
-  
+
 
 
   /*
@@ -249,7 +249,7 @@ function updateStatus(pad){  // tested once per frame
        if (pad.buttons[15].value === 1){ print('Buffalo SNES D-pad right pressed');} // redundant with axes 0 (X-value)
     }
     */
-    
+
     /**
      *  This bit is specific to the Exlene SNES style controller,
      *  USB Gamepad (Vendor: 0079 Product: 0011)
