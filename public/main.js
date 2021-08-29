@@ -250,7 +250,7 @@ function updateStatus(pad){  // tested once per frame
     }
     */
 
-    /**
+    /*
      *  This bit is specific to the Exlene SNES style controller,
      *  USB Gamepad (Vendor: 0079 Product: 0011)
      *  The Exlene controller worked on older MacOS X and Mac Mini, with middleware.
@@ -261,7 +261,7 @@ function updateStatus(pad){  // tested once per frame
      *  and some value > -0.99 for 'right'
      *  well that didn't work. going to leave Exlene commented out
      */
-  /**
+  /*
      if (pad.id.match(exleneID) ){
        if (pad.axes[0] < -1.0000){print('Exlene SNES D-pad left pressed');} // this axis is not registering at present
        if (pad.axes[0] > -0.992){print('Exlene SNES D-pad right pressed');} // this axis is not registering at present
@@ -302,7 +302,7 @@ function updateStatus(pad){  // tested once per frame
      }
   */
 
-   /**
+   /*
     * This bit is specific to the Sony PS3 contoller,
     * PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)
     * it also uses 8 for select and 9 for start code 054c_0268
