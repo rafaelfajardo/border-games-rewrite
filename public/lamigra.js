@@ -123,7 +123,7 @@ let solids;
 //  define a boolean to set play.p5.js library debug function state
 //
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
-// turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below 
+// turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below
 const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
 // this is a timeout for no input which will then go back to the main screen
@@ -178,7 +178,7 @@ function dequeueInput(inputQueue) {
 }
 
 
-// we put a unique number on each sprite element, though obviously this will overflow if the 
+// we put a unique number on each sprite element, though obviously this will overflow if the
 // game runs a veeeeery long time while being played--typically longer than is possible for a human to play.
 // we increment this value each time we call createSprite
 let spriteId = 0;
@@ -333,7 +333,7 @@ function updateRendering(queue, timing) {
     const nextIdx = getNextIndex(queue, currentIndex, timing);
 
     // get a reference to the current sprite because sometimes
-    // they get removed from the queue after updating and 
+    // they get removed from the queue after updating and
     // we want to hold onto it for the duration of the function
     let sprite = queue[currentIndex];
 
@@ -393,7 +393,7 @@ function updateRendering(queue, timing) {
 
 /**
  * Manually animate the sprite by moving to the next frame
- * @param {The sprite we're animating} sprite 
+ * @param {The sprite we're animating} sprite
  */
 function manuallyAnimate(sprite, looping) {
     // first, test if it's the player, if it's not, just animate it
@@ -714,6 +714,7 @@ function preload() {
      *  load images for MariaLucia De Pieles non-player character sprite
      */
     maluciadepieles = createSprite(4 * 32 + 16, 2 * 32, 32, 64);
+    maluciadepieles.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/marialucia-2_01.png');
     img1 = loadImage('img-lamigra/marialucia-2_02.png');
     maluciadepieles.addAnimation('down', img0, img0, img1, img1);
@@ -737,7 +738,7 @@ function preload() {
     img1 = loadImage('img-lamigra/marialucia-2_10.png');
     maluciadepieles.addAnimation('muerto', img1, img1, img1, img1);
     maluciadepieles.changeAnimation('down');
-    maluciadepieles.setDefaultCollider();
+    maluciadepieles.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     maluciadepieles.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(maluciadepieles); // add maluciadepieles to renderQueue []
     maluciadepieles.name = 'maluciadepieles';
@@ -772,7 +773,7 @@ function preload() {
     img1 = loadImage('img-lamigra/nita-2_10.png');
     nitamoreno.addAnimation('muerto', img1, img1, img1, img1);
     nitamoreno.changeAnimation('down');
-    nitamoreno.setDefaultCollider();
+    nitamoreno.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     nitamoreno.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(nitamoreno); // add nitamoreno to renderQueue []
     nitamoreno.name = 'nitamoreno';
@@ -808,7 +809,7 @@ function preload() {
     img1 = loadImage('img-lamigra/lino-2_10.png');
     linodepieles.addAnimation('muerto', img1, img1, img1, img1);
     linodepieles.changeAnimation('down');
-    linodepieles.setDefaultCollider();
+    linodepieles.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     linodepieles.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(linodepieles);
     linodepieles.name = 'linodepieles';
@@ -843,7 +844,7 @@ function preload() {
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_15.png');
     carlosmoreno.addAnimation('muerto', img1, img1, img1, img1);
     carlosmoreno.changeAnimation('down');
-    carlosmoreno.setDefaultCollider();
+    carlosmoreno.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     carlosmoreno.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(carlosmoreno); // add carlosmoreno to renderQueue []
     carlosmoreno.name = 'carlosmoreno';
@@ -879,7 +880,7 @@ function preload() {
     img1 = loadImage('img-lamigra/marcia-3_10.png');
     marcia.addAnimation('muerto', img1, img1, img1, img1);
     marcia.changeAnimation('down');
-    marcia.setDefaultCollider();
+    marcia.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     marcia.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(marcia); // add marcia to renderQueue []
     marcia.name = 'marcia';
@@ -915,7 +916,7 @@ function preload() {
     img1 = loadImage('img-lamigra/patricia-2_10.png');
     patricialamachona.addAnimation('muerto', img1, img1, img1, img1);
     patricialamachona.changeAnimation('down');
-    patricialamachona.setDefaultCollider();
+    patricialamachona.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     patricialamachona.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(patricialamachona); // add patricialamachona to renderQueue []
     patricialamachona.name = 'patricialamachona';
@@ -951,7 +952,7 @@ function preload() {
     img1 = loadImage('img-lamigra/porcupine_14.png');
     puercoespin.addAnimation('muerto', img1, img1, img1, img1);
     puercoespin.changeAnimation('down');
-    puercoespin.setDefaultCollider();
+    puercoespin.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     puercoespin.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(puercoespin); // add puercoespin to renderQueue []
     puercoespin.name = 'puercoespin';
@@ -987,7 +988,7 @@ function preload() {
     img1 = loadImage('img-lamigra/X-rodar-3_10-copy-b.png');
     xrodar.addAnimation('muerto', img1, img1, img1, img1); // resolved - image is not transparent
     xrodar.changeAnimation('down');
-    xrodar.setDefaultCollider();
+    xrodar.setCollider(rectangle,0,0,30,62); // set a collision box two pixels smaller than sprite
     xrodar.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(xrodar); // add xrodar to renderQueue []
     xrodar.name = 'xrodar';
@@ -1037,7 +1038,7 @@ function preload() {
     repatriationcenter.debug = BUGGY; // set the debug flag
 
     /*
-     *  create a group for the solid objects 
+     *  create a group for the solid objects
      */
     solids = new Group();
     solids.add(maluciadepieles);
@@ -1205,8 +1206,8 @@ function draw() {
 
 /**
  * Creates the esposas by creating a sprite and setting up its movement
- * @param {X position of the sprite} x 
- * @param {Y position of the sprite} y 
+ * @param {X position of the sprite} x
+ * @param {Y position of the sprite} y
  * @returns the sprite that was created
  */
 function makeEsposas(x, y) {
@@ -1300,7 +1301,7 @@ function keyTyped() { // tested once per frame, triggered on keystroke
 
 /**
  * Reads the current status of the game pad and processes input
- * @param {The gamepad that's being read} pad 
+ * @param {The gamepad that's being read} pad
  */
 function updateStatus(pad) {
     // get the current time
@@ -1330,13 +1331,13 @@ function updateStatus(pad) {
         if (pad.axes[1] === -1.00000) {
             // check that we're in play state
             if (gameState === 'play') {
-                // do nothing for up 
+                // do nothing for up
             }
         }
         if (pad.axes[1] === 1.00000) {
             // check that we're in play state
             if (gameState === 'play') {
-                // do nothing for down 
+                // do nothing for down
             }
         }
         if (pad.buttons[0].value === 1.00) {
