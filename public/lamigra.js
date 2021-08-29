@@ -113,13 +113,18 @@ let repatriationcenter; // sprite container for environment set piece
 let sombra0; // sprite container for environment set piece
 let sombra1; // sprite container for environment set piece
 let sombra2; // sprite container for environment set piece
+
+// define a group for solids so they don't collide
+let solids;
+
+
 //
 //
 //  define a boolean to set play.p5.js library debug function state
 //
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below 
-const DRAW_COLLIDER = BUGGY ? BUGGY : false;
+const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
 // this is a timeout for no input which will then go back to the main screen
 let lastInputAt = 0;
@@ -236,6 +241,10 @@ function setPeanutMovementDir(sprite) {
     // take the random movement code that was added to updateSprite earlier and paste it here
     // choose a number between 0 and 5 as an index that will yield a direction
     let movementIndex = floor(random(6));
+
+    // now ideally, we'd like to not move if they're going to collide with
+    // something that they shouldn't collide with, like another cacahuate or la migra
+
     // map the index to a movementDir
     switch (movementIndex) {
         case 0:
@@ -273,17 +282,24 @@ function setPeanutMovementDir(sprite) {
  * @param {The sprite to be checked} sprite
  */
 function checkForPeanutSprite(sprite) {
-    if (cacahuates.length > 0) {
-        for (let cIdx = 0; cIdx < cacahuates.length; cIdx++) {
-            if (sprite === cacahuates[cIdx]) {
-                //console.log(sprite.name + ' is in cacahuates');
-                if (!(sprite.collide(cacahuates[cIdx]))) {  //this is a test to see if they collide
-                    setPeanutMovementDir(sprite); // this line works outside if-sprite-collide test
-                }
-                //return true;
-            }
-        }
+    // check to see if this is a peanut sprite, if so, it'll be in the peanut group
+    if (cacahuates.contains(sprite)) {
+        // if so, move it like if you can
+        setPeanutMovementDir(sprite);
+    } else {
+        // cacahuates allergy
     }
+    // if (cacahuates.length > 0) {
+    //     for (let cIdx = 0; cIdx < cacahuates.length; cIdx++) {
+    //         if (sprite === cacahuates[cIdx]) {
+    //             //console.log(sprite.name + ' is in cacahuates');
+    //             if (!(sprite.collide(cacahuates[cIdx]))) {  //this is a test to see if they collide
+    //                 setPeanutMovementDir(sprite); // this line works outside if-sprite-collide test
+    //             }
+    //             //return true;
+    //         }
+    //     }
+    // }
     //return false;
 }
 
@@ -430,12 +446,13 @@ function updateSprite(sprite) {
         }
     }
 
-    // how a sprite moves if it is a non-player character
+    // how a sprite moves, and generally they shouldn't collide
     switch (sprite.movementDir) {
         case 'left':
             sprite.position.x = sprite.position.x - sprite.speed;
             // bound the x-axis at 0
-            if (sprite.position.x < 0) {
+            if (sprite.position.x < 0 ||
+                (solids.contains(sprite) && solids.overlap(sprite))) {
                 // we calculate the new position as such so that
                 // the sprite x position cannot be below 0,
                 // we may want to be sure that x should be 32 instead of 16
@@ -445,7 +462,8 @@ function updateSprite(sprite) {
         case 'right':
             // bound the x-axis at the shadows under the bridge
             sprite.position.x = sprite.position.x + sprite.speed;
-            if (sprite.position.x > WIDTH - 32) {
+            if (sprite.position.x > WIDTH - 32 ||
+                (solids.contains(sprite) && solids.overlap(sprite))) {
                 // we calculate the new position as such so that
                 // the sprite x value can never be more than width-32,
                 // in essence bounding the position
@@ -456,7 +474,8 @@ function updateSprite(sprite) {
             // bound the y-axis at 32
             sprite.position.y = sprite.position.y - sprite.speed;
 
-            if (sprite.position.y < 0) {
+            if (sprite.position.y < 0 ||
+                (solids.contains(sprite) && solids.overlap(sprite))) {
                 // calculate the new position as such so that
                 // the sprite y position can never be less than 0
                 // the sprites are 64 pixels tall and so their center is 32
@@ -466,7 +485,8 @@ function updateSprite(sprite) {
         case 'down':
             // bound the lower y-axis at height-32
             sprite.position.y = sprite.position.y + sprite.speed;
-            if (sprite.position.y > HEIGHT - 32) {
+            if (sprite.position.y > HEIGHT - 32 ||
+                (solids.contains(sprite) && solids.overlap(sprite))) {
                 // the y position of the sprite should never exceed height-32
                 sprite.position.y -= 32;
             }
@@ -718,7 +738,7 @@ function preload() {
     maluciadepieles.addAnimation('muerto', img1, img1, img1, img1);
     maluciadepieles.changeAnimation('down');
     maluciadepieles.setDefaultCollider();
-    maluciadepieles.debug = BUGGY; // set the debug flag
+    maluciadepieles.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(maluciadepieles); // add maluciadepieles to renderQueue []
     maluciadepieles.name = 'maluciadepieles';
     maluciadepieles.animation.playing = false;
@@ -753,7 +773,7 @@ function preload() {
     nitamoreno.addAnimation('muerto', img1, img1, img1, img1);
     nitamoreno.changeAnimation('down');
     nitamoreno.setDefaultCollider();
-    nitamoreno.debug = BUGGY; // set the debug flag
+    nitamoreno.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(nitamoreno); // add nitamoreno to renderQueue []
     nitamoreno.name = 'nitamoreno';
     nitamoreno.animation.playing = false;
@@ -789,7 +809,7 @@ function preload() {
     linodepieles.addAnimation('muerto', img1, img1, img1, img1);
     linodepieles.changeAnimation('down');
     linodepieles.setDefaultCollider();
-    linodepieles.debug = BUGGY; // set the debug flag
+    linodepieles.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(linodepieles);
     linodepieles.name = 'linodepieles';
     linodepieles.animation.playing = false;
@@ -824,7 +844,7 @@ function preload() {
     carlosmoreno.addAnimation('muerto', img1, img1, img1, img1);
     carlosmoreno.changeAnimation('down');
     carlosmoreno.setDefaultCollider();
-    carlosmoreno.debug = BUGGY; // set the debug flag
+    carlosmoreno.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(carlosmoreno); // add carlosmoreno to renderQueue []
     carlosmoreno.name = 'carlosmoreno';
     carlosmoreno.animation.playing = false;
@@ -860,7 +880,7 @@ function preload() {
     marcia.addAnimation('muerto', img1, img1, img1, img1);
     marcia.changeAnimation('down');
     marcia.setDefaultCollider();
-    marcia.debug = BUGGY; // set the debug flag
+    marcia.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(marcia); // add marcia to renderQueue []
     marcia.name = 'marcia';
     marcia.animation.playing = false;
@@ -896,7 +916,7 @@ function preload() {
     patricialamachona.addAnimation('muerto', img1, img1, img1, img1);
     patricialamachona.changeAnimation('down');
     patricialamachona.setDefaultCollider();
-    patricialamachona.debug = BUGGY; // set the debug flag
+    patricialamachona.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(patricialamachona); // add patricialamachona to renderQueue []
     patricialamachona.name = 'patricialamachona';
     patricialamachona.animation.playing = false;
@@ -932,7 +952,7 @@ function preload() {
     puercoespin.addAnimation('muerto', img1, img1, img1, img1);
     puercoespin.changeAnimation('down');
     puercoespin.setDefaultCollider();
-    puercoespin.debug = BUGGY; // set the debug flag
+    puercoespin.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(puercoespin); // add puercoespin to renderQueue []
     puercoespin.name = 'puercoespin';
     puercoespin.animation.playing = false;
@@ -968,7 +988,7 @@ function preload() {
     xrodar.addAnimation('muerto', img1, img1, img1, img1); // resolved - image is not transparent
     xrodar.changeAnimation('down');
     xrodar.setDefaultCollider();
-    xrodar.debug = BUGGY; // set the debug flag
+    xrodar.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(xrodar); // add xrodar to renderQueue []
     xrodar.name = 'xrodar';
     xrodar.animation.playing = false;
@@ -987,6 +1007,8 @@ function preload() {
     cacahuates.add(patricialamachona);
     cacahuates.add(puercoespin);
     cacahuates.add(xrodar);
+
+
 
     /*
      *  load image for deportation center
@@ -1013,6 +1035,22 @@ function preload() {
     repatriationcenter.changeAnimation('gate activated'); // will change,
     repatriationcenter.setDefaultCollider();
     repatriationcenter.debug = BUGGY; // set the debug flag
+
+    /*
+     *  create a group for the solid objects 
+     */
+    solids = new Group();
+    solids.add(maluciadepieles);
+    solids.add(nitamoreno);
+    solids.add(linodepieles);
+    solids.add(carlosmoreno);
+    solids.add(marcia);
+    solids.add(patricialamachona);
+    solids.add(puercoespin);
+    solids.add(xrodar);
+    solids.add(deportacioncenter);
+    solids.add(migra);
+    solids.add(repatriationcenter);
 
     /*
      * load image for shadows along right hand side of screen
@@ -1292,8 +1330,7 @@ function updateStatus(pad) {
         if (pad.axes[1] === -1.00000) {
             // check that we're in play state
             if (gameState === 'play') {
-                readInputAfter = currentTime + INPUT_DELAY;
-                addInput(inputQueue, 'esposas');
+                // do nothing for up 
             }
         }
         if (pad.axes[1] === 1.00000) {
@@ -1302,8 +1339,20 @@ function updateStatus(pad) {
                 // do nothing for down 
             }
         }
-        if (pad.buttons[0].value === 1.00) { console.log(pad.buttons); print('NES B button pressed'); } // NES B button
-        if (pad.buttons[1].value === 1.00) { print('NES A button pressed'); } // NES A button
+        if (pad.buttons[0].value === 1.00) {
+            print('NES B button pressed');
+            if (gameState === 'play') {
+                // commented out, but here's where we'd probably shoot
+                // readInputAfter = currentTime + INPUT_DELAY;
+            }
+        } // NES B button
+        if (pad.buttons[1].value === 1.00) {
+            print('NES A button pressed');
+            if (gameState === 'play') {
+                readInputAfter = currentTime + INPUT_DELAY;
+                addInput(inputQueue, 'esposas');
+            }
+        } // NES A button
         // does not have buttons 2-7 inclusive
         if (isButtonReleased(0, 8)) {
             print('NES Select pressed and released');
