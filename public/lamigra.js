@@ -238,7 +238,7 @@ function checkForPeanutSprite(sprite) {
     if (cacahuates.length > 0) {
         for (let cIdx = 0; cIdx < cacahuates.length; cIdx++) {
             if (sprite === cacahuates[cIdx]) {
-                console.log(sprite.name + ' is in cacahuates');
+                //console.log(sprite.name + ' is in cacahuates');
                 if (!(sprite.collide(cacahuates[cIdx]))) {  //this is a test to see if they collide
                     setPeanutMovementDir(sprite); // this line works outside if-sprite-collide test
                 }
@@ -256,20 +256,14 @@ function checkForPeanutSprite(sprite) {
  * and if so, checks to see if the y value is less than the border
  * and if so, removes that sprite from renderQue [] and cuffs []
  * @param {The sprite to be checked} sprite
- * @param {The renderQueue array} myQueue
- * @param {The current index of the renderQueue} qIdx
  */   ///*
-function checkCuffsJurisdiction(sprite, myQueue, qIdx) {
-    if (cuffs.length > 0) {
-        for (let i = 0; i < cuffs.length; i++) {
-            if (sprite === cuffs[i]) {
-                if (sprite.position.y < 7 * 32) {
-                    console.log('cuff ' + i + ' out of jurisdiction');
-                    cuffs[i].remove();
-                    let removed = myQueue.splice(qIdx, 1); // POTENTIALLY DANGEROUS
-                }
-            }
-        }
+function checkCuffsJurisdiction(sprite) {
+    // check for y boundary of esposas so that we can remove it at the border
+    if (sprite.isEsposa && sprite.position.y < BORDER) {
+        // remove from the render queue
+        console.log(sprite.name + ' is out of jurisdiction');
+        removeFromQueue(sprite);
+        sprite.visible = false;
     }
 }
 //*/
@@ -291,22 +285,19 @@ function updateRendering(queue, timing) {
 
     // if the index hasn't changed, then we need to manually animate the sprite
     if (nextIdx !== currentIndex) {
+        // now update the sprite, which will cause it to move if its movement
+        // speed is something > 0
+        updateSprite(sprite)
+
         // can we test queue[currentIndex] is also part of cacahuates group?
         // and then pass queue[currentIndex] to a function that
         // randomizes its direction for the next cycle?
         // if current sprite is in cacahuates
         // set the movement direction for said sprite
         checkForPeanutSprite(sprite);
-        /*
-          // can we test the y value of a member of cuffs []
-          // and if y value is less than border, remove from or splice
-          // both renderQueue [] and cuffs []
-          checkCuffsJurisdiction(queue[currentIndex], queue, currentIndex); //DANGEROUS
-        */
 
-        // now update the sprite, which will cause it to move if its movement
-        // speed is something > 0
-        updateSprite(sprite)
+        // checks to see if the sprite is a cuff, and if so, removes it from the render queue
+        checkCuffsJurisdiction(sprite);
 
         // after updating, the sprite has moved so it's no longer animated
         sprite.hasMoved = false;
@@ -383,7 +374,7 @@ const BORDER = 7 * 32;
  * updateSprite figures out which way a sprite is moving and where to draw it
  */
 function updateSprite(sprite) {
-    console.log('updating ' + sprite.name);
+    //console.log('updating ' + sprite.name);
     if (sprite.animation) {
         sprite.animation.play();
     }
@@ -413,12 +404,6 @@ function updateSprite(sprite) {
             // bound the y-axis at 32
             sprite.position.y = sprite.position.y - sprite.speed;
 
-            // check for y boundary of esposas so that we can remove it at the border
-            if (sprite.isEsposa && sprite.position.y < BORDER) {
-                // remove from the render queue
-                removeFromQueue(sprite);
-                sprite.visible = false;
-            }
             if (sprite.position.y < 0) {
                 // calculate the new position as such so that
                 // the sprite y position can never be less than 0
