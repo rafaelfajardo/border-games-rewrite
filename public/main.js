@@ -31,36 +31,41 @@ let ctr0; // container for a counter
 
 // preload
 function preload(){
-  let img0  = loadImage('assets/ground00.png');
-  let img1  = loadImage('assets/ground01.png');
-  let img2  = loadImage('assets/ground02.png');
-  let img3  = loadImage('assets/ground03.png');
-  let img4  = loadImage('assets/ground04.png');
-  let img5  = loadImage('assets/ground05.png');
-  let img6  = loadImage('assets/ground06.png');
-  let img7  = loadImage('assets/ground07.png');
-  let img8  = loadImage('assets/ground08.png');
-  let img9  = loadImage('assets/ground09.png');
-  let img10 = loadImage('assets/ground10.png');
-  let img11 = loadImage('assets/ground11.png');
-  let img12 = loadImage('assets/ground12.png');
-  let img13 = loadImage('assets/ground13.png');
-  let img14 = loadImage('assets/ground14.png');
-  let img15 = loadImage('assets/ground15.png');
-  let img16 = loadImage('assets/ground16.png');
-  let img17 = loadImage('assets/ground17.png');
+  //let img0  = loadImage('assets/ground00.png');
+  let img1  = loadImage('assets/ground0001.png');
+  let img2  = loadImage('assets/ground0002.png');
+  let img3  = loadImage('assets/ground0003.png');
+  let img4  = loadImage('assets/ground0004.png');
+  let img5  = loadImage('assets/ground0005.png');
+  let img6  = loadImage('assets/ground0006.png');
+  let img7  = loadImage('assets/ground0007.png');
+  let img8  = loadImage('assets/ground0008.png');
+  let img9  = loadImage('assets/ground0009.png');
+  let img10 = loadImage('assets/ground0010.png');
+  let img11 = loadImage('assets/ground0011.png');
+  let img12 = loadImage('assets/ground0012.png');
+  //let img13 = loadImage('assets/ground13.png');
+  //let img14 = loadImage('assets/ground14.png');
+  //let img15 = loadImage('assets/ground15.png');
+  //let img16 = loadImage('assets/ground16.png');
+  //let img17 = loadImage('assets/ground17.png');
   ground = createSprite(224, 274, 448, 548);
   ground.depth = 0;
-  ground.addAnimation('loop', img0,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img13,img14,img15,img16,img17);
+  ground.addAnimation('loop',img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12);//,img13,img14,img15,img16,img17);
 
 
 
   img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
   img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  img3 = loadImage('assets/CrosserButton2.gif'); // load dimmed crosser button image eyes to one side
+  img4 = loadImage('assets/CrosserButton3.gif'); // load dimmed crosser button image eyes to the other side
   btn1 = createSprite(224, 160, 180, 180);
   btn1.addImage('off1', img1);
   btn1.addImage('on1', img2);
-  btn1.addAnimation('off', img1);
+  btn1.addAnimation('off', img1,img1,img1,img1,img1,img1,img1,img1,img1,
+                           img3,img3,
+                           img1,img1,img1,img1,img1,img1,img1,img1,img1,
+                           img4,img4);
   btn1.addAnimation('select', img2);
   btn1.addAnimation('blink', img1,img2,img2,img1);
   btn1.changeAnimation('select');
@@ -68,10 +73,11 @@ function preload(){
 
   img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
   img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
+  img3 = loadImage('assets/LaMigraButton2.gif');
   btn2 = createSprite(224, 390, 180, 180);
   btn2.addImage('off2', img1);
   btn2.addImage('on2', img2);
-  btn2.addAnimation('off', img1);
+  btn2.addAnimation('off', img1,img1,img1,img1,img3,img3,img3,img3);
   btn2.addAnimation('select', img2);
   btn2.addAnimation('blink', img1,img2,img2,img1);
   btn2.changeAnimation('off');
