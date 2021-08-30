@@ -126,10 +126,13 @@ const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.J
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below
 const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
+// if set to true, the people only move downwards, left and right, never up
+const NO_UP = true;
+
 // this is a timeout for no input which will then go back to the main screen
 let lastInputAt = 0;
 // this is the timeout before going back to the selection screent
-const BACK_TO_SELECTION_TIMEOUT = 120;
+const BACK_TO_SELECTION_TIMEOUT = 600; //120;
 
 // create an input queue so we can store the last two inputs we received
 let inputQueue = [];
@@ -260,8 +263,11 @@ function setPeanutMovementDir(sprite) {
             sprite.speed = ONE_UNIT;
             break;
         case 3:
-            sprite.movementDir = 'up';
-            sprite.speed = ONE_UNIT;
+            // don't let them move upwards
+            if (!NO_UP) {
+                sprite.movementDir = 'up';
+                sprite.speed = ONE_UNIT;
+            }
             break;
         case 4:
         case 5:
@@ -273,6 +279,21 @@ function setPeanutMovementDir(sprite) {
             break;
     }
 }
+
+/**
+ * This function is called whenever a peanut escapes
+ * @param {The sprite for the peanut who has escaped} sprite 
+ */
+function peanutEscapes(peanut, pipa) {
+    pipa.changeAnimation('pipa activated');
+    pipa.animation.goToFrame(0);
+    pipa.animation.looping = false;
+    pipa.animation.play();
+    removeFromRenderQueue(peanut);
+    peanut.remove();
+    peanut.visible = false;
+}
+
 
 /**********
  * this takes a sprite in the renderQueue[]
@@ -318,6 +339,7 @@ function checkCuffsJurisdiction(sprite) {
         console.log(sprite.name + ' is out of jurisdiction');
         removeFromRenderQueue(sprite);
         sprite.visible = false;
+        sprite.remove();
     }
 }
 //*/
@@ -342,6 +364,11 @@ function updateRendering(queue, timing) {
         // now update the sprite, which will cause it to move if its movement
         // speed is something > 0
         updateSprite(sprite)
+
+        // check for peanut escape
+        if (sprite.overlap(pipas, peanutEscapes)) {
+            console.log('peanut ' + sprite.name + ' escapes!');
+        }
 
         // can we test queue[currentIndex] is also part of cacahuates group?
         // and then pass queue[currentIndex] to a function that
@@ -576,8 +603,10 @@ function preload() {
     pipa0.spriteId = spriteId++;
     pipa0.addImage('pipa', img0);
     pipa0.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
-    pipa0.changeAnimation('pipa activated'); // will need to change this state later
-    pipa0.debug = BUGGY; // set the debug flag
+    //pipa0.changeAnimation('pipa activated'); // will need to change this state later
+    pipa0.animation.looping = false;
+    pipa0.debug = DRAW_COLLIDER; // set the debug flag
+    pipa0.setCollider('rectangle', 0, 0, 32, 32)
     //renderQueue.push(pipa0); // add pipa0 to renderQueue []
     //pipa0.name = 'pipa0';
     //pipa0.animation.playing = false;
@@ -588,8 +617,10 @@ function preload() {
     pipa1.spriteId = spriteId++;
     pipa1.addImage('pipa', img0);
     pipa1.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
-    pipa1.changeAnimation('pipa activated'); // will need to change this state later
-    pipa1.debug = BUGGY; // set the debug flag
+    pipa1.animation.looping = false;
+    //pipa1.changeAnimation('pipa activated'); // will need to change this state later
+    pipa1.debug = DRAW_COLLIDER; // set the debug flag
+    pipa1.setCollider('rectangle', 0, 0, 32, 32)
     //renderQueue.push(pipa1); // add pipa1 to renderQueue []
     //pipa1.name = 'pipa1';
     //pipa1.animation.playing = false;
@@ -600,8 +631,10 @@ function preload() {
     pipa2.spriteId = spriteId++;
     pipa2.addImage('pipa', img0);
     pipa2.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
-    pipa2.changeAnimation('pipa activated'); // will need to change this state later
-    pipa2.debug = BUGGY; // set the debug flag
+    pipa2.animation.looping = false;
+    //pipa2.changeAnimation('pipa activated'); // will need to change this state later
+    pipa2.debug = DRAW_COLLIDER; // set the debug flag
+    pipa2.setCollider('rectangle', 0, 0, 32, 32)
     //renderQueue.push(pipa2); // add pipa2 to renderQueue []
     //pipa2.name = 'pipa2';
     //pipa2.animation.playing = false;
@@ -612,8 +645,10 @@ function preload() {
     pipa3.spriteId = spriteId++;
     pipa3.addImage('pipa', img0);
     pipa3.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
-    pipa3.changeAnimation('pipa activated'); // will need to change this state later
-    pipa3.debug = BUGGY; // set the debug flag
+    pipa3.animation.looping = false;
+    //pipa3.changeAnimation('pipa activated'); // will need to change this state later
+    pipa3.debug = DRAW_COLLIDER; // set the debug flag
+    pipa3.setCollider('rectangle', 0, 0, 32, 32)
     //renderQueue.push(pipa3); // add pipa3 to renderQueue []
     //pipa3.name ='pipa3';
     //pipa3.animation.playing = false;
@@ -738,7 +773,7 @@ function preload() {
     img1 = loadImage('img-lamigra/marialucia-2_10.png');
     maluciadepieles.addAnimation('muerto', img1, img1, img1, img1);
     maluciadepieles.changeAnimation('down');
-    maluciadepieles.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    maluciadepieles.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     maluciadepieles.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(maluciadepieles); // add maluciadepieles to renderQueue []
     maluciadepieles.name = 'maluciadepieles';
@@ -773,7 +808,7 @@ function preload() {
     img1 = loadImage('img-lamigra/nita-2_10.png');
     nitamoreno.addAnimation('muerto', img1, img1, img1, img1);
     nitamoreno.changeAnimation('down');
-    nitamoreno.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    nitamoreno.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     nitamoreno.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(nitamoreno); // add nitamoreno to renderQueue []
     nitamoreno.name = 'nitamoreno';
@@ -809,7 +844,7 @@ function preload() {
     img1 = loadImage('img-lamigra/lino-2_10.png');
     linodepieles.addAnimation('muerto', img1, img1, img1, img1);
     linodepieles.changeAnimation('down');
-    linodepieles.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    linodepieles.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     linodepieles.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(linodepieles);
     linodepieles.name = 'linodepieles';
@@ -844,7 +879,7 @@ function preload() {
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_15.png');
     carlosmoreno.addAnimation('muerto', img1, img1, img1, img1);
     carlosmoreno.changeAnimation('down');
-    carlosmoreno.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    carlosmoreno.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     carlosmoreno.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(carlosmoreno); // add carlosmoreno to renderQueue []
     carlosmoreno.name = 'carlosmoreno';
@@ -880,7 +915,7 @@ function preload() {
     img1 = loadImage('img-lamigra/marcia-3_10.png');
     marcia.addAnimation('muerto', img1, img1, img1, img1);
     marcia.changeAnimation('down');
-    marcia.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    marcia.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     marcia.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(marcia); // add marcia to renderQueue []
     marcia.name = 'marcia';
@@ -916,7 +951,7 @@ function preload() {
     img1 = loadImage('img-lamigra/patricia-2_10.png');
     patricialamachona.addAnimation('muerto', img1, img1, img1, img1);
     patricialamachona.changeAnimation('down');
-    patricialamachona.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    patricialamachona.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     patricialamachona.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(patricialamachona); // add patricialamachona to renderQueue []
     patricialamachona.name = 'patricialamachona';
@@ -952,7 +987,7 @@ function preload() {
     img1 = loadImage('img-lamigra/porcupine_14.png');
     puercoespin.addAnimation('muerto', img1, img1, img1, img1);
     puercoespin.changeAnimation('down');
-    puercoespin.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    puercoespin.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     puercoespin.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(puercoespin); // add puercoespin to renderQueue []
     puercoespin.name = 'puercoespin';
@@ -988,7 +1023,7 @@ function preload() {
     img1 = loadImage('img-lamigra/X-rodar-3_10-copy-b.png');
     xrodar.addAnimation('muerto', img1, img1, img1, img1); // resolved - image is not transparent
     xrodar.changeAnimation('down');
-    xrodar.setCollider('rectangle',0,0,30,62); // set a collision box two pixels smaller than sprite
+    xrodar.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     xrodar.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(xrodar); // add xrodar to renderQueue []
     xrodar.name = 'xrodar';
