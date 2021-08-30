@@ -128,6 +128,8 @@ const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
 // if set to true, the people only move downwards, left and right, never up
 const NO_UP = true;
+const NO_LEFT = false;
+const NO_IDLE = false
 
 // this is a timeout for no input which will then go back to the main screen
 let lastInputAt = 0;
@@ -153,6 +155,9 @@ let currentIndex = 0;
 
 // timestamp for our indexing into the render queue
 let timeStamp = 0;
+
+// a queue for deporting
+let deportacionQueue = [];
 
 /**
  * Adds an input into our queue, which we can remove with dequeueInput
@@ -191,7 +196,6 @@ function removeFromRenderQueue(item) {
     // remove the element from the queue
     renderQueue.splice(index, 1)
     item.removedFromQueue = true
-    console.log('render queue length: ' + renderQueue.length)
 }
 
 /**
@@ -241,6 +245,11 @@ function calculateSubtiming(sprite, timing) {
  * @param {The sprite to set movementDir for} sprite
  */
 function setPeanutMovementDir(peanut) {
+    if (peanut.isDeported) {
+        // if they're deported, then stand still idle, haha
+        peanut.movemenDir = 'idle';
+        return;
+    }
     // if they're caught, we have specific behavior, which is first to 
     // move right, then to move down to the deportation center, otherwise
     // they're free to move as they chose!
@@ -274,18 +283,22 @@ function setPeanutMovementDir(peanut) {
     // map the index to a movementDir
     switch (movementIndex) {
         case 0:
-            peanut.movementDir = 'idle';
-            peanut.speed = 0;
-            peanut.changeAnimation('down')
-            peanut.animation.looping = false;
-            peanut.animation.goToFrame(0);
+            if (!NO_IDLE) {
+                peanut.movementDir = 'idle';
+                peanut.speed = 0;
+                peanut.changeAnimation('down')
+                peanut.animation.looping = false;
+                peanut.animation.goToFrame(0);
+            }
             break;
         case 1:
-            peanut.movementDir = 'left';
-            peanut.speed = ONE_UNIT;
-            peanut.changeAnimation('left')
-            peanut.animation.looping = false;
-            peanut.animation.goToFrame(0);
+            if (!NO_LEFT) {
+                peanut.movementDir = 'left';
+                peanut.speed = ONE_UNIT;
+                peanut.changeAnimation('left')
+                peanut.animation.looping = false;
+                peanut.animation.goToFrame(0);
+            }
             break;
         case 2:
             peanut.movementDir = 'right';
@@ -332,6 +345,9 @@ function peanutEscapes(peanut, pipa) {
     solids.remove(peanut);
     peanut.remove();
     peanut.visible = false;
+    avisocontador.changeAnimation('test');
+    avisocontador.animation.nextFrame();
+
 }
 
 
@@ -383,19 +399,104 @@ function checkCuffsJurisdiction(sprite) {
     }
 }
 
-/** */
+/**
+ * This checks to see if cuffs are overlapping with a peanut
+ * @param {The cuff being flung} cuffs 
+ */
 function checkForCaughtPeanut(cuffs) {
-    if (cuffs.overlap(cacahuates, (cuffs, peanut) => {
-        console.log('peanut ' + peanut.name + ' caught')
-        peanut.isCaught = true;
-        peanut.changeAnimation('caught jump');
-        peanut.animation.looping = false;
-        peanut.animation.goToFrame(0);
-        cuffs.visible = false
-        removeFromRenderQueue(cuffs)
-        cuffs.remove()
-    })) {
-        console.log('peanut caught')
+    // this returns true if a peanut was caught, false otherwise
+    if (cuffs.isEsposa) {
+        return cuffs.overlap(cacahuates, (cuffs, peanut) => {
+            console.log('peanut ' + peanut.name + ' caught by cuffs! ' + cuffs.name)
+            // only catch them once with cuffs, second time won't do anything
+            // but make the cuffs disappear
+            if (!peanut.isCaught) {
+                peanut.isCaught = true;
+                peanut.changeAnimation('caught jump');
+                peanut.animation.looping = false;
+                peanut.animation.goToFrame(0);
+            }
+            cuffs.visible = false
+            removeFromRenderQueue(cuffs)
+            cuffs.remove()
+        });
+    }
+}
+
+function checkPeanutDeportation(sprite1, sprite2) {
+    // see if either is a peanut, if so, we'll assign the name peanut to it
+    let peanut = cacahuates.contains(sprite1) ? sprite1 :
+        (cacahuates.contains(sprite2) ? sprite2 : undefined)
+
+    // if peanut is undefined or hasn't been caught, we'll just return, nothing to do
+    if (!peanut || !peanut.isCaught)
+        return;
+
+    let deportation = sprite1.name === 'deportationcenter' ? sprite1 :
+        (sprite2.name === 'deportationcenter' ? sprite2 : undefined)
+
+    // and if it's not the deportation center, we'll do nothing
+    if (!deportation)
+        return;
+
+    // and finally, make sure we're not already deporting someone
+    if (deportation.deporting) {
+        console.log('checking to deport ' + peanut.name + ' but busy deporting ' + deportation.deporting.name
+            + 'who is flagged as deported ' + deportation.deporting.isDeported);
+        return;
+    }
+
+    // otherwise we have a peanut and deportation, so first, make the peanut disappear
+    peanut.isDeported = true;
+
+    // now turn on animation for deportation center
+    deportacioncenter.changeAnimation('gate activated')
+    deportacioncenter.animation.looping = false;
+    deportacioncenter.animation.goToFrame(0);
+    deportacioncenter.deporting = peanut;
+    console.log('deporting ' + deportation.deporting.name);
+
+    // now update the counter
+    avisocounter.changeAnimation('test');
+    avisocounter.animation.nextFrame();
+}
+
+// this checks to see if we're the deportation center and if so, tries
+// to deport the peanut back to the repatriation center
+function checkDeportationCenter(bureaucracy) {
+    // see if we're deporting someone
+    if (bureaucracy.name === 'deportationcenter' && bureaucracy.deporting) {
+        console.log('check if we can repatriate ' + bureaucracy.deporting.name)
+        // now see if we can move them to the repatriation center
+        if (!repatriationcenter.repatriating) {
+            let peanut = bureaucracy.deporting;
+            repatriationcenter.repatriating = bureaucracy.deporting;
+            console.log('moved ' + peanut.name + ' to repatriation center')
+            bureaucracy.deporting = undefined;
+            peanut.position.x = repatriationcenter.position.x;
+            peanut.position.y = repatriationcenter.position.y;
+        }
+    } // otherwise we're not the deportation center or if we are, we're not deporting
+}
+
+function checkRepatriationCenter(bureaucracy) {
+    // check first if we're repatriating someone
+    if (bureaucracy.name === 'repatriationcenter' && bureaucracy.repatriating) {
+        bureaucracy.changeAnimation('gate activated');
+        let peanut = bureaucracy.repatriating;
+        peanut.position.x -= 32;
+        // well, move it back if it's overlapping
+        if (solids.overlap(peanut)) {
+            console.log('no room to repatriate ' + peanut.name)
+            peanut.position.x += 32;
+        } else {
+            console.log(peanut.name + ' repatriated!')
+            bureaucracy.repatriating = undefined;
+            // otherwise, we can stay here, so change the animations and stuff
+            peanut.isCaught = false;
+            peanut.isDeported = false;
+            peanut.changeAnimation('down');
+        }
     }
 }
 
@@ -434,15 +535,21 @@ function updateRendering(queue, timing) {
             console.log('peanut ' + sprite.name + ' escapes!');
         }
 
-        // checks if this sprite is a cuff, and if so, if it's overlapping with
-        // a peanut so that they can be caught
-        checkForCaughtPeanut(sprite);
-
         // checks to see if the sprite is a cuff, and if so, removes it from the render queue
         checkCuffsJurisdiction(sprite);
 
+        // checks if this sprite is a cuff, and if so, if it's overlapping with
+        // a peanut so that they can be caught (also ignore it if it was removed)
+        if (!sprite.removedFromQueue)
+            checkForCaughtPeanut(sprite);
+
         // after updating, the sprite has moved so it's no longer animated
         sprite.hasMoved = false;
+
+        checkDeportationCenter(sprite);
+
+        checkRepatriationCenter(sprite);
+
 
         // stop sprite animations of the current sprite
         if (currentIndex >= 0) {
@@ -522,7 +629,7 @@ function updateSprite(sprite) {
 
     // now we deal with user input
     if (sprite.isPlayer == true) {
-        console.log('player x pos is ' + sprite.position.x)
+        //console.log('player x pos is ' + sprite.position.x)
         // if so, get the next movement that's been queued up
         let dir = dequeueInput(inputQueue)
         if (dir && gameState === 'play') {
@@ -551,7 +658,10 @@ function updateSprite(sprite) {
         case 'right':
             // bound the x-axis at the shadows under the bridge
             sprite.position.x = sprite.position.x + sprite.speed;
-            if (sprite.position.x >= WIDTH ||
+            // this is a bit more complicated, mainly because if we're a 
+            // caught sprite, it's okay to walk beneath the bridge, so
+            // we're allowed to move to the edge of the screen
+            if (sprite.position.x >= WIDTH - (sprite.isCaught ? 0 : 32) ||
                 (solids.contains(sprite) && solids.overlap(sprite, (s1, s2) => {
                     console.log(s1.name + ' overlaps ' + s2.name)
                 }))) {
@@ -577,8 +687,8 @@ function updateSprite(sprite) {
             // bound the lower y-axis at height-32
             sprite.position.y = sprite.position.y + sprite.speed;
             if (sprite.position.y > HEIGHT - 32 ||
-                (solids.contains(sprite) && solids.overlap(sprite))) {
-                // the y position of the sprite should never exceed height-32
+                (solids.contains(sprite) && solids.overlap(sprite, checkPeanutDeportation))) {
+                // the y position of the sprite should never exceed height-32            
                 sprite.position.y -= 32;
             }
             break;
@@ -589,8 +699,11 @@ function updateSprite(sprite) {
         case 'esposas':
             makeEsposas(migra.position.x + 16, migra.position.y - 32, 32, 32);
             break;
+        case 'none':
+            // for the non-moving objects
+            break;
         default:
-            console.error('movementDir is undefined as \'' + sprite.movementDir + '\'');
+            console.error('movementDir on ' + sprite.name + ' is undefined as \'' + sprite.movementDir + '\'');
             break;
     }
 }
@@ -1109,10 +1222,12 @@ function preload() {
     img1 = loadImage('img-lamigra/gates3B.png');
     deportacioncenter.addImage('gate', img0);
     deportacioncenter.addAnimation('gate activated', img0, img1, img1, img1, img1, img0);
-    deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
-    deportacioncenter.setCollider('rectangle', 0, 16, 32, 64);
+    //deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
+    deportacioncenter.setCollider('rectangle', 0, 16, 28, 56);
     deportacioncenter.debug = DRAW_COLLIDER; // set the debug flag
     deportacioncenter.name = 'deportationcenter'
+    deportacioncenter.movementDir = 'none';
+    renderQueue.push(deportacioncenter);
 
     /*
      *  load image for repatriation center
@@ -1123,10 +1238,12 @@ function preload() {
     img1 = loadImage('img-lamigra/porton3B.png');
     repatriationcenter.addImage('gate', img0);
     repatriationcenter.addAnimation('gate activated', img0, img1, img1, img1, img1, img0);
-    repatriationcenter.changeAnimation('gate activated'); // will change,
-    repatriationcenter.setCollider('rectangle', 0, 0, 32, 60);
+    //repatriationcenter.changeAnimation('gate activated'); // will change,
+    repatriationcenter.setCollider('rectangle', 0, 0, 28, 60);
     repatriationcenter.debug = DRAW_COLLIDER; // set the debug flag
     repatriationcenter.name = 'repatriationcenter'
+    repatriationcenter.movementDir = 'none'
+    renderQueue.push(repatriationcenter);
 
     /*
      *  create a group for the solid objects
@@ -1278,7 +1395,7 @@ function draw() {
         // test that pad0 is not null or undefined (i.e., it exists)
         if (pad0) {
             // just log it so we know
-            console.log('pad0 is active');
+            //console.log('pad0 is active');
             // now update the game with the status of the game pad
             updateStatus(pad0); // will need an updateStatus() function
         } else { // what to do if pad0 is null, which is to say there is no gamepad connected
