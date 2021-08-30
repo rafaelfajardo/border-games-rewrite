@@ -140,7 +140,7 @@ const NO_RIGHT = false;
 // this is a timeout for no input which will then go back to the main screen
 let lastInputAt = 0;
 // this is the timeout before going back to the selection screent
-const BACK_TO_SELECTION_TIMEOUT = 600; //120;
+const BACK_TO_SELECTION_TIMEOUT = 120;
 
 // create an input queue so we can store the last two inputs we received
 let inputQueue = [];
