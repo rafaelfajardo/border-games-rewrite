@@ -117,6 +117,8 @@ let sombra2; // sprite container for environment set piece
 // define a group for solids so they don't collide
 let solids;
 
+let escapeCount = 0;
+let catchCount = 0;
 
 //
 //
@@ -129,7 +131,7 @@ const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 // if set to true, the people only move downwards, left and right, never up
 const NO_UP = true;
 const NO_LEFT = false;
-const NO_IDLE = false
+const NO_IDLE = true;
 
 // this is a timeout for no input which will then go back to the main screen
 let lastInputAt = 0;
@@ -347,7 +349,7 @@ function peanutEscapes(peanut, pipa) {
     peanut.visible = false;
     avisocontador.changeAnimation('test');
     avisocontador.animation.nextFrame();
-
+    escapeCount++;
 }
 
 
@@ -646,8 +648,8 @@ function updateSprite(sprite) {
     switch (sprite.movementDir) {
         case 'left':
             sprite.position.x = sprite.position.x - sprite.speed;
-            // bound the x-axis at 0
-            if (sprite.position.x < 0 ||
+            // bound the x-axis at 0, unless you're the player, then it's 32
+            if (sprite.position.x < (sprite.isPlayer ? 32 : 0) ||
                 (solids.contains(sprite) && solids.overlap(sprite))) {
                 // we calculate the new position as such so that
                 // the sprite x position cannot be below 0,
@@ -873,7 +875,8 @@ function preload() {
     avisocontador.addImage('8', img8);
     avisocontador.addImage('9', img9);
     avisocontador.addAnimation('test', img0, img1, img2, img3, img4, img5, img6, img7, img8, img9);
-    avisocontador.debug = BUGGY; // set the debug flag
+    avisocontador.setCollider('rectangle', 0, 0, 28, 28)
+    avisocontador.debug = DRAW_COLLIDER; // set the debug flag
     avisocontador.name = 'avisocontador';
 
     /*
@@ -902,7 +905,8 @@ function preload() {
     avisocounter.addImage('8', img8);
     avisocounter.addImage('9', img9);
     avisocounter.addAnimation('test', img0, img1, img2, img3, img4, img5, img6, img7, img8, img9);
-    avisocounter.debug = BUGGY; // set the debug flag
+    avisocounter.setCollider('rectangle', 0, 0, 28, 28)
+    avisocounter.debug = DRAW_COLLIDER; // set the debug flag
     avisocounter.name = 'avisocounter'
     /*
      *  load images for MariaLucia De Pieles non-player character sprite
@@ -1260,6 +1264,8 @@ function preload() {
     solids.add(deportacioncenter);
     solids.add(migra);
     solids.add(repatriationcenter);
+    solids.add(avisocounter);
+    solids.add(avisocontador)
 
     /*
      * load image for shadows along right hand side of screen
