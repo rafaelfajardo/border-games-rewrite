@@ -679,6 +679,8 @@ function updateSprite(sprite) {
             sprite.movementDir = dir;
             sprite.animation.goToFrame(0);
             sprite.hasMoved = true;
+            sprite.changeAnimation('move');
+            sprite.animation.rewind();
         } else {
             // and if there's no movement, just be idle
             sprite.movementDir = 'idle';
@@ -882,7 +884,7 @@ function preload() {
     img1 = loadImage('img-lamigra/migra_car-2.png');
     migra = createSprite(8 * 32, 13 * 32 + 16, 64, 32); // verify the size of images for this sprite
     migra.spriteId = spriteId++;
-    migra.addAnimation('move', img0, img0, img0, img0, img1, img1, img0, img0);
+    migra.addAnimation('move', img0, img1);
     migra.addAnimation('stay', img0, img0);
     migra.changeAnimation('stay');
     migra.debug = DRAW_COLLIDER; // set the debug flag
