@@ -57,10 +57,15 @@ function preload(){
 
   img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
   img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  img3 = loadImage('assets/CrosserButton2.gif'); // load dimmed crosser button image eyes to one side
+  img4 = loadImage('assets/CrosserButton3.gif'); // load dimmed crosser button image eyes to the other side
   btn1 = createSprite(224, 160, 180, 180);
   btn1.addImage('off1', img1);
   btn1.addImage('on1', img2);
-  btn1.addAnimation('off', img1);
+  btn1.addAnimation('off', img1,img1,img1,img1,img1,img1,img1,img1,img1,
+                           img3,img3,
+                           img1,img1,img1,img1,img1,img1,img1,img1,img1,
+                           img4,img4);
   btn1.addAnimation('select', img2);
   btn1.addAnimation('blink', img1,img2,img2,img1);
   btn1.changeAnimation('select');
@@ -68,10 +73,11 @@ function preload(){
 
   img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
   img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
+  img3 = loadImage('assets/LaMigraButton2.gif');
   btn2 = createSprite(224, 390, 180, 180);
   btn2.addImage('off2', img1);
   btn2.addImage('on2', img2);
-  btn2.addAnimation('off', img1);
+  btn2.addAnimation('off', img1,img1,img1,img1,img3,img3,img3,img3);
   btn2.addAnimation('select', img2);
   btn2.addAnimation('blink', img1,img2,img2,img1);
   btn2.changeAnimation('off');
