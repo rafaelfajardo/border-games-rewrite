@@ -162,9 +162,6 @@ let currentIndex = 0;
 // timestamp for our indexing into the render queue
 let timeStamp = 0;
 
-// a queue for deporting
-let deportacionQueue = [];
-
 /**
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
@@ -361,7 +358,7 @@ function peanutEscapes(peanut, pipa) {
     solids.remove(peanut);
     peanut.remove();
     peanut.visible = false;
-    avisocontador.changeAnimation('test');
+    avisocontador.changeAnimation('counter');
     avisocontador.animation.nextFrame();
     escapeCount++;
 }
@@ -489,10 +486,6 @@ function checkPeanutDeportation(sprite1, sprite2) {
     deportacioncenter.animation.goToFrame(0);
     deportacioncenter.deporting = peanut;
     console.log('deporting ' + deportation.deporting.name);
-
-    // now update the counter
-    avisocounter.changeAnimation('test');
-    avisocounter.animation.nextFrame();
 }
 
 // this checks to see if we're the deportation center and if so, tries
@@ -504,8 +497,18 @@ function checkDeportationCenter(bureaucracy) {
         // now see if we can move them to the repatriation center
         if (!repatriationcenter.repatriating) {
             let peanut = bureaucracy.deporting;
+            // now let the repatriation center hold the peanut
             repatriationcenter.repatriating = bureaucracy.deporting;
             console.log('moved ' + peanut.name + ' to repatriation center')
+            // update our catch count
+            catchCount++;
+
+            // update the on screen counter 
+            // now update the counter
+            avisocounter.changeAnimation('counter');
+            avisocounter.animation.nextFrame();
+
+            // make room for more deportation
             bureaucracy.deporting = undefined;
             peanut.position.x = repatriationcenter.position.x;
             peanut.position.y = repatriationcenter.position.y;
@@ -531,6 +534,7 @@ function checkRepatriationCenter(bureaucracy) {
             peanut.isCaught = false;
             peanut.isDeported = false;
             peanut.changeAnimation('down');
+
         }
     }
 }
@@ -581,10 +585,11 @@ function updateRendering(queue, timing) {
         // after updating, the sprite has moved so it's no longer animated
         sprite.hasMoved = false;
 
+        // check if this is the deportation center and deport if we can
         checkDeportationCenter(sprite);
 
+        // check if this is the repatriation center and repatriate if we can
         checkRepatriationCenter(sprite);
-
 
         // stop sprite animations of the current sprite
         if (currentIndex >= 0) {
@@ -733,7 +738,7 @@ function updateSprite(sprite) {
             // bound the y-axis at 32
             sprite.position.y = sprite.position.y - sprite.speed;
 
-            if (sprite.position.y < 0 ||
+            if (sprite.position.y < 16 ||
                 (solids.contains(sprite) && solids.overlap(sprite))) {
                 // calculate the new position as such so that
                 // the sprite y position can never be less than 0
@@ -826,7 +831,7 @@ function preload() {
     tierra.addImage('mapa', img1); // gameplay screen
     tierra.addImage('pierdes', img2); // loss screen
     tierra.addImage('ganas', img3); // victory screen
-    tierra.changeImage('mapa'); // set the background to mapa while we develop, will need to change later
+    tierra.changeImage('masthead'); // set the background to mapa while we develop, will need to change later
     tierra.debug = BUGGY; // set the debug flag
     tierra.name = 'tierra'
 
@@ -930,7 +935,7 @@ function preload() {
     avisocontador.addImage('7', img7);
     avisocontador.addImage('8', img8);
     avisocontador.addImage('9', img9);
-    avisocontador.addAnimation('test', img0, img1, img2, img3, img4, img5, img6, img7, img8, img9);
+    avisocontador.addAnimation('counter', img0, img1, img2, img3, img4, img5, img6, img7, img8, img9);
     avisocontador.setCollider('rectangle', 0, 0, 28, 28)
     avisocontador.debug = DRAW_COLLIDER; // set the debug flag
     avisocontador.name = 'avisocontador';
@@ -960,7 +965,7 @@ function preload() {
     avisocounter.addImage('7', img7);
     avisocounter.addImage('8', img8);
     avisocounter.addImage('9', img9);
-    avisocounter.addAnimation('test', img0, img1, img2, img3, img4, img5, img6, img7, img8, img9);
+    avisocounter.addAnimation('counter', img0, img1, img2, img3, img4, img5, img6, img7, img8, img9);
     avisocounter.setCollider('rectangle', 0, 0, 28, 28)
     avisocounter.debug = DRAW_COLLIDER; // set the debug flag
     avisocounter.name = 'avisocounter'
@@ -1401,15 +1406,28 @@ function draw() {
             // temporarily just fall through to play
             // statements to display the startup condition
             // statements that may alter gamestate label and condition
-            gameState = "play";
+            tierra.changeImage('masthead');
+            tierra.depth = 100;
             break;
         case "play":
+            tierra.changeImage('mapa')
+            tierra.depth = 0;
             // statements that display gameplay
+
+            // update what we're rendering and how frequently
+            updateRendering(renderQueue, renderTime);
+
+            // check if we're winning or losing at this point
+            checkWinLose();
             break;
         case "lose":
+            tierra.changeImage('pierdes')
+            tierra.depth = 100;
             // statements that display loss condition
             break;
         case "win":
+            tierra.changeImage('ganas');
+            tierra.depth = 100;
             // statements that display win condition
             break;
         default:
@@ -1467,12 +1485,22 @@ function draw() {
         }
     }
 
-    // update what we're rendering and how frequently
-    updateRendering(renderQueue, renderTime);
-
     // now tell p5.play to draw all the sprites it knows about
     drawSprites();
 } // end of draw()
+
+
+/**
+ * This function is purely for the side effect of changing
+ * the game state to the win/lose state depending on how
+ * many people we've caught or lost
+ */
+function checkWinLose() {
+    if (catchCount >= WINNING_CATCH_COUNT)
+        gameState = 'win';
+    else if (escapeCount >= LOSING_ESCAPE_COUNT)
+        gameState = 'lose';
+}
 
 /**
  * Creates the esposas by creating a sprite and setting up its movement
