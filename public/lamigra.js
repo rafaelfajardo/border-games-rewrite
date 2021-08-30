@@ -117,6 +117,9 @@ let sombra2; // sprite container for environment set piece
 // define a group for solids so they don't collide
 let solids;
 
+const WINNING_CATCH_COUNT = 6;
+const LOSING_ESCAPE_COUNT = 4;
+
 let escapeCount = 0;
 let catchCount = 0;
 
@@ -126,12 +129,13 @@ let catchCount = 0;
 //
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below
-const DRAW_COLLIDER = BUGGY ? BUGGY : true;
+const DRAW_COLLIDER = BUGGY ? BUGGY : false;
 
 // if set to true, the people only move downwards, left and right, never up
-const NO_UP = true;
+const NO_UP = false;
 const NO_LEFT = false;
-const NO_IDLE = true;
+const NO_IDLE = false;
+const NO_RIGHT = false;
 
 // this is a timeout for no input which will then go back to the main screen
 let lastInputAt = 0;
@@ -247,11 +251,19 @@ function calculateSubtiming(sprite, timing) {
  * @param {The sprite to set movementDir for} sprite
  */
 function setPeanutMovementDir(peanut) {
+    // check if they're dead
+    if (peanut.isDead) {
+        peanut.movementDir = 'none';
+        return;
+    }
+
+    // check if they're deported
     if (peanut.isDeported) {
-        // if they're deported, then stand still idle, haha
+        // if they're deported, then stand still idle
         peanut.movemenDir = 'idle';
         return;
     }
+
     // if they're caught, we have specific behavior, which is first to 
     // move right, then to move down to the deportation center, otherwise
     // they're free to move as they chose!
@@ -303,11 +315,13 @@ function setPeanutMovementDir(peanut) {
             }
             break;
         case 2:
-            peanut.movementDir = 'right';
-            peanut.speed = ONE_UNIT;
-            peanut.changeAnimation('right')
-            peanut.animation.looping = false;
-            peanut.animation.goToFrame(0);
+            if (!NO_RIGHT) {
+                peanut.movementDir = 'right';
+                peanut.speed = ONE_UNIT;
+                peanut.changeAnimation('right')
+                peanut.animation.looping = false;
+                peanut.animation.goToFrame(0);
+            }
             break;
         case 3:
             // don't let them move upwards
@@ -352,6 +366,24 @@ function peanutEscapes(peanut, pipa) {
     escapeCount++;
 }
 
+function checkPeanutKilled(sprite1, sprite2) {
+    let player = (sprite1.isPlayer ? sprite1 :
+        (sprite2.isPlayer ? sprite2 : undefined))
+
+    let peanut = (cacahuates.contains(sprite1) ? sprite1 :
+        (cacahuates.contains(sprite2) ? sprite2 : undefined))
+
+    // now only test this if we've got a peanut and player--in essence
+    // this says yes, the two are overlapping, meaning we ran over the peanut
+    if (player && peanut) {
+        console.log('player killed ' + peanut.name);
+        // change the animation to dead
+        peanut.changeAnimation('muerto')
+        peanut.animation.looping = false;
+        peanut.animation.goToFrame(0);
+        peanut.isDead = true;
+    }
+}
 
 /**********
  * this takes a sprite in the renderQueue[]
@@ -485,6 +517,7 @@ function checkRepatriationCenter(bureaucracy) {
     // check first if we're repatriating someone
     if (bureaucracy.name === 'repatriationcenter' && bureaucracy.repatriating) {
         bureaucracy.changeAnimation('gate activated');
+        bureaucracy.animation.rewind();
         let peanut = bureaucracy.repatriating;
         peanut.position.x -= 32;
         // well, move it back if it's overlapping
@@ -578,9 +611,12 @@ function updateRendering(queue, timing) {
         if (sprite.animation) {
             // in crosser, we animate the sprite differently for the player,
             // but here the player is the car, so its treatment is pretty uniform
-            manuallyAnimate(sprite);
+            // manuallyAnimate(sprite);
         }
     } else {
+        if (queue[currentIndex].isDead) {
+            console.log('animating dead sprite ' + queue[currentIndex].name)
+        }
         // in this case, we can do things to the current sprite, which
         // resides in queue[currentIndex]--in particular, animate it because
         // we're at this point in the render queue
@@ -602,7 +638,12 @@ function manuallyAnimate(sprite, looping) {
             sprite.animation.goToFrame(0);
         }
     } else {
-        sprite.animation.nextFrame();
+        if (sprite.isDead) {
+            console.log('on frame: ' + sprite.animation.getFrame() + ', lastFrame: ' + sprite.animation.getLastFrame())
+        }
+        // animate only if we're not at the end
+        if (sprite.animation.getFrame() != sprite.animation.getLastFrame())
+            sprite.animation.nextFrame();
     }
 }
 
@@ -613,8 +654,8 @@ function manuallyAnimate(sprite, looping) {
 function stopSprite(sprite) {
     // console.log('stopping ' + sprite.name);
     if (sprite.animation) {
-        sprite.animation.stop();
-        sprite.animation.rewind();
+        //sprite.animation.stop();
+        //sprite.animation.rewind();
     }
 }
 
@@ -651,6 +692,13 @@ function updateSprite(sprite) {
             // bound the x-axis at 0, unless you're the player, then it's 32
             if (sprite.position.x < (sprite.isPlayer ? 32 : 0) ||
                 (solids.contains(sprite) && solids.overlap(sprite))) {
+                // at this point we know there's an overlap of the solids
+                // and the sprite--well the main interesting question is
+                // was this the player moving onto a peanut
+                if (sprite.isPlayer && sprite.overlap(solids, checkPeanutKilled)) {
+                    console.log('player ran over a peanut');
+                }
+
                 // we calculate the new position as such so that
                 // the sprite x position cannot be below 0,
                 // we may want to be sure that x should be 32 instead of 16
@@ -664,9 +712,15 @@ function updateSprite(sprite) {
             // caught sprite, it's okay to walk beneath the bridge, so
             // we're allowed to move to the edge of the screen
             if (sprite.position.x >= WIDTH - (sprite.isCaught ? 0 : 32) ||
-                (solids.contains(sprite) && solids.overlap(sprite, (s1, s2) => {
-                    console.log(s1.name + ' overlaps ' + s2.name)
-                }))) {
+                (solids.contains(sprite) && solids.overlap(sprite))) {
+
+                // at this point we know there's an overlap of the solids
+                // and the sprite--well the main interesting question is
+                // was this the player moving onto a peanut
+                if (sprite.isPlayer && sprite.overlap(solids, checkPeanutKilled)) {
+                    console.log('player ran over a peanut');
+                }
+
                 // we calculate the new position as such so that
                 // the sprite x value can never be more than width-32,
                 // in essence bounding the position
@@ -934,7 +988,7 @@ function preload() {
     img0 = loadImage('img-lamigra/marialucia-2_09.png');
     maluciadepieles.addAnimation('caught jump', img0, img0, img0, img0);
     img1 = loadImage('img-lamigra/marialucia-2_10.png');
-    maluciadepieles.addAnimation('muerto', img1, img1, img1, img1);
+    maluciadepieles.addAnimation('muerto', img0, img0, img1, img1);
     maluciadepieles.changeAnimation('down');
     maluciadepieles.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     maluciadepieles.debug = DRAW_COLLIDER; // set the debug flag
@@ -970,7 +1024,7 @@ function preload() {
     img0 = loadImage('img-lamigra/nita-2_09.png');
     nitamoreno.addAnimation('caught jump', img0, img0, img0, img0);
     img1 = loadImage('img-lamigra/nita-2_10.png');
-    nitamoreno.addAnimation('muerto', img1, img1, img1, img1);
+    nitamoreno.addAnimation('muerto', img0, img0, img1, img1);
     nitamoreno.changeAnimation('down');
     nitamoreno.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     nitamoreno.debug = DRAW_COLLIDER; // set the debug flag
@@ -1007,7 +1061,7 @@ function preload() {
     img0 = loadImage('img-lamigra/lino-2_09.png');
     linodepieles.addAnimation('caught jump', img0, img0, img0, img0);
     img1 = loadImage('img-lamigra/lino-2_10.png');
-    linodepieles.addAnimation('muerto', img1, img1, img1, img1);
+    linodepieles.addAnimation('muerto', img0, img0, img1, img1);
     linodepieles.changeAnimation('down');
     linodepieles.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     linodepieles.debug = DRAW_COLLIDER; // set the debug flag
@@ -1043,7 +1097,7 @@ function preload() {
     img0 = loadImage('img-lamigra/Carlos-Moreno-3_14.png');
     carlosmoreno.addAnimation('caught jump', img0, img0, img0, img0);
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_15.png');
-    carlosmoreno.addAnimation('muerto', img1, img1, img1, img1);
+    carlosmoreno.addAnimation('muerto', img0, img0, img1, img1);
     carlosmoreno.changeAnimation('down');
     carlosmoreno.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     carlosmoreno.debug = DRAW_COLLIDER; // set the debug flag
@@ -1080,7 +1134,7 @@ function preload() {
     img0 = loadImage('img-lamigra/marcia-3_09.png');
     marcia.addAnimation('caught jump', img0, img0, img0, img0);
     img1 = loadImage('img-lamigra/marcia-3_10.png');
-    marcia.addAnimation('muerto', img1, img1, img1, img1);
+    marcia.addAnimation('muerto', img0, img0, img1, img1);
     marcia.changeAnimation('down');
     marcia.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     marcia.debug = DRAW_COLLIDER; // set the debug flag
@@ -1117,7 +1171,7 @@ function preload() {
     img0 = loadImage('img-lamigra/patricia-2_09.png');
     patricialamachona.addAnimation('caught jump', img0, img0, img0, img0);
     img1 = loadImage('img-lamigra/patricia-2_10.png');
-    patricialamachona.addAnimation('muerto', img1, img1, img1, img1);
+    patricialamachona.addAnimation('muerto', img0, img0, img1, img1);
     patricialamachona.changeAnimation('down');
     patricialamachona.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     patricialamachona.debug = DRAW_COLLIDER; // set the debug flag
@@ -1154,7 +1208,7 @@ function preload() {
     img0 = loadImage('img-lamigra/porcupine_13.png');
     puercoespin.addAnimation('caught jump', img0, img0, img0, img0);
     img1 = loadImage('img-lamigra/porcupine_14.png');
-    puercoespin.addAnimation('muerto', img1, img1, img1, img1);
+    puercoespin.addAnimation('muerto', img0, img0, img1, img1);
     puercoespin.changeAnimation('down');
     puercoespin.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     puercoespin.debug = DRAW_COLLIDER; // set the debug flag
@@ -1191,7 +1245,7 @@ function preload() {
     img0 = loadImage('img-lamigra/X-rodar-3_09.png');
     xrodar.addAnimation('caught jump', img0, img0, img0, img0); // resolved - image is not transparent
     img1 = loadImage('img-lamigra/X-rodar-3_10-copy-b.png');
-    xrodar.addAnimation('muerto', img1, img1, img1, img1); // resolved - image is not transparent
+    xrodar.addAnimation('muerto', img0, img0, img1, img1); // resolved - image is not transparent
     xrodar.changeAnimation('down');
     xrodar.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     xrodar.debug = DRAW_COLLIDER; // set the debug flag
@@ -1225,7 +1279,7 @@ function preload() {
     img0 = loadImage('img-lamigra/gates3A.png');
     img1 = loadImage('img-lamigra/gates3B.png');
     deportacioncenter.addImage('gate', img0);
-    deportacioncenter.addAnimation('gate activated', img0, img1, img1, img1, img1, img0);
+    deportacioncenter.addAnimation('gate activated', img1, img1, img1, img1, img0);
     //deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
     deportacioncenter.setCollider('rectangle', 0, 16, 28, 56);
     deportacioncenter.debug = DRAW_COLLIDER; // set the debug flag
@@ -1241,7 +1295,7 @@ function preload() {
     img0 = loadImage('img-lamigra/porton3A.png');
     img1 = loadImage('img-lamigra/porton3B.png');
     repatriationcenter.addImage('gate', img0);
-    repatriationcenter.addAnimation('gate activated', img0, img1, img1, img1, img1, img0);
+    repatriationcenter.addAnimation('gate activated', img1, img1, img1, img0);
     //repatriationcenter.changeAnimation('gate activated'); // will change,
     repatriationcenter.setCollider('rectangle', 0, 0, 28, 60);
     repatriationcenter.debug = DRAW_COLLIDER; // set the debug flag
