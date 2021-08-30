@@ -19,6 +19,7 @@
  */
 
 // declare global variables
+let ground; // sprite container for background animation cycle
 let btn1; // sprite container for button art
 let btn2; // sprite container for button art
 // let img1; // temporary container to preload an image
@@ -30,8 +31,32 @@ let ctr0; // container for a counter
 
 // preload
 function preload(){
-  let img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
-  let img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
+  let img0  = loadImage('assets/ground00.png');
+  let img1  = loadImage('assets/ground01.png');
+  let img2  = loadImage('assets/ground02.png');
+  let img3  = loadImage('assets/ground03.png');
+  let img4  = loadImage('assets/ground04.png');
+  let img5  = loadImage('assets/ground05.png');
+  let img6  = loadImage('assets/ground06.png');
+  let img7  = loadImage('assets/ground07.png');
+  let img8  = loadImage('assets/ground08.png');
+  let img9  = loadImage('assets/ground09.png');
+  let img10 = loadImage('assets/ground10.png');
+  let img11 = loadImage('assets/ground11.png');
+  let img12 = loadImage('assets/ground12.png');
+  let img13 = loadImage('assets/ground13.png');
+  let img14 = loadImage('assets/ground14.png');
+  let img15 = loadImage('assets/ground15.png');
+  let img16 = loadImage('assets/ground16.png');
+  let img17 = loadImage('assets/ground17.png');
+  ground = createSprite(224, 274, 448, 548);
+  ground.depth = 0;
+  ground.addAnimation('loop', img0,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img13,img14,img15,img16,img17);
+
+
+
+  img1 = loadImage('assets/CrosserButton1.gif'); // load dimmed crosser button image
+  img2 = loadImage('assets/CrosserButton4.gif'); // load bright crosser button image
   btn1 = createSprite(224, 160, 180, 180);
   btn1.addImage('off1', img1);
   btn1.addImage('on1', img2);
@@ -39,16 +64,18 @@ function preload(){
   btn1.addAnimation('select', img2);
   btn1.addAnimation('blink', img1,img2,img2,img1);
   btn1.changeAnimation('select');
+  btn1.depth = 1;
 
   img1 = loadImage('assets/LaMigraButton1.gif'); // load dimmed la migra button image
   img2 = loadImage('assets/LaMigraButton3.gif'); // load bright la migra button image
-  btn2 = createSprite(224, 370, 180, 180);
+  btn2 = createSprite(224, 390, 180, 180);
   btn2.addImage('off2', img1);
   btn2.addImage('on2', img2);
   btn2.addAnimation('off', img1);
   btn2.addAnimation('select', img2);
   btn2.addAnimation('blink', img1,img2,img2,img1);
   btn2.changeAnimation('off');
+  btn2.depth = 2;
 
 /*  // these paths are for dev and for DAM
   url = 'http://localhost:8080/index.html'; // these urls have to reflect the files in /public
@@ -124,8 +151,8 @@ function draw(){
     drawSprites();
 } // end draw
 
-
-//
+/*
+//  Deprecate mouse clickable UI
 //  implementing button clickable UI in index.html + main.js
 //  it's not working yet
 function mouseClicked(){
@@ -143,7 +170,7 @@ function mouseClicked(){
   }
   return false;
 }
-
+*/
 
 function updateStatus(pad){  // tested once per frame
 
@@ -153,7 +180,7 @@ function updateStatus(pad){  // tested once per frame
    *  axis default values are -0.00392 so can test for greater and less than that.
    *  need a test to enclose it
    */
-  
+
 
 
   /*
@@ -197,12 +224,12 @@ function updateStatus(pad){  // tested once per frame
         print('NES Start pressed'); } // NES Start button
   }
 
-  /**
+  /*
    *  This bit is specific to the Buffalo SNES style controller,
    *  USB,2-axis 8-button gamepad (STANDARD GAMEPAD Vendor: 0583 Product: 2060)
    *  need a test to enclose it. Axis defaults are 0.00392 (positive values)
    */
-  /**
+  /*
    if (pad.id.match(standardID)) { // this matches the id against the controller ID value
        if (pad.axes[0] === -1.00000){print('Buffalo SNES d-pad left pressed');} // SNES d-pad leftward
        if (pad.axes[0] ===  1.00000){print('Buffalo SNES d-pad right pressed');} // SNES d-pad leftward
@@ -249,8 +276,8 @@ function updateStatus(pad){  // tested once per frame
        if (pad.buttons[15].value === 1){ print('Buffalo SNES D-pad right pressed');} // redundant with axes 0 (X-value)
     }
     */
-    
-    /**
+
+    /*
      *  This bit is specific to the Exlene SNES style controller,
      *  USB Gamepad (Vendor: 0079 Product: 0011)
      *  The Exlene controller worked on older MacOS X and Mac Mini, with middleware.
@@ -261,7 +288,7 @@ function updateStatus(pad){  // tested once per frame
      *  and some value > -0.99 for 'right'
      *  well that didn't work. going to leave Exlene commented out
      */
-  /**
+  /*
      if (pad.id.match(exleneID) ){
        if (pad.axes[0] < -1.0000){print('Exlene SNES D-pad left pressed');} // this axis is not registering at present
        if (pad.axes[0] > -0.992){print('Exlene SNES D-pad right pressed');} // this axis is not registering at present
@@ -302,14 +329,16 @@ function updateStatus(pad){  // tested once per frame
      }
   */
 
-   /**
+   /*
     * This bit is specific to the Sony PS3 contoller,
     * PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)
     * it also uses 8 for select and 9 for start code 054c_0268
     */
+  /*
   if (pad.id ==='PLAYSTATION(R)3 Controller (STANDARD GAMEPAD Vendor: 054c Product: 0268)'){
       // add code for playstation buttons
   }
+  */
   return;
 }
 
