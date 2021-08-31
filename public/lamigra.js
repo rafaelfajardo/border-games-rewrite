@@ -1656,6 +1656,7 @@ function keyTyped() { // tested once per frame, triggered on keystroke
 
 } // end keyTyped
 
+let aButtonReleased = true;
 
 /**
  * Reads the current status of the game pad and processes input
@@ -1705,11 +1706,13 @@ function updateStatus(pad) {
                 // readInputAfter = currentTime + INPUT_DELAY;
             }
         } // NES B button
-        if (pad.buttons[1].value === 1.00) {
+        if (pad.buttons[1].value === 1.00 && aButtonReleased) {
             print('NES A button pressed');
             if (gameState === 'play') {
                 readInputAfter = currentTime + INPUT_DELAY;
                 addInput(inputQueue, 'esposas');
+                // record that we've pressed it so that it must be released to press again
+                aButtonReleased = false;
             }
         } // NES A button
         // does not have buttons 2-7 inclusive
@@ -1726,6 +1729,11 @@ function updateStatus(pad) {
             } else {
                 window.open(url1, "_self");
             }
+        }
+
+        if (isButtonReleased(0, 1)) {
+            console.log('NES A button released');
+            aButtonReleased = true;
         }
     }
 }
