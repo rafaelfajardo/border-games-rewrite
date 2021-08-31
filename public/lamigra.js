@@ -116,6 +116,7 @@ let sombra2; // sprite container for environment set piece
 
 // define a group for solids so they don't collide
 let solids;
+let caughtSolids;
 
 const WINNING_CATCH_COUNT = 6;
 const LOSING_ESCAPE_COUNT = 4;
@@ -129,7 +130,7 @@ let catchCount = 0;
 //
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below
-const DRAW_COLLIDER = BUGGY ? BUGGY : false;
+const DRAW_COLLIDER = BUGGY ? BUGGY : true;
 
 // if set to true, the people only move downwards, left and right, never up
 const NO_UP = false;
@@ -162,12 +163,18 @@ let currentIndex = 0;
 // timestamp for our indexing into the render queue
 let timeStamp = 0;
 
+// considering how to queue on a different time boundary, the next to variables aren't being used yet
+let QUEUE_DELAY = .25;
+let nextQueueTimeAt = 0;
 /**
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
  * @param {The next input to add} item
  */
 function addInput(inputQueue, item) {
+    // grab the current time
+    const currentTime = millis() / 1000;
+
     if (inputQueue.length < maxQueueSize) {
         inputQueue.push(item);
     } else {
@@ -176,7 +183,7 @@ function addInput(inputQueue, item) {
     }
 
     // now timestamp when we received this input last
-    lastInputAt = millis() / 1000;
+    lastInputAt = currentTime;
 }
 
 /**
@@ -265,14 +272,31 @@ function setPeanutMovementDir(peanut) {
     // move right, then to move down to the deportation center, otherwise
     // they're free to move as they chose!
     if (peanut.isCaught) {
-        // see if we've moved right enough
+        // see if we've moved right enough, if we're less than WIDTH - 16, we can keep moving
+        // right (possibly) as long as we're not blocked, and if we're blocked, we'd like to chose
+        // down, instead of just being stuck here
+        let canMoveRight = false;
         if (peanut.position.x < WIDTH - 16) {
-            peanut.movementDir = 'right';
-            peanut.speed = ONE_UNIT;
-            peanut.changeAnimation('caught right')
-            peanut.animation.looping = false
-            peanut.animation.goToFrame(0);
-        } else if (peanut.position.y > 32) {
+
+            // now let's test to see if they can move right
+            peanut.position.x += 32;
+            // if we wouldn't overlap one of the caughtSolids, then we can move right 
+            if (!caughtSolids.overlap(peanut)) {
+                canMoveRight = true;
+
+                // set them up for movement to the right
+                peanut.movementDir = 'right';
+                peanut.speed = ONE_UNIT;
+                peanut.changeAnimation('caught right')
+                peanut.animation.looping = false
+                peanut.animation.goToFrame(0);
+            }
+
+            // and reset their position
+            peanut.position.x -= 32;
+        }
+
+        if (!canMoveRight && peanut.position.y > 32) {
             peanut.movementDir = 'down';
             peanut.speed = ONE_UNIT;
             peanut.changeAnimation('caught down')
@@ -463,12 +487,15 @@ function checkPeanutDeportation(sprite1, sprite2) {
     if (!peanut || !peanut.isCaught)
         return;
 
+    console.log('checking possible deportation of ' + peanut.name);
+
     let deportation = sprite1.name === 'deportationcenter' ? sprite1 :
         (sprite2.name === 'deportationcenter' ? sprite2 : undefined)
 
     // and if it's not the deportation center, we'll do nothing
-    if (!deportation)
+    if (!deportation) {
         return;
+    }
 
     // and finally, make sure we're not already deporting someone
     if (deportation.deporting) {
@@ -477,6 +504,7 @@ function checkPeanutDeportation(sprite1, sprite2) {
         return;
     }
 
+    console.log(peanut.name + ' will be deported');
     // otherwise we have a peanut and deportation, so first, make the peanut disappear
     peanut.isDeported = true;
 
@@ -620,7 +648,7 @@ function updateRendering(queue, timing) {
         }
     } else {
         if (queue[currentIndex].isDead) {
-            console.log('animating dead sprite ' + queue[currentIndex].name)
+            // console.log('animating dead sprite ' + queue[currentIndex].name)
         }
         // in this case, we can do things to the current sprite, which
         // resides in queue[currentIndex]--in particular, animate it because
@@ -644,10 +672,10 @@ function manuallyAnimate(sprite, looping) {
         }
     } else {
         if (sprite.isDead) {
-            console.log('on frame: ' + sprite.animation.getFrame() + ', lastFrame: ' + sprite.animation.getLastFrame())
+            // console.log('on frame: ' + sprite.animation.getFrame() + ', lastFrame: ' + sprite.animation.getLastFrame())
         }
         // animate only if we're not at the end
-        if (sprite.animation.getFrame() != sprite.animation.getLastFrame())
+        if (sprite.animation.getFrame() != sprite.animation.getLastFrame() || sprite.isEsposa)
             sprite.animation.nextFrame();
     }
 }
@@ -709,7 +737,7 @@ function updateSprite(sprite) {
                 // we calculate the new position as such so that
                 // the sprite x position cannot be below 0,
                 // we may want to be sure that x should be 32 instead of 16
-                sprite.position.x += 32;
+                sprite.position.x += sprite.speed;
             }
             break;
         case 'right':
@@ -719,7 +747,7 @@ function updateSprite(sprite) {
             // caught sprite, it's okay to walk beneath the bridge, so
             // we're allowed to move to the edge of the screen
             if (sprite.position.x >= WIDTH - (sprite.isCaught ? 0 : 32) ||
-                (solids.contains(sprite) && solids.overlap(sprite))) {
+                (solids.contains(sprite) && solids.overlap(sprite, checkPeanutDeportation))) {
 
                 // at this point we know there's an overlap of the solids
                 // and the sprite--well the main interesting question is
@@ -728,10 +756,18 @@ function updateSprite(sprite) {
                     console.log('player ran over a peanut');
                 }
 
-                // we calculate the new position as such so that
-                // the sprite x value can never be more than width-32,
-                // in essence bounding the position
-                sprite.position.x -= 32;
+                // check to see if this is a peanut and they've been caught, because
+                // we have special rules for them, i.e., that they can walk over the avisocounter, 
+                // in essence, they can't move right if they're a peanut, they're caught
+                // and the overlap (from the outer if statement) was not with the avisocounter
+                if (cacahuates.contains(sprite) && sprite.isCaught && !caughtSolids.overlap(sprite)) {
+                    console.log('special case: ' + sprite.name + ' isCaught: ' + sprite.isCaught);
+                } else {
+                    // we calculate the new position as such so that
+                    // the sprite x value can never be more than width-32,
+                    // in essence bounding the position
+                    sprite.position.x -= sprite.speed;
+                }
             }
             break;
         case 'up':
@@ -743,7 +779,7 @@ function updateSprite(sprite) {
                 // calculate the new position as such so that
                 // the sprite y position can never be less than 0
                 // the sprites are 64 pixels tall and so their center is 32
-                sprite.position.y += 32;
+                sprite.position.y += sprite.speed;
             }
             break;
         case 'down':
@@ -751,8 +787,8 @@ function updateSprite(sprite) {
             sprite.position.y = sprite.position.y + sprite.speed;
             if (sprite.position.y > HEIGHT - 32 ||
                 (solids.contains(sprite) && solids.overlap(sprite, checkPeanutDeportation))) {
-                // the y position of the sprite should never exceed height-32
-                sprite.position.y -= 32;
+                // the y position of the sprite should never exceed height-32            
+                sprite.position.y -= sprite.speed;
             }
             break;
         case 'idle':
@@ -1326,7 +1362,23 @@ function preload() {
     solids.add(migra);
     solids.add(repatriationcenter);
     solids.add(avisocounter);
-    solids.add(avisocontador)
+    solids.add(avisocontador);
+
+    caughtSolids = new Group();
+    caughtSolids.add(maluciadepieles);
+    caughtSolids.add(nitamoreno);
+    caughtSolids.add(linodepieles);
+    caughtSolids.add(carlosmoreno);
+    caughtSolids.add(marcia);
+    caughtSolids.add(patricialamachona);
+    caughtSolids.add(puercoespin);
+    caughtSolids.add(xrodar);
+    //caughtSolids.add(deportacioncenter);
+    caughtSolids.add(migra);
+    caughtSolids.add(repatriationcenter);
+    // do not add avisocounter, so that the caught peanuts can walk through it
+    caughtSolids.add(avisocontador);
+
 
     /*
      * load image for shadows along right hand side of screen
@@ -1506,7 +1558,7 @@ function draw() {
 function checkWinLose() {
     if (catchCount >= WINNING_CATCH_COUNT)
         gameState = 'win';
-    else if (escapeCount >= LOSING_ESCAPE_COUNT)
+    else if (escapeCount >= LOSING_ESCAPE_COUNT + 10)
         gameState = 'lose';
 }
 
@@ -1524,11 +1576,11 @@ function makeEsposas(x, y) {
         'img-lamigra/esposas_1.png',
         'img-lamigra/esposas_2.png',
         'img-lamigra/esposas_3.png');
+    newSprite.changeAnimation('lanzar');
     cuffs.add(newSprite); // add new sprite to Play.P5.js group cuffs
     flingEsposas = false;
     renderQueue.push(newSprite); // add newSprite to renderQueue
     newSprite.name = 'cuffs[' + cuffs.length + ']'; // give the sprite a name that accords with the group identity
-    newSprite.animation.playing = 'true'; // set attributes for cuffs
     newSprite.movementDir = 'up';
     newSprite.speed = 32;
     newSprite.isEsposa = true;
@@ -1604,6 +1656,7 @@ function keyTyped() { // tested once per frame, triggered on keystroke
 
 } // end keyTyped
 
+let aButtonReleased = true;
 
 /**
  * Reads the current status of the game pad and processes input
@@ -1653,11 +1706,13 @@ function updateStatus(pad) {
                 // readInputAfter = currentTime + INPUT_DELAY;
             }
         } // NES B button
-        if (pad.buttons[1].value === 1.00) {
+        if (pad.buttons[1].value === 1.00 && aButtonReleased) {
             print('NES A button pressed');
             if (gameState === 'play') {
                 readInputAfter = currentTime + INPUT_DELAY;
                 addInput(inputQueue, 'esposas');
+                // record that we've pressed it so that it must be released to press again
+                aButtonReleased = false;
             }
         } // NES A button
         // does not have buttons 2-7 inclusive
@@ -1674,6 +1729,11 @@ function updateStatus(pad) {
             } else {
                 window.open(url1, "_self");
             }
+        }
+
+        if (isButtonReleased(0, 1)) {
+            console.log('NES A button released');
+            aButtonReleased = true;
         }
     }
 }
