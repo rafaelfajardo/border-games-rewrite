@@ -133,7 +133,7 @@ let catchCount = 0;
 //
 const BUGGY = false; // boolean, debug flag, used for debug feature of P5.Play.JS
 // turning on BUGGY will turn on DRAW_COLLIDER, otherwise, it's the final value listed below
-const DRAW_COLLIDER = BUGGY ? BUGGY : true;
+const DRAW_COLLIDER = BUGGY ? BUGGY : false;
 
 // if set to true, the people only move downwards, left and right, never up
 const NO_UP = false;
