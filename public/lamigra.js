@@ -1389,8 +1389,8 @@ function preload() {
     sombra1.spriteId = spriteId++;
     sombra2 = createSprite(15 * 32 + 16, 12 * 32, 32, 128); // will contain shadowC.png
     sombra2.spriteId = spriteId++;
-    img0 = loadImage('img-lamigra/shadowC.png'); // used twice, mid right, lower right
-    img1 = loadImage('img-lamigra/shadowB.png'); // used once, upper right
+    img0 = loadImage('img-lamigra/shadowCCC.png'); // used twice, mid right, lower right
+    img1 = loadImage('img-lamigra/shadowBBB.png'); // used once, upper right
     sombra0.addImage('sombra', img1);
     sombra1.addImage('sombra', img0);
     sombra2.addImage('sombra', img0);
