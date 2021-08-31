@@ -1487,6 +1487,14 @@ function draw() {
 
     // now tell p5.play to draw all the sprites it knows about
     drawSprites();
+
+    // we have to render text after drawing sprites
+    if (gameState === 'startup') {
+        //strokeWeight(5);
+        fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
+        textSize(14);
+        text('Press START to play', 190, 370);
+    }
 } // end of draw()
 
 
