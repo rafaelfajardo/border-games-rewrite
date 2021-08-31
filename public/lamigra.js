@@ -1319,8 +1319,8 @@ function preload() {
      */
     deportacioncenter = createSprite(15 * 32 + 16, 15 * 32 + 16, 32, 96);
     deportacioncenter.spriteId = spriteId++;
-    img0 = loadImage('img-lamigra/gates3A.png');
-    img1 = loadImage('img-lamigra/gates3B.png');
+    img0 = loadImage('img-lamigra/gates3AAA.png');
+    img1 = loadImage('img-lamigra/gates3BB.png');
     deportacioncenter.addImage('gate', img0);
     deportacioncenter.addAnimation('gate activated', img1, img1, img1, img1, img0);
     //deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
