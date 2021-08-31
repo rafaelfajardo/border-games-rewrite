@@ -59,6 +59,9 @@ let url = 'index.html';
 let url0 = '_crosser.html';
 let url1 = '_lamigra.html';
 //
+// declare a variable to contain our font
+let arcadeFont;
+//
 //
 //  define state variables
 //
@@ -280,7 +283,7 @@ function setPeanutMovementDir(peanut) {
 
             // now let's test to see if they can move right
             peanut.position.x += 32;
-            // if we wouldn't overlap one of the caughtSolids, then we can move right 
+            // if we wouldn't overlap one of the caughtSolids, then we can move right
             if (!caughtSolids.overlap(peanut)) {
                 canMoveRight = true;
 
@@ -757,7 +760,7 @@ function updateSprite(sprite) {
                 }
 
                 // check to see if this is a peanut and they've been caught, because
-                // we have special rules for them, i.e., that they can walk over the avisocounter, 
+                // we have special rules for them, i.e., that they can walk over the avisocounter,
                 // in essence, they can't move right if they're a peanut, they're caught
                 // and the overlap (from the outer if statement) was not with the avisocounter
                 if (cacahuates.contains(sprite) && sprite.isCaught && !caughtSolids.overlap(sprite)) {
@@ -787,7 +790,7 @@ function updateSprite(sprite) {
             sprite.position.y = sprite.position.y + sprite.speed;
             if (sprite.position.y > HEIGHT - 32 ||
                 (solids.contains(sprite) && solids.overlap(sprite, checkPeanutDeportation))) {
-                // the y position of the sprite should never exceed height-32            
+                // the y position of the sprite should never exceed height-32
                 sprite.position.y -= sprite.speed;
             }
             break;
@@ -1401,10 +1404,12 @@ function preload() {
     sombra1.debug = BUGGY; // set the debug flag
     sombra2.debug = BUGGY; // set the debug flag
 
+    // preload our font into arcadeFont
+    arcadeFont = loadFont('assets/04b30.otf'); // this is a freeware font from http://www.04.jp.org/
 } // end preload()
 
 
-const INPUT_DELAY = .15;
+const INPUT_DELAY = .25;
 let readInputAfter = 0;
 
 /***********************************************************
@@ -1431,6 +1436,8 @@ function setup() {
     background(128);
     cuffs = new Group(); // a group of esposas-like sprites
 
+    // setup the font parameters to be used by text in 'startup' and 'win' state
+    textFont(arcadeFont);
 }
 function draw() {
     // put drawing code here
@@ -1545,7 +1552,7 @@ function draw() {
         //strokeWeight(5);
         fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
         textSize(14);
-        text('Press START to play', 190, 370);
+        text('Press START to play', 140, 512);
     }
 } // end of draw()
 
