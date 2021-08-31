@@ -261,7 +261,7 @@ function setPeanutMovementDir(peanut) {
         return;
     }
 
-    // if they're caught, we have specific behavior, which is first to 
+    // if they're caught, we have specific behavior, which is first to
     // move right, then to move down to the deportation center, otherwise
     // they're free to move as they chose!
     if (peanut.isCaught) {
@@ -346,7 +346,7 @@ function setPeanutMovementDir(peanut) {
 
 /**
  * This function is called whenever a peanut escapes
- * @param {The sprite for the peanut who has escaped} sprite 
+ * @param {The sprite for the peanut who has escaped} sprite
  */
 function peanutEscapes(peanut, pipa) {
     pipa.changeAnimation('pipa activated');
@@ -432,7 +432,7 @@ function checkCuffsJurisdiction(sprite) {
 
 /**
  * This checks to see if cuffs are overlapping with a peanut
- * @param {The cuff being flung} cuffs 
+ * @param {The cuff being flung} cuffs
  */
 function checkForCaughtPeanut(cuffs) {
     // this returns true if a peanut was caught, false otherwise
@@ -503,7 +503,7 @@ function checkDeportationCenter(bureaucracy) {
             // update our catch count
             catchCount++;
 
-            // update the on screen counter 
+            // update the on screen counter
             // now update the counter
             avisocounter.changeAnimation('counter');
             avisocounter.animation.nextFrame();
@@ -715,7 +715,7 @@ function updateSprite(sprite) {
         case 'right':
             // bound the x-axis at the shadows under the bridge
             sprite.position.x = sprite.position.x + sprite.speed;
-            // this is a bit more complicated, mainly because if we're a 
+            // this is a bit more complicated, mainly because if we're a
             // caught sprite, it's okay to walk beneath the bridge, so
             // we're allowed to move to the edge of the screen
             if (sprite.position.x >= WIDTH - (sprite.isCaught ? 0 : 32) ||
@@ -751,7 +751,7 @@ function updateSprite(sprite) {
             sprite.position.y = sprite.position.y + sprite.speed;
             if (sprite.position.y > HEIGHT - 32 ||
                 (solids.contains(sprite) && solids.overlap(sprite, checkPeanutDeportation))) {
-                // the y position of the sprite should never exceed height-32            
+                // the y position of the sprite should never exceed height-32
                 sprite.position.y -= 32;
             }
             break;
@@ -1352,7 +1352,7 @@ function preload() {
 } // end preload()
 
 
-const INPUT_DELAY = .5;
+const INPUT_DELAY = .15;
 let readInputAfter = 0;
 
 /***********************************************************
