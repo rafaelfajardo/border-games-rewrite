@@ -175,7 +175,8 @@ let timeStamp = 0;
 // considering how to queue on a different time boundary, the next to variables aren't being used yet
 let QUEUE_DELAY = .25;
 let nextQueueTimeAt = 0;
-/**
+
+/*****************************************************************
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
  * @param {The next input to add} item
@@ -195,7 +196,7 @@ function addInput(inputQueue, item) {
     lastInputAt = currentTime;
 }
 
-/**
+/*****************************************************************
  * This function removes the next item (i.e., the oldest) in the queue
  * @param {The input queue we're using (which should be an array)} inputQueue
  * @returns {The item we just removed from the queue}
@@ -209,6 +210,10 @@ function dequeueInput(inputQueue) {
 // game runs a veeeeery long time while being played--typically longer than is possible for a human to play.
 // we increment this value each time we call createSprite
 let spriteId = 0;
+/*****************************************************************
+ * Remove an item from the rendering queue so that we no longer process it
+ * @param {The item in the queue to be removed, based on its spriteId} item 
+ */
 function removeFromRenderQueue(item) {
     // find the index in the queue where this sprite is
     let index = renderQueue.findIndex((sprite) => sprite.spriteId === item.spriteId)
@@ -219,44 +224,26 @@ function removeFromRenderQueue(item) {
 
 /**
  * Calculates the new index from the current one, based on
- * what our current index is, how many elements are in the queue
- * and how long each sprite gets to move
+ * what our current index is and how many elements are in the queue
  * @param {The queue of sprites we'll be drawing} queue
  * @param {The current index we are testing} idx
- * @param {How long each sprite has to move} timing
  */
-function getNextIndex(queue, idx, timing) {
+function getNextIndex(queue, idx) {
     // get the time in seconds, with subsecond accuracy
-    const seconds = millis() / 1000;
     const len = queue.length;
 
-    if (!timing || seconds > timeStamp) {
-        // first, update our timeStamp to be in the future
-        timeStamp = seconds + timing;
-        if (len > 0) {
-            return (idx + 1) % len;
-        } else {
-            console.error('queue length is 0, you probably forgot to add things to it');
-            return idx;
-        }
+    // make sure the length is greater than 0, and we should always have that
+    if (len > 0) {
+        return (idx + 1) % len;
     } else {
+        console.error('queue length is 0, you probably forgot to add things to it');
         return idx;
     }
 }
 
-/**
- * Calculates how long we have at each ONE_UNIT distance to hang
- * out before animating to a new spot, which is based really on
- * the speed of the sprite. If a sprite moves 4 units, for example,
- * we have timing/4 seconds to hang out before moving again
- * @param {The sprite that's moving} sprite
- * @param {The length of time each sprite has to move} timing
- */
-function calculateSubtiming(sprite, timing) {
-    const total_units = sprite.speed / ONE_UNIT;
-    return timing / total_units;
-}
-/**********
+
+
+/*****************************************************************
  * this function is called by checkForPeanutSprite(sprite)
  * this takes/receives a sprite in the renderQueue[] that is
  * also a member of cacahuates [] (a play.p5.js group entity)
@@ -377,7 +364,7 @@ function setPeanutMovementDir(peanut) {
     }
 }
 
-/**
+/*****************************************************************
  * This function is called whenever a peanut escapes
  * @param {The sprite for the peanut who has escaped} sprite
  */
@@ -415,7 +402,7 @@ function checkPeanutKilled(sprite1, sprite2) {
     }
 }
 
-/**********
+/*****************************************************************
  * this takes a sprite in the renderQueue[]
  * and checks to see if it is a member of cacahuates []
  * and calls setPeanutMovementDir() if so.
@@ -430,21 +417,9 @@ function checkForPeanutSprite(sprite) {
     } else {
         // cacahuates allergy
     }
-    // if (cacahuates.length > 0) {
-    //     for (let cIdx = 0; cIdx < cacahuates.length; cIdx++) {
-    //         if (sprite === cacahuates[cIdx]) {
-    //             //console.log(sprite.name + ' is in cacahuates');
-    //             if (!(sprite.collide(cacahuates[cIdx]))) {  //this is a test to see if they collide
-    //                 setPeanutMovementDir(sprite); // this line works outside if-sprite-collide test
-    //             }
-    //             //return true;
-    //         }
-    //     }
-    // }
-    //return false;
 }
 
-/**********
+/*****************************************************************
  * this function is called by updateRendering()
  * and takes a sprite in the renderQueue[]
  * and checks to see if it is a member of cuffs []
@@ -463,7 +438,7 @@ function checkCuffsJurisdiction(sprite) {
     }
 }
 
-/**
+/*****************************************************************
  * This checks to see if cuffs are overlapping with a peanut
  * @param {The cuff being flung} cuffs
  */
@@ -487,6 +462,15 @@ function checkForCaughtPeanut(cuffs) {
     }
 }
 
+/*****************************************************************
+ * This function checks if a peanut can be deported. It's used by passing it to 
+ * a call to overlap, which takes a function as the second argument. If overlap returns
+ * true, then the given function is called (this one, for example). We check if
+ * one of these is a peanut and one is the deportation center. We then deport if we can!
+ * @param {First sprite involved} sprite1 
+ * @param {Second sprite involved} sprite2 
+ * @returns 
+ */
 function checkPeanutDeportation(sprite1, sprite2) {
     // see if either is a peanut, if so, we'll assign the name peanut to it
     let peanut = cacahuates.contains(sprite1) ? sprite1 :
@@ -525,8 +509,11 @@ function checkPeanutDeportation(sprite1, sprite2) {
     console.log('deporting ' + deportation.deporting.name);
 }
 
-// this checks to see if we're the deportation center and if so, tries
-// to deport the peanut back to the repatriation center
+/*****************************************************************
+ * Checks to see if we're the deportation center and if so, tries
+ * to deport the peanut back to the repatriation center
+ * @param {The sprite we're working with} bureaucracy
+ */
 function checkDeportationCenter(bureaucracy) {
     // see if we're deporting someone
     if (bureaucracy.name === 'deportationcenter' && bureaucracy.deporting) {
@@ -553,10 +540,16 @@ function checkDeportationCenter(bureaucracy) {
     } // otherwise we're not the deportation center or if we are, we're not deporting
 }
 
+/*****************************************************************
+ * Checks to see if we're the repatriation center and if so, tries
+ * to repatriate the peanut back into Mexico
+ * @param {The sprite we're working with} bureaucracy
+ */
 function checkRepatriationCenter(bureaucracy) {
     // check first if we're repatriating someone
     if (bureaucracy.name === 'repatriationcenter' && bureaucracy.repatriating) {
         bureaucracy.changeAnimation('gate activated');
+        bureaucracy.animation.looping = false;
         bureaucracy.animation.rewind();
         let peanut = bureaucracy.repatriating;
         peanut.position.x -= 32;
@@ -576,7 +569,6 @@ function checkRepatriationCenter(bureaucracy) {
     }
 }
 
-//*/
 /************************************************************
  * this function takes/receives a rendering queue and timing;
  * and, updates positions based on how much
@@ -599,29 +591,16 @@ function updateRendering(queue, timing) {
 
     let nextIdx = currentIndex;
     // this returns true if we have another frame, false otherwise
-    if (manuallyAnimate(sprite, sprite.animation.looping)) {
-
-    } else {
-        let len = renderQueue.length;
-        nextIdx = len === 0 ? 0 : (currentIndex + 1) % renderQueue.length;
+    if (!manuallyAnimate(sprite, sprite.animation.looping)) {
+        nextIdx = getNextIndex(renderQueue, currentIndex);
         console.log('next index is ' + nextIdx)
         updateSprite(sprite)
     }
 
     // if the index hasn't changed, then we need to manually animate the sprite
     if (nextIdx !== currentIndex) {
-        // can we test queue[currentIndex] is also part of cacahuates group?
-        // and then pass queue[currentIndex] to a function that
-        // randomizes its direction for the next cycle?
-        // if current sprite is in cacahuates
-        // set the movement direction for said sprite
-        //checkForPeanutSprite(sprite);
 
-        // now update the sprite, which will cause it to move if its movement
-        // speed is something > 0
-        //updateSprite(sprite)
-
-        // check for peanut escape
+        // first, check for peanut escape
         if (sprite.overlap(pipas, peanutEscapes)) {
             console.log('peanut ' + sprite.name + ' escapes!');
         }
@@ -643,48 +622,25 @@ function updateRendering(queue, timing) {
         // check if this is the repatriation center and repatriate if we can
         checkRepatriationCenter(sprite);
 
-        // stop sprite animations of the current sprite
-        if (currentIndex >= 0) {
-            if (sprite !== queue[nextIdx]) {
-                // this stops any animations and rewinds them
-                stopSprite(sprite);
-            }
-        }
-
-        //updateSprite(sprite)
         // at this point, we can update our index, but if it was
         // removed from the queue, our current index points now
         // to the next index, so we want to recalculate it
         if (sprite.removedFromQueue) {
             currentIndex--;
-            //currentIndex = getNextIndex(queue, currentIndex - 1)//, timing)
-            let len = renderQueue.length;
-            nextIdx = len === 0 ? 0 : (currentIndex + 1) % renderQueue.length;
+            nextIdx = getNextIndex(queue, currentIndex);
             console.log('next index is ' + nextIdx)
-        } else {
-            // otherwise, just use the next index
-            currentIndex = nextIdx
         }
+
+        // otherwise, just use the next index
+        currentIndex = nextIdx
 
         // this is the new sprite
         sprite = queue[currentIndex];
 
+        // this will cause the peanut to face their next direction they'll be moving
+        // since it will go to the first frame in their animation after they pick a direction
+        // note that we do this only when we're the new sprite to be animated
         checkForPeanutSprite(sprite);
-
-        // now start the animation of this next sprite, if we have an animation
-        if (sprite.animation) {
-            // in crosser, we animate the sprite differently for the player,
-            // but here the player is the car, so its treatment is pretty uniform
-            // manuallyAnimate(sprite);
-        }
-    } else {
-        if (queue[currentIndex].isDead) {
-            // console.log('animating dead sprite ' + queue[currentIndex].name)
-        }
-        // in this case, we can do things to the current sprite, which
-        // resides in queue[currentIndex]--in particular, animate it because
-        // we're at this point in the render queue
-        // manuallyAnimate(queue[currentIndex]);
     }
 }
 
@@ -693,6 +649,7 @@ function updateRendering(queue, timing) {
  * @param {The sprite we're animating} sprite
  */
 function manuallyAnimate(sprite, looping) {
+    // if we're not at the last frame, we can move forward one frame
     if (sprite.animation.getFrame() != sprite.animation.getLastFrame()) {
         sprite.animation.nextFrame();
         // return true that there might be another frame
@@ -705,27 +662,6 @@ function manuallyAnimate(sprite, looping) {
         // return false if we're at the last frame so we know to move on
         return false;
     }
-    // // first, test if it's the player, if it's not, just animate it
-    // if (sprite.isPlayer) {
-    //     // now if the player has moved, we'll run the animation
-    //     // if (sprite.hasMoved || ) {
-    //     //     sprite.animation.nextFrame();
-    //     // } else {
-    //     //     sprite.animation.goToFrame(0);
-    //     //}
-    //     if (sprite.animation.getFrame() != sprite.animation.getLastFrame()) {
-    //         sprite.animation.nextFrame();
-    //     } else {
-    //         sprite.hasMoved = false;
-    //     }
-    // } else {
-    //     if (sprite.isDead) {
-    //         // console.log('on frame: ' + sprite.animation.getFrame() + ', lastFrame: ' + sprite.animation.getLastFrame())
-    //     }
-    //     // animate only if we're not at the end
-    //     if (sprite.animation.getFrame() != sprite.animation.getLastFrame() || sprite.isEsposa)
-    //         sprite.animation.nextFrame();
-    // }
 }
 
 /**********************************************
@@ -858,25 +794,6 @@ function updateSprite(sprite) {
     }
 }
 
-/**
- * This function animates the sprite to move from its current position
- * to the next position, so that we "smoothly" jump between UNITS of 32 pixels
- * until it gets to its next destination. It also allows us to control which
- * animation frame is being used.
- * @param {The sprite we're animating} sprite
- */
-function animateSprite(sprite, timing, distance) {
-    // get the subtiming of this sprite
-    const subtiming = calculateSubtiming(sprite, timing);
-    // grab elapsed time
-    const seconds = millis() / 1000;
-
-    if (seconds > subTimestamp) {
-        // slap a new subtimestamp down
-        subTimestamp = seconds + subtiming;
-        return sprite.position.x + distance;
-    }
-}
 
 /*********************************************************
  *
@@ -899,7 +816,6 @@ function preload() {
     let img9;
 
     timeStamp = millis() / 1000 + RENDER_TIME;
-
 
     /*
      * load and create tierra
