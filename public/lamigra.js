@@ -1,3 +1,4 @@
+'use strict';
 /* * * * * * * * * * * * * * * *
  *
  *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
@@ -158,7 +159,12 @@ let renderQueue = [];
 
 // this defines the time to spend on changing the animation and rendering for
 // each character, the fast this is, the faster the game will move
-let renderTime = .0909;
+const FPS_PER_ITEM = 11;
+const RENDER_TIME = 1 / FPS_PER_ITEM;
+
+// defines the frame rate--generally we want it some multiple of RENDER_TIME so that
+// and then that number of frames will be drawn
+const FRAME_RATE = 20;
 
 // indicates where we are in the render queue
 let currentIndex = 0;
@@ -169,7 +175,8 @@ let timeStamp = 0;
 // considering how to queue on a different time boundary, the next to variables aren't being used yet
 let QUEUE_DELAY = .25;
 let nextQueueTimeAt = 0;
-/**
+
+/*****************************************************************
  * Adds an input into our queue, which we can remove with dequeueInput
  * @param {The input queue (which should be an array) that we're using} inputQueue
  * @param {The next input to add} item
@@ -189,7 +196,7 @@ function addInput(inputQueue, item) {
     lastInputAt = currentTime;
 }
 
-/**
+/*****************************************************************
  * This function removes the next item (i.e., the oldest) in the queue
  * @param {The input queue we're using (which should be an array)} inputQueue
  * @returns {The item we just removed from the queue}
@@ -203,6 +210,10 @@ function dequeueInput(inputQueue) {
 // game runs a veeeeery long time while being played--typically longer than is possible for a human to play.
 // we increment this value each time we call createSprite
 let spriteId = 0;
+/*****************************************************************
+ * Remove an item from the rendering queue so that we no longer process it
+ * @param {The item in the queue to be removed, based on its spriteId} item 
+ */
 function removeFromRenderQueue(item) {
     // find the index in the queue where this sprite is
     let index = renderQueue.findIndex((sprite) => sprite.spriteId === item.spriteId)
@@ -213,44 +224,26 @@ function removeFromRenderQueue(item) {
 
 /**
  * Calculates the new index from the current one, based on
- * what our current index is, how many elements are in the queue
- * and how long each sprite gets to move
+ * what our current index is and how many elements are in the queue
  * @param {The queue of sprites we'll be drawing} queue
  * @param {The current index we are testing} idx
- * @param {How long each sprite has to move} timing
  */
-function getNextIndex(queue, idx, timing) {
+function getNextIndex(queue, idx) {
     // get the time in seconds, with subsecond accuracy
-    const seconds = millis() / 1000;
     const len = queue.length;
 
-    if (seconds > timeStamp) {
-        // first, update our timeStamp to be in the future
-        timeStamp = seconds + timing;
-        if (len > 0) {
-            return (idx + 1) % len;
-        } else {
-            console.error('queue length is 0, you probably forgot to add things to it');
-            return idx;
-        }
+    // make sure the length is greater than 0, and we should always have that
+    if (len > 0) {
+        return (idx + 1) % len;
     } else {
+        console.error('queue length is 0, you probably forgot to add things to it');
         return idx;
     }
 }
 
-/**
- * Calculates how long we have at each ONE_UNIT distance to hang
- * out before animating to a new spot, which is based really on
- * the speed of the sprite. If a sprite moves 4 units, for example,
- * we have timing/4 seconds to hang out before moving again
- * @param {The sprite that's moving} sprite
- * @param {The length of time each sprite has to move} timing
- */
-function calculateSubtiming(sprite, timing) {
-    const total_units = sprite.speed / ONE_UNIT;
-    return timing / total_units;
-}
-/**********
+
+
+/*****************************************************************
  * this function is called by checkForPeanutSprite(sprite)
  * this takes/receives a sprite in the renderQueue[] that is
  * also a member of cacahuates [] (a play.p5.js group entity)
@@ -324,7 +317,7 @@ function setPeanutMovementDir(peanut) {
             if (!NO_IDLE) {
                 peanut.movementDir = 'idle';
                 peanut.speed = 0;
-                peanut.changeAnimation('down')
+                peanut.changeAnimation('idle')
                 peanut.animation.looping = false;
                 peanut.animation.goToFrame(0);
             }
@@ -371,7 +364,7 @@ function setPeanutMovementDir(peanut) {
     }
 }
 
-/**
+/*****************************************************************
  * This function is called whenever a peanut escapes
  * @param {The sprite for the peanut who has escaped} sprite
  */
@@ -409,7 +402,7 @@ function checkPeanutKilled(sprite1, sprite2) {
     }
 }
 
-/**********
+/*****************************************************************
  * this takes a sprite in the renderQueue[]
  * and checks to see if it is a member of cacahuates []
  * and calls setPeanutMovementDir() if so.
@@ -424,21 +417,9 @@ function checkForPeanutSprite(sprite) {
     } else {
         // cacahuates allergy
     }
-    // if (cacahuates.length > 0) {
-    //     for (let cIdx = 0; cIdx < cacahuates.length; cIdx++) {
-    //         if (sprite === cacahuates[cIdx]) {
-    //             //console.log(sprite.name + ' is in cacahuates');
-    //             if (!(sprite.collide(cacahuates[cIdx]))) {  //this is a test to see if they collide
-    //                 setPeanutMovementDir(sprite); // this line works outside if-sprite-collide test
-    //             }
-    //             //return true;
-    //         }
-    //     }
-    // }
-    //return false;
 }
 
-/**********
+/*****************************************************************
  * this function is called by updateRendering()
  * and takes a sprite in the renderQueue[]
  * and checks to see if it is a member of cuffs []
@@ -457,7 +438,7 @@ function checkCuffsJurisdiction(sprite) {
     }
 }
 
-/**
+/*****************************************************************
  * This checks to see if cuffs are overlapping with a peanut
  * @param {The cuff being flung} cuffs
  */
@@ -481,6 +462,15 @@ function checkForCaughtPeanut(cuffs) {
     }
 }
 
+/*****************************************************************
+ * This function checks if a peanut can be deported. It's used by passing it to 
+ * a call to overlap, which takes a function as the second argument. If overlap returns
+ * true, then the given function is called (this one, for example). We check if
+ * one of these is a peanut and one is the deportation center. We then deport if we can!
+ * @param {First sprite involved} sprite1 
+ * @param {Second sprite involved} sprite2 
+ * @returns 
+ */
 function checkPeanutDeportation(sprite1, sprite2) {
     // see if either is a peanut, if so, we'll assign the name peanut to it
     let peanut = cacahuates.contains(sprite1) ? sprite1 :
@@ -519,8 +509,11 @@ function checkPeanutDeportation(sprite1, sprite2) {
     console.log('deporting ' + deportation.deporting.name);
 }
 
-// this checks to see if we're the deportation center and if so, tries
-// to deport the peanut back to the repatriation center
+/*****************************************************************
+ * Checks to see if we're the deportation center and if so, tries
+ * to deport the peanut back to the repatriation center
+ * @param {The sprite we're working with} bureaucracy
+ */
 function checkDeportationCenter(bureaucracy) {
     // see if we're deporting someone
     if (bureaucracy.name === 'deportationcenter' && bureaucracy.deporting) {
@@ -547,10 +540,16 @@ function checkDeportationCenter(bureaucracy) {
     } // otherwise we're not the deportation center or if we are, we're not deporting
 }
 
+/*****************************************************************
+ * Checks to see if we're the repatriation center and if so, tries
+ * to repatriate the peanut back into Mexico
+ * @param {The sprite we're working with} bureaucracy
+ */
 function checkRepatriationCenter(bureaucracy) {
     // check first if we're repatriating someone
     if (bureaucracy.name === 'repatriationcenter' && bureaucracy.repatriating) {
         bureaucracy.changeAnimation('gate activated');
+        bureaucracy.animation.looping = false;
         bureaucracy.animation.rewind();
         let peanut = bureaucracy.repatriating;
         peanut.position.x -= 32;
@@ -570,7 +569,6 @@ function checkRepatriationCenter(bureaucracy) {
     }
 }
 
-//*/
 /************************************************************
  * this function takes/receives a rendering queue and timing;
  * and, updates positions based on how much
@@ -579,28 +577,30 @@ function checkRepatriationCenter(bureaucracy) {
  * @param {How long we spend at each sprite drawing} timing
  */
 function updateRendering(queue, timing) {
+    // frameCount++;
+    // let rate = frameCount / (millis() / 1000);
+    //console.log('rate: ' + rate);
+
     // calculate the next index
-    const nextIdx = getNextIndex(queue, currentIndex, timing);
+    //const nextIdx = getNextIndex(queue, currentIndex, timing);
 
     // get a reference to the current sprite because sometimes
     // they get removed from the queue after updating and
     // we want to hold onto it for the duration of the function
     let sprite = queue[currentIndex];
 
+    let nextIdx = currentIndex;
+    // this returns true if we have another frame, false otherwise
+    if (!manuallyAnimate(sprite, sprite.animation.looping)) {
+        nextIdx = getNextIndex(renderQueue, currentIndex);
+        console.log('next index is ' + nextIdx)
+        updateSprite(sprite)
+    }
+
     // if the index hasn't changed, then we need to manually animate the sprite
     if (nextIdx !== currentIndex) {
-        // can we test queue[currentIndex] is also part of cacahuates group?
-        // and then pass queue[currentIndex] to a function that
-        // randomizes its direction for the next cycle?
-        // if current sprite is in cacahuates
-        // set the movement direction for said sprite
-        checkForPeanutSprite(sprite);
 
-        // now update the sprite, which will cause it to move if its movement
-        // speed is something > 0
-        updateSprite(sprite)
-
-        // check for peanut escape
+        // first, check for peanut escape
         if (sprite.overlap(pipas, peanutEscapes)) {
             console.log('peanut ' + sprite.name + ' escapes!');
         }
@@ -622,41 +622,25 @@ function updateRendering(queue, timing) {
         // check if this is the repatriation center and repatriate if we can
         checkRepatriationCenter(sprite);
 
-        // stop sprite animations of the current sprite
-        if (currentIndex >= 0) {
-            if (sprite !== queue[nextIdx]) {
-                // this stops any animations and rewinds them
-                stopSprite(sprite);
-            }
-        }
-
         // at this point, we can update our index, but if it was
         // removed from the queue, our current index points now
         // to the next index, so we want to recalculate it
         if (sprite.removedFromQueue) {
-            currentIndex = getNextIndex(queue, currentIndex - 1, timing)
-        } else {
-            // otherwise, just use the next index
-            currentIndex = nextIdx
+            currentIndex--;
+            nextIdx = getNextIndex(queue, currentIndex);
+            console.log('next index is ' + nextIdx)
         }
+
+        // otherwise, just use the next index
+        currentIndex = nextIdx
 
         // this is the new sprite
         sprite = queue[currentIndex];
 
-        // now start the animation of this next sprite, if we have an animation
-        if (sprite.animation) {
-            // in crosser, we animate the sprite differently for the player,
-            // but here the player is the car, so its treatment is pretty uniform
-            // manuallyAnimate(sprite);
-        }
-    } else {
-        if (queue[currentIndex].isDead) {
-            // console.log('animating dead sprite ' + queue[currentIndex].name)
-        }
-        // in this case, we can do things to the current sprite, which
-        // resides in queue[currentIndex]--in particular, animate it because
-        // we're at this point in the render queue
-        manuallyAnimate(queue[currentIndex]);
+        // this will cause the peanut to face their next direction they'll be moving
+        // since it will go to the first frame in their animation after they pick a direction
+        // note that we do this only when we're the new sprite to be animated
+        checkForPeanutSprite(sprite);
     }
 }
 
@@ -665,21 +649,18 @@ function updateRendering(queue, timing) {
  * @param {The sprite we're animating} sprite
  */
 function manuallyAnimate(sprite, looping) {
-    // first, test if it's the player, if it's not, just animate it
-    if (sprite.isPlayer) {
-        // now if the player has moved, we'll run the animation
-        if (sprite.hasMoved || inputQueue.length > 0) {
-            sprite.animation.nextFrame();
-        } else {
-            sprite.animation.goToFrame(0);
-        }
+    // if we're not at the last frame, we can move forward one frame
+    if (sprite.animation.getFrame() != sprite.animation.getLastFrame()) {
+        sprite.animation.nextFrame();
+        // return true that there might be another frame
+        return true;
     } else {
-        if (sprite.isDead) {
-            // console.log('on frame: ' + sprite.animation.getFrame() + ', lastFrame: ' + sprite.animation.getLastFrame())
-        }
-        // animate only if we're not at the end
-        if (sprite.animation.getFrame() != sprite.animation.getLastFrame() || sprite.isEsposa)
-            sprite.animation.nextFrame();
+        // if we're looping, then rewind the animation
+        if (looping)
+            sprite.animation.rewind();
+
+        // return false if we're at the last frame so we know to move on
+        return false;
     }
 }
 
@@ -713,10 +694,13 @@ function updateSprite(sprite) {
         let dir = dequeueInput(inputQueue)
         if (dir && gameState === 'play') {
             sprite.movementDir = dir;
-            sprite.animation.goToFrame(0);
-            sprite.hasMoved = true;
-            sprite.changeAnimation('move');
-            sprite.animation.rewind();
+            // don't move if we're just flinging esposas
+            if (dir !== 'esposas') {
+                sprite.hasMoved = true;
+                sprite.changeAnimation('move');
+                sprite.animation.looping = false;
+                sprite.animation.rewind();
+            }
         } else {
             // and if there's no movement, just be idle
             sprite.movementDir = 'idle';
@@ -810,25 +794,6 @@ function updateSprite(sprite) {
     }
 }
 
-/**
- * This function animates the sprite to move from its current position
- * to the next position, so that we "smoothly" jump between UNITS of 32 pixels
- * until it gets to its next destination. It also allows us to control which
- * animation frame is being used.
- * @param {The sprite we're animating} sprite
- */
-function animateSprite(sprite, timing, distance) {
-    // get the subtiming of this sprite
-    const subtiming = calculateSubtiming(sprite, timing);
-    // grab elapsed time
-    const seconds = millis() / 1000;
-
-    if (seconds > subTimestamp) {
-        // slap a new subtimestamp down
-        subTimestamp = seconds + subtiming;
-        return sprite.position.x + distance;
-    }
-}
 
 /*********************************************************
  *
@@ -850,8 +815,7 @@ function preload() {
     let img8;
     let img9;
 
-    timeStamp = millis() / 1000 + renderTime;
-
+    timeStamp = millis() / 1000 + RENDER_TIME;
 
     /*
      * load and create tierra
@@ -882,7 +846,7 @@ function preload() {
     pipa0 = createSprite(2 * 32 + 16, 16 * 32 + 16, 32, 32);
     pipa0.spriteId = spriteId++;
     pipa0.addImage('pipa', img0);
-    pipa0.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
+    pipa0.addAnimation('pipa activated', img0, img1, img1, img0);
     pipa0.animation.looping = false;
     pipa0.debug = DRAW_COLLIDER; // set the debug flag
     pipa0.setCollider('rectangle', 0, 0, 32, 32)
@@ -891,7 +855,7 @@ function preload() {
     pipa1 = createSprite(32 * 5 + 16, 16 * 32 + 16, 32, 32);
     pipa1.spriteId = spriteId++;
     pipa1.addImage('pipa', img0);
-    pipa1.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
+    pipa1.addAnimation('pipa activated', img0, img1, img1, img0);
     pipa1.animation.looping = false;
     pipa1.debug = DRAW_COLLIDER; // set the debug flag
     pipa1.setCollider('rectangle', 0, 0, 32, 32)
@@ -900,7 +864,7 @@ function preload() {
     pipa2 = createSprite(32 * 8 + 16, 16 * 32 + 16, 32, 32);
     pipa2.spriteId = spriteId++;
     pipa2.addImage('pipa', img0);
-    pipa2.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
+    pipa2.addAnimation('pipa activated', img0, img1, img1, img0);
     pipa2.animation.looping = false;
     pipa2.debug = DRAW_COLLIDER; // set the debug flag
     pipa2.setCollider('rectangle', 0, 0, 32, 32)
@@ -909,7 +873,7 @@ function preload() {
     pipa3 = createSprite(32 * 11 + 16, 16 * 32 + 16, 32, 32);
     pipa3.spriteId = spriteId++;
     pipa3.addImage('pipa', img0);
-    pipa3.addAnimation('pipa activated', img0, img1, img1, img1, img1, img0);
+    pipa3.addAnimation('pipa activated', img0, img1, img1, img0);
     pipa3.animation.looping = false;
     pipa3.debug = DRAW_COLLIDER; // set the debug flag
     pipa3.setCollider('rectangle', 0, 0, 32, 32)
@@ -928,8 +892,8 @@ function preload() {
     img1 = loadImage('img-lamigra/migra_car-2.png');
     migra = createSprite(8 * 32, 13 * 32 + 16, 64, 32); // verify the size of images for this sprite
     migra.spriteId = spriteId++;
-    migra.addAnimation('move', img0, img1);
-    migra.addAnimation('stay', img0, img0);
+    migra.addAnimation('move', img1, img0, img1, img0);
+    migra.addAnimation('stay', img0);
     migra.changeAnimation('stay');
     migra.debug = DRAW_COLLIDER; // set the debug flag
     renderQueue.push(migra); // add migra to renderQueue []
@@ -1015,26 +979,27 @@ function preload() {
     maluciadepieles.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/marialucia-2_01.png');
     img1 = loadImage('img-lamigra/marialucia-2_02.png');
-    maluciadepieles.addAnimation('down', img0, img0, img1, img1);
+    maluciadepieles.addAnimation('idle', img0);
+    maluciadepieles.addAnimation('down', img0, img1, img0);
     img0 = loadImage('img-lamigra/marialucia-2_03.png');
     img1 = loadImage('img-lamigra/marialucia-2_04.png');
-    maluciadepieles.addAnimation('right', img0, img0, img1, img1);
+    maluciadepieles.addAnimation('right', img1, img0, img1);
     img0 = loadImage('img-lamigra/marialucia-2_05.png');
     img1 = loadImage('img-lamigra/marialucia-2_06.png');
-    maluciadepieles.addAnimation('left', img0, img0, img1, img1);
+    maluciadepieles.addAnimation('left', img1, img0, img1);
     img0 = loadImage('img-lamigra/marialucia-2_07.png');
     img1 = loadImage('img-lamigra/marialucia-2_08.png');
-    maluciadepieles.addAnimation('up', img0, img0, img1, img1);
+    maluciadepieles.addAnimation('up', img1, img0, img1);
     img0 = loadImage('img-lamigra/marialucia-2_11.png');
     img1 = loadImage('img-lamigra/marialucia-2_12.png');
-    maluciadepieles.addAnimation('caught down', img0, img0, img1, img1);
+    maluciadepieles.addAnimation('caught down', img0, img1, img0);
     img0 = loadImage('img-lamigra/marialucia-2_12.png');
     img1 = loadImage('img-lamigra/marialucia-2_13.png');
-    maluciadepieles.addAnimation('caught right', img0, img0, img1, img1);
+    maluciadepieles.addAnimation('caught right', img0, img1, img0);
     img0 = loadImage('img-lamigra/marialucia-2_09.png');
-    maluciadepieles.addAnimation('caught jump', img0, img0, img0, img0);
+    maluciadepieles.addAnimation('caught jump', img0, img0, img0);
     img1 = loadImage('img-lamigra/marialucia-2_10.png');
-    maluciadepieles.addAnimation('muerto', img0, img0, img1, img1);
+    maluciadepieles.addAnimation('muerto', img0, img1, img1);
     maluciadepieles.changeAnimation('down');
     maluciadepieles.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     maluciadepieles.debug = DRAW_COLLIDER; // set the debug flag
@@ -1052,25 +1017,26 @@ function preload() {
     nitamoreno.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/nita-2_01.png');
     img1 = loadImage('img-lamigra/nita-2_02.png');
-    nitamoreno.addAnimation('down', img0, img0, img1, img1); // resolved - something wrong here
+    nitamoreno.addAnimation('idle', img0);
+    nitamoreno.addAnimation('down', img0, img1, img0); // resolved - something wrong here
     img0 = loadImage('img-lamigra/nita-2_03.png');
     img1 = loadImage('img-lamigra/nita-2_04.png');
-    nitamoreno.addAnimation('right', img0, img0, img1, img1);
+    nitamoreno.addAnimation('right', img1, img0, img1);
     img0 = loadImage('img-lamigra/nita-2_05.png');
     img1 = loadImage('img-lamigra/nita-2_06.png');
-    nitamoreno.addAnimation('left', img0, img0, img1, img1);
+    nitamoreno.addAnimation('left', img1, img0, img1);
     img0 = loadImage('img-lamigra/nita-2_07.png');
     img1 = loadImage('img-lamigra/nita-2_08.png');
-    nitamoreno.addAnimation('up', img0, img0, img1, img1); // resolved - something wrong here
+    nitamoreno.addAnimation('up', img0, img1, img0); // resolved - something wrong here
     img0 = loadImage('img-lamigra/nita-2_11.png');
     img1 = loadImage('img-lamigra/nita-2_12.png');
-    nitamoreno.addAnimation('caught down', img0, img0, img1, img1);
+    nitamoreno.addAnimation('caught down', img0, img1, img0);
     img2 = loadImage('img-lamigra/nita-2_13.png');
-    nitamoreno.addAnimation('caught right', img1, img1, img2, img2);
+    nitamoreno.addAnimation('caught right', img1, img2, img1);
     img0 = loadImage('img-lamigra/nita-2_09.png');
-    nitamoreno.addAnimation('caught jump', img0, img0, img0, img0);
+    nitamoreno.addAnimation('caught jump', img0, img0, img0);
     img1 = loadImage('img-lamigra/nita-2_10.png');
-    nitamoreno.addAnimation('muerto', img0, img0, img1, img1);
+    nitamoreno.addAnimation('muerto', img0, img1, img1);
     nitamoreno.changeAnimation('down');
     nitamoreno.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     nitamoreno.debug = DRAW_COLLIDER; // set the debug flag
@@ -1088,26 +1054,27 @@ function preload() {
     linodepieles.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/lino-2_01.png');
     img1 = loadImage('img-lamigra/lino-2_02.png');
-    linodepieles.addAnimation('down', img0, img0, img1, img1);
+    linodepieles.addAnimation('idle', img0);
+    linodepieles.addAnimation('down', img0, img1, img0);
     img0 = loadImage('img-lamigra/lino-2_03.png');
     img1 = loadImage('img-lamigra/lino-2_04.png');
-    linodepieles.addAnimation('left', img0, img0, img1, img1);
+    linodepieles.addAnimation('left', img0, img1, img0);
     img0 = loadImage('img-lamigra/lino-2_05.png');
     img1 = loadImage('img-lamigra/lino-2_06.png');
-    linodepieles.addAnimation('up', img0, img0, img1, img1);
+    linodepieles.addAnimation('up', img0, img1, img0);
     img0 = loadImage('img-lamigra/lino-2_07.png');
     img1 = loadImage('img-lamigra/lino-2_08.png');
-    linodepieles.addAnimation('right', img0, img0, img1, img1);
+    linodepieles.addAnimation('right', img0, img1, img0);
     img0 = loadImage('img-lamigra/lino-2_11.png');
     img1 = loadImage('img-lamigra/lino-2_12.png');
-    linodepieles.addAnimation('caught down', img0, img0, img1, img1);
+    linodepieles.addAnimation('caught down', img0, img1, img0);
     img0 = loadImage('img-lamigra/lino-2_12.png');
     img1 = loadImage('img-lamigra/lino-2_13.png');
-    linodepieles.addAnimation('caught right', img0, img0, img1, img1);
+    linodepieles.addAnimation('caught right', img1, img0, img1);
     img0 = loadImage('img-lamigra/lino-2_09.png');
-    linodepieles.addAnimation('caught jump', img0, img0, img0, img0);
+    linodepieles.addAnimation('caught jump', img0, img0, img0);
     img1 = loadImage('img-lamigra/lino-2_10.png');
-    linodepieles.addAnimation('muerto', img0, img0, img1, img1);
+    linodepieles.addAnimation('muerto', img0, img1, img1);
     linodepieles.changeAnimation('down');
     linodepieles.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     linodepieles.debug = DRAW_COLLIDER; // set the debug flag
@@ -1119,31 +1086,32 @@ function preload() {
     linodepieles.isCaught = false;
 
     /*
-     * add imgages for Carlos Moreno non-player character
-     */
+    * add imgages for Carlos Moreno non-player character
+    */
     carlosmoreno = createSprite(16, 2 * 32, 32, 64);
     carlosmoreno.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/Carlos-Moreno-3_01.png');
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_02.png');
-    carlosmoreno.addAnimation('down', img0, img0, img1, img1);
+    carlosmoreno.addAnimation('idle', img0);
+    carlosmoreno.addAnimation('down', img0, img1, img0);
     img0 = loadImage('img-lamigra/Carlos-Moreno-3_03.png');
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_04.png');
-    carlosmoreno.addAnimation('up', img0, img0, img1, img1);
+    carlosmoreno.addAnimation('up', img0, img1, img0);
     img0 = loadImage('img-lamigra/Carlos-Moreno-3_05.png');
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_06.png');
-    carlosmoreno.addAnimation('right', img0, img0, img1, img1);
+    carlosmoreno.addAnimation('right', img0, img1, img0);
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_07.png');
     img0 = loadImage('img-lamigra/Carlos-Moreno-3_08.png');
-    carlosmoreno.addAnimation('left', img0, img0, img1, img1);
+    carlosmoreno.addAnimation('left', img0, img1, img0);
     img0 = loadImage('img-lamigra/Carlos-Moreno-3_11.png');
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_12.png');
-    carlosmoreno.addAnimation('caught down', img0, img0, img1, img1);
+    carlosmoreno.addAnimation('caught down', img0, img1, img0);
     img2 = loadImage('img-lamigra/Carlos-Moreno-3_13.png');
-    carlosmoreno.addAnimation('caught right', img1, img1, img2, img2);
+    carlosmoreno.addAnimation('caught right', img1, img2, img1);
     img0 = loadImage('img-lamigra/Carlos-Moreno-3_14.png');
-    carlosmoreno.addAnimation('caught jump', img0, img0, img0, img0);
+    carlosmoreno.addAnimation('caught jump', img0, img0, img0);
     img1 = loadImage('img-lamigra/Carlos-Moreno-3_15.png');
-    carlosmoreno.addAnimation('muerto', img0, img0, img1, img1);
+    carlosmoreno.addAnimation('muerto', img0, img1, img1);
     carlosmoreno.changeAnimation('down');
     carlosmoreno.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     carlosmoreno.debug = DRAW_COLLIDER; // set the debug flag
@@ -1161,26 +1129,27 @@ function preload() {
     marcia.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/marcia-3_01.png');
     img1 = loadImage('img-lamigra/marcia-3_02.png');
-    marcia.addAnimation('down', img0, img0, img1, img1);
+    marcia.addAnimation('idle', img0);
+    marcia.addAnimation('down', img0, img1, img0);
     img0 = loadImage('img-lamigra/marcia-3_03.png');
     img1 = loadImage('img-lamigra/marcia-3_04.png');
-    marcia.addAnimation('up', img0, img0, img1, img1);
+    marcia.addAnimation('up', img0, img1, img0);
     img0 = loadImage('img-lamigra/marcia-3_05.png');
     img1 = loadImage('img-lamigra/marcia-3_06.png');
-    marcia.addAnimation('right', img0, img0, img1, img1);
+    marcia.addAnimation('right', img0, img1, img0);
     img0 = loadImage('img-lamigra/marcia-3_07.png');
     img1 = loadImage('img-lamigra/marcia-3_08.png');
-    marcia.addAnimation('left', img0, img0, img1, img1);
+    marcia.addAnimation('left', img0, img1, img0);
     img0 = loadImage('img-lamigra/marcia-3_11.png');
     img1 = loadImage('img-lamigra/marcia-3_12.png');
-    marcia.addAnimation('caught down', img0, img0, img1, img1); // resolved - one of these frames is not transparent
+    marcia.addAnimation('caught down', img0, img1, img0); // resolved - one of these frames is not transparent
     img0 = loadImage('img-lamigra/marcia-3_12.png');
     img1 = loadImage('img-lamigra/marcia-3_13.png');
-    marcia.addAnimation('caught right', img0, img0, img1, img1);
+    marcia.addAnimation('caught right', img0, img1, img0);
     img0 = loadImage('img-lamigra/marcia-3_09.png');
-    marcia.addAnimation('caught jump', img0, img0, img0, img0);
+    marcia.addAnimation('caught jump', img0, img0, img0);
     img1 = loadImage('img-lamigra/marcia-3_10.png');
-    marcia.addAnimation('muerto', img0, img0, img1, img1);
+    marcia.addAnimation('muerto', img0, img1, img1);
     marcia.changeAnimation('down');
     marcia.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     marcia.debug = DRAW_COLLIDER; // set the debug flag
@@ -1198,26 +1167,27 @@ function preload() {
     patricialamachona.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/patricia-2_01.png');
     img1 = loadImage('img-lamigra/patricia-2_02.png');
-    patricialamachona.addAnimation('down', img0, img0, img1, img1);
-    img0 = loadImage('img-lamigra/patricia-2_03.png');
-    img1 = loadImage('img-lamigra/patricia-2_04.png');
-    patricialamachona.addAnimation('right', img1, img1, img0, img0);
+    patricialamachona.addAnimation('idle', img0);
+    patricialamachona.addAnimation('down', img0, img1, img0);
+    img1 = loadImage('img-lamigra/patricia-2_03.png');
+    img0 = loadImage('img-lamigra/patricia-2_04.png');
+    patricialamachona.addAnimation('right', img0, img1, img0);
     img0 = loadImage('img-lamigra/patricia-2_05.png');
     img1 = loadImage('img-lamigra/patricia-2_06.png');
-    patricialamachona.addAnimation('up', img0, img0, img1, img1);
-    img0 = loadImage('img-lamigra/patricia-2_07.png');
-    img1 = loadImage('img-lamigra/patricia-2_08.png');
-    patricialamachona.addAnimation('left', img1, img1, img0, img0);
+    patricialamachona.addAnimation('up', img0, img1, img0);
+    img1 = loadImage('img-lamigra/patricia-2_07.png');
+    img0 = loadImage('img-lamigra/patricia-2_08.png');
+    patricialamachona.addAnimation('left', img0, img1, img0);
     img0 = loadImage('img-lamigra/patricia-2_11.png');
     img1 = loadImage('img-lamigra/patricia-2_12.png');
-    patricialamachona.addAnimation('caught down', img0, img0, img1, img1);
+    patricialamachona.addAnimation('caught down', img0, img1, img0);
     img0 = loadImage('img-lamigra/patricia-2_12.png');
     img1 = loadImage('img-lamigra/patricia-2_13.png');
-    patricialamachona.addAnimation('caught right', img0, img0, img1, img1);
+    patricialamachona.addAnimation('caught right', img0, img1, img0);
     img0 = loadImage('img-lamigra/patricia-2_09.png');
-    patricialamachona.addAnimation('caught jump', img0, img0, img0, img0);
+    patricialamachona.addAnimation('caught jump', img0, img0, img0);
     img1 = loadImage('img-lamigra/patricia-2_10.png');
-    patricialamachona.addAnimation('muerto', img0, img0, img1, img1);
+    patricialamachona.addAnimation('muerto', img0, img1, img1);
     patricialamachona.changeAnimation('down');
     patricialamachona.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     patricialamachona.debug = DRAW_COLLIDER; // set the debug flag
@@ -1235,26 +1205,27 @@ function preload() {
     puercoespin.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/porcupine_01.png');
     img1 = loadImage('img-lamigra/porcupine_02.png');
-    puercoespin.addAnimation('down', img0, img0, img1, img1);
+    puercoespin.addAnimation('idle', img0);
+    puercoespin.addAnimation('down', img0, img1, img0);
     img0 = loadImage('img-lamigra/porcupine_03.png');
     img1 = loadImage('img-lamigra/porcupine_04.png');
-    puercoespin.addAnimation('right', img0, img0, img1, img1);
+    puercoespin.addAnimation('right', img0, img1, img0);
     img0 = loadImage('img-lamigra/porcupine_05.png');
     img1 = loadImage('img-lamigra/porcupine_06.png');
-    puercoespin.addAnimation('left', img0, img0, img1, img1);
+    puercoespin.addAnimation('left', img0, img1, img0);
     img0 = loadImage('img-lamigra/porcupine_07.png');
     img1 = loadImage('img-lamigra/porcupine_08.png');
-    puercoespin.addAnimation('up', img0, img0, img1, img1);
-    img0 = loadImage('img-lamigra/porcupine_16.png');
+    puercoespin.addAnimation('up', img0, img1, img0);
     img1 = loadImage('img-lamigra/porcupine_15.png');
-    puercoespin.addAnimation('caught down', img0, img0, img1, img1);
+    img0 = loadImage('img-lamigra/porcupine_16.png');
+    puercoespin.addAnimation('caught down', img0, img1, img0);
     img0 = loadImage('img-lamigra/porcupine_15.png');
     img1 = loadImage('img-lamigra/porcupine_17.png');
-    puercoespin.addAnimation('caught right', img0, img0, img1, img1);
+    puercoespin.addAnimation('caught right', img0, img1, img0);
     img0 = loadImage('img-lamigra/porcupine_13.png');
-    puercoespin.addAnimation('caught jump', img0, img0, img0, img0);
+    puercoespin.addAnimation('caught jump', img0, img0, img0);
     img1 = loadImage('img-lamigra/porcupine_14.png');
-    puercoespin.addAnimation('muerto', img0, img0, img1, img1);
+    puercoespin.addAnimation('muerto', img0, img1, img1);
     puercoespin.changeAnimation('down');
     puercoespin.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     puercoespin.debug = DRAW_COLLIDER; // set the debug flag
@@ -1272,26 +1243,27 @@ function preload() {
     xrodar.spriteId = spriteId++;
     img0 = loadImage('img-lamigra/X-rodar-3_01.png');
     img1 = loadImage('img-lamigra/X-rodar-3_02.png');
-    xrodar.addAnimation('down', img0, img0, img1, img1);
+    xrodar.addAnimation('idle', img0);
+    xrodar.addAnimation('down', img0, img1, img0);
     img0 = loadImage('img-lamigra/X-rodar-3_03.png');
     img1 = loadImage('img-lamigra/X-rodar-3_04.png');
-    xrodar.addAnimation('right', img0, img0, img1, img1);
+    xrodar.addAnimation('right', img0, img1, img0);
     img0 = loadImage('img-lamigra/X-rodar-3_05.png');
     img1 = loadImage('img-lamigra/X-rodar-3_06.png');
-    xrodar.addAnimation('left', img0, img0, img1, img1);
+    xrodar.addAnimation('left', img0, img1, img0);
     img0 = loadImage('img-lamigra/X-rodar-3_07.png');
     img1 = loadImage('img-lamigra/X-rodar-3_08.png');
-    xrodar.addAnimation('up', img0, img0, img1, img1);
+    xrodar.addAnimation('up', img0, img1, img0);
     img0 = loadImage('img-lamigra/X-rodar-3_11.png');
     img1 = loadImage('img-lamigra/X-rodar-3_12.png');
-    xrodar.addAnimation('caught down', img0, img0, img1, img1); // resolved - one frame has white pixels
+    xrodar.addAnimation('caught down', img0, img1, img0); // resolved - one frame has white pixels
     img0 = loadImage('img-lamigra/X-rodar-3_12.png');
     img1 = loadImage('img-lamigra/X-rodar-3_13.png');
-    xrodar.addAnimation('caught right', img0, img0, img1, img1);
+    xrodar.addAnimation('caught right', img0, img1, img0);
     img0 = loadImage('img-lamigra/X-rodar-3_09.png');
-    xrodar.addAnimation('caught jump', img0, img0, img0, img0); // resolved - image is not transparent
+    xrodar.addAnimation('caught jump', img0, img0, img0); // resolved - image is not transparent
     img1 = loadImage('img-lamigra/X-rodar-3_10-copy-b.png');
-    xrodar.addAnimation('muerto', img0, img0, img1, img1); // resolved - image is not transparent
+    xrodar.addAnimation('muerto', img0, img1, img1); // resolved - image is not transparent
     xrodar.changeAnimation('down');
     xrodar.setCollider('rectangle', 0, 0, 30, 62); // set a collision box two pixels smaller than sprite
     xrodar.debug = DRAW_COLLIDER; // set the debug flag
@@ -1325,7 +1297,7 @@ function preload() {
     img0 = loadImage('img-lamigra/gates3AAA.png');
     img1 = loadImage('img-lamigra/gates3BB.png');
     deportacioncenter.addImage('gate', img0);
-    deportacioncenter.addAnimation('gate activated', img1, img1, img1, img1, img0);
+    deportacioncenter.addAnimation('gate activated', img1, img1, img1, img0);
     //deportacioncenter.changeAnimation('gate activated'); // will change, activated for testing purposes during development
     deportacioncenter.setCollider('rectangle', 0, 16, 28, 56);
     deportacioncenter.debug = DRAW_COLLIDER; // set the debug flag
@@ -1432,7 +1404,7 @@ function setup() {
     // noCursor(); // testing cursor manipulation
     cursor(HAND); // params = HAND, ARROW, CROSS, MOVE, TEXT, WAIT
     //
-    frameRate(30);
+    frameRate(FRAME_RATE);
     background(128);
     cuffs = new Group(); // a group of esposas-like sprites
 
@@ -1474,7 +1446,7 @@ function draw() {
             // statements that display gameplay
 
             // update what we're rendering and how frequently
-            updateRendering(renderQueue, renderTime);
+            updateRendering(renderQueue, RENDER_TIME);
 
             // check if we're winning or losing at this point
             checkWinLose();
@@ -1555,16 +1527,16 @@ function draw() {
         text('Press START to play', 140, 512);
     }
     if (gameState === 'win') {
-      fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
-      textSize(14);
-      text('Press START to play again', 120, 500);
-      text('Or press SELECT to choose', 120, 520);
+        fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
+        textSize(14);
+        text('Press START to play again', 120, 500);
+        text('Or press SELECT to choose', 120, 520);
     }
     if (gameState === 'lose') {
-      fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
-      textSize(14);
-      text('Press START to try again', 120, 500);
-      text('Or press SELECT to choose', 120, 520);
+        fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
+        textSize(14);
+        text('Press START to try again', 120, 500);
+        text('Or press SELECT to choose', 120, 520);
     }
 } // end of draw()
 
@@ -1577,7 +1549,7 @@ function draw() {
 function checkWinLose() {
     if (catchCount >= WINNING_CATCH_COUNT)
         gameState = 'win';
-    else if (escapeCount >= LOSING_ESCAPE_COUNT + 10)
+    else if (escapeCount >= LOSING_ESCAPE_COUNT)
         gameState = 'lose';
 }
 
@@ -1622,7 +1594,11 @@ function keyReleased() {
         window.open(url, "_self");
     }
     if ((key === 'h') || (key === 'H')) { // h on most keyboards using here as start the selected choice
-        window.open(url1, '_self')
+        if (gameState === 'startup')
+            gameState = 'play'
+        else
+            window.open(url1, '_self')
+
     }
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
