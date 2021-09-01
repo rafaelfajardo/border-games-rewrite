@@ -99,3 +99,8 @@ ul {
     margin: 0;
     border: 0px solid #0000FF;
   }
+img.bottom{
+  position: absolute;
+  left: 1200px;
+  top: 700px;
+}
