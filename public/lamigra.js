@@ -1,3 +1,4 @@
+'use strict';
 /* * * * * * * * * * * * * * * *
  *
  *		This is a rewriting/remediation of Crosser (2000 a.c.e.)
@@ -583,7 +584,6 @@ function checkRepatriationCenter(bureaucracy) {
  * @param {A queue of sprites to render} queue
  * @param {How long we spend at each sprite drawing} timing
  */
-let frameCount = 0;
 function updateRendering(queue, timing) {
     // frameCount++;
     // let rate = frameCount / (millis() / 1000);
@@ -1611,10 +1611,10 @@ function draw() {
         text('Press START to play', 140, 512);
     }
     if (gameState === 'win') {
-      fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
-      textSize(14);
-      text('Press START to play again', 120, 500);
-      text('Or press SELECT to choose', 120, 520);
+        fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
+        textSize(14);
+        text('Press START to play again', 120, 500);
+        text('Or press SELECT to choose', 120, 520);
     }
     if (gameState === 'lose') {
         fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
