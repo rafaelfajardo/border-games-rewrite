@@ -1557,7 +1557,7 @@ function draw() {
     if (gameState === 'win') {
       fill(128 + sin(frameCount * 0.1) * 128, 128 + cos(frameCount * 0.1) * 128, 128 + sin(frameCount * 0.1) * 128);
       textSize(14);
-      text('Press START to play again', 120, 400);
+      text('Press START to play again', 120, 500);
       text('Or press SELECT to choose', 120, 520);
     }
     if (gameState === 'lose') {

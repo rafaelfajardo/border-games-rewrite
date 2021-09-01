@@ -486,4 +486,14 @@ I believe that 1280 x 720 is the sweet spot for our purposes.
 
 1280 x 3 = 3840
 720 x 3 = 2160
+
+======
+2021 09 01
+Chris finished the code for crosser.js on 2021 08 27, and for lamigra.js on 2021 08 31. We celebrated with tacos at Tacos El Metate on University Ave. before testing the install requirements on a windows 10 device in his office at DU. Along the way he also made sure that main.js had gamepad controller code that worked consistently with the other two files. I worked on the idle animation for main.js and tweaked instruction lines. I communicated with Eric and Cordelia that the games are open for beta testing online at http://sudor.org/betatest . I'm wondering what I might have missed in the CSS that could improve how everything looks. I'm also wondering how much time it would take to remaster or upsample the artwork so that it's nominally 4K resolution. There are some places in the code where we use explicit x and y values and so those would break.
+
+I've continued to move cruft from the /public directory. Cruft is the term of art for the accreta of programming iteratively. Cruft is the sedimentary silt that settles in the code. I'm using it to talk about the lines of code that are commented out and superceded by other lines. They are artworks that we don't actually use sitting in the directories on the server.
+
+Chris is going to try and figure out how to refine a couple of the animations in lamigra.js. The car doesn't show us all the frames. And neither do the cuffs. He got to a point last night where he broke something and so decided to step back and try again today. I'm going to see what I might be able to do that's useful.
+
+======
 */
