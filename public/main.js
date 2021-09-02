@@ -127,7 +127,7 @@ function draw(){
     // add a delay to how frequently we poll input
     const currentTime = millis() / 1000;
     if (currentTime >= nextInputAfter) {
-      console.log('scanning input');
+      //console.log('scanning input');
       // experimental code for gamepad
       scanGamePads();
       //let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
@@ -181,7 +181,7 @@ function mouseClicked(){
 function updateStatus(pad){  // tested once per frame
 
   // list out the buttons
-  console.log('pad name is: ' + pad.id);
+  //console.log('pad name is: ' + pad.id);
   listButtons(pad);
   /**
    *  This bit is specific to an NES style controller,
@@ -201,12 +201,12 @@ function updateStatus(pad){  // tested once per frame
   let exleneID = /Vendor\: 0079 Product\: 0011/;
 
 	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
-    	if (pad.axes[0] === -1.00000){print('NES d-pad left pressed'); } // NES d-pad left
-    	if (pad.axes[0] ===  1.00000){print('NES d-pad right pressed'); } // NES d-pad right
-    	if (pad.axes[1] === -1.00000){print('NES d-pad up pressed'); } // NES d-pad up
-    	if (pad.axes[1] ===  1.00000){print('NES d-pad down pressed'); } // NES d-pad down
-    	if (pad.buttons[0].value === 1.00){ print('NES B button pressed'); } // NES B button
-    	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
+    	if (pad.axes[0] === -1.00000){}// print('NES d-pad left pressed'); } // NES d-pad left
+    	if (pad.axes[0] ===  1.00000){}//print('NES d-pad right pressed'); } // NES d-pad right
+    	if (pad.axes[1] === -1.00000){}//print('NES d-pad up pressed'); } // NES d-pad up
+    	if (pad.axes[1] ===  1.00000){}//print('NES d-pad down pressed'); } // NES d-pad down
+    	if (pad.buttons[0].value === 1.00){}//print('NES B button pressed'); } // NES B button
+    	if (pad.buttons[1].value === 1.00){}// print('NES A button pressed'); } // NES A button
       // does not have buttons 2-7 inclusive
 
     	if (isButtonReleased(0, 8)) {
@@ -425,10 +425,16 @@ let lastControllers = []
 let controllers = []
 
 function listButtons(pad) {
-  if (pad.buttons) {
-    for (var i; i < pad.buttons.length; i++) {
-      console.log('button[' + i + '].value = ' + pad.buttons[i].value);
-    }
+  console.log('pad.axes.length is ' + pad.axes.length)
+  for (var i = 0; i < pad.axes.length; i++) {
+      console.log('axis[' + i + '] is ' + pad.axes[i]);
+  }
+  //console.log('pad buttons are: ' + pad.buttons)
+  for (var i = 0; i < pad.buttons.length; i++) {
+    if (pad.buttons[i].value > 0 || pad.buttons[i].pressed == true)
+      console.log('button[' + i + '] is pressed');
+    else 
+      console.log('button[' + i + '] is NOT pressed');  
   }
 }
 
