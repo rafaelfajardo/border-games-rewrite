@@ -1678,17 +1678,17 @@ function updateStatus(pad) {
             addInput(inputQueue, 'left');
         }
     }
-    if (isButtonPressed(pad.index, BUTTON_DPAD_RIGHT) || pad.axes[1] === 1.0) {  // check that we're in play state
+    if (isButtonPressed(pad.index, BUTTON_DPAD_RIGHT) || pad.axes[0] === 1.0) {  // check that we're in play state
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
             addInput(inputQueue, 'right');
         }
     }
     // accept any of the gamepad buttons
-    if  (isButtonReleased(pad.index, BUTTON_A) ||
-            isButtonReleased(pad.index, BUTTON_B) ||
-            isButtonPressed(pad.index, BUTTON_X) ||
-            isButtonPressed(pad.index, BUTTON_Y)) {
+    if (isButtonReleased(pad.index, BUTTON_A) ||
+        isButtonReleased(pad.index, BUTTON_B) ||
+        isButtonPressed(pad.index, BUTTON_X) ||
+        isButtonPressed(pad.index, BUTTON_Y)) {
         // print('NES A button pressed');
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
@@ -1738,13 +1738,13 @@ const BUTTON_DPAD_DOWN = 13;
  * @param {ID for a given button} buttonId 
  * @returns true if the button is currently pressed, false otherwise
  */
- function isButtonPressed(ctrlId, buttonId) {
+function isButtonPressed(ctrlId, buttonId) {
     if (controllers[ctrlId].buttons[buttonId]) {
         let val = controllers[ctrlId].buttons[buttonId].value;
         let pressed = controllers[ctrlId].buttons[buttonId].pressed;
         return (val > 0 || pressed == true);
     }
-    
+
     return false;
 }
 
