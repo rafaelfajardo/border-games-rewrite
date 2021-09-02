@@ -593,7 +593,7 @@ function updateRendering(queue, timing) {
     // this returns true if we have another frame, false otherwise
     if (!manuallyAnimate(sprite, sprite.animation.looping)) {
         nextIdx = getNextIndex(renderQueue, currentIndex);
-        console.log('next index is ' + nextIdx)
+        //console.log('next index is ' + nextIdx)
         updateSprite(sprite)
     }
 
@@ -1509,6 +1509,9 @@ function draw() {
             //console.log('pad0 is active');
             // now update the game with the status of the game pad
             updateStatus(pad0); // will need an updateStatus() function
+
+            // now cache the last controller status
+            cacheControllers();
         } else { // what to do if pad0 is null, which is to say there is no gamepad connected
             // use keyboard
             // or use touches
@@ -1669,30 +1672,29 @@ function updateStatus(pad) {
     // get the current time
     const currentTime = millis() / 1000;
 
-    if (isButtonPressed(pad.index, BUTTON_DPAD_LEFT)) {	// check that we're in play state
+    if (isButtonPressed(pad.index, BUTTON_DPAD_LEFT) || pad.axes[0] === -1.0) {	// check that we're in play state
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
             addInput(inputQueue, 'left');
         }
     }
-    if (isButtonPressed(pad.index, BUTTON_DPAD_RIGHT)) {  // check that we're in play state
+    if (isButtonPressed(pad.index, BUTTON_DPAD_RIGHT) || pad.axes[1] === 1.0) {  // check that we're in play state
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
             addInput(inputQueue, 'right');
         }
     }
     // accept any of the gamepad buttons
-    if (aButtonReleased && 
-        (isButtonPressed(pad.index, BUTTON_A) ||
-         isButtonPressed(pad.index, BUTTON_B) ||
-         isButtonPressed(pad.index, BUTTON_X) ||
-         isButtonPressed(pad.index, BUTTON_Y))) {
+    if  (isButtonReleased(pad.index, BUTTON_A) ||
+            isButtonReleased(pad.index, BUTTON_B) ||
+            isButtonPressed(pad.index, BUTTON_X) ||
+            isButtonPressed(pad.index, BUTTON_Y)) {
         // print('NES A button pressed');
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
             addInput(inputQueue, 'esposas');
             // record that we've pressed it so that it must be released to press again
-            aButtonReleased = false;
+            console.log('Button A, B, X, or Y released');
         }
     } // NES A button
     // does not have buttons 2-7 inclusive
@@ -1709,11 +1711,6 @@ function updateStatus(pad) {
         } else {
             window.open(url1, "_self");
         }
-    }
-
-    if (isButtonReleased(0, 1)) {
-        console.log('NES A button released');
-        aButtonReleased = true;
     }
 }
 
@@ -1824,6 +1821,7 @@ function copyPad(pad) {
     for (var i = 0; i < pad.buttons.length; i++) {
         p.buttons.push({})
         p.buttons[i].value = pad.buttons[i].value;
+        p.buttons[i].pressed = pad.buttons[i].pressed;
     }
     return p;
 }
@@ -1832,7 +1830,7 @@ function copyPad(pad) {
  * Copies our controllers to lastControllers by doing a slightly deep copy of
  * the button states so that we can look for button releases later
  */
-function copyControllers() {
+function cacheControllers() {
     lastControllers = [];
     lastControllers.length = controllers.length;
     for (var i = 0; i < controllers.length; i++) {
@@ -1854,8 +1852,6 @@ function scanGamePads() {
 
     // make sure our controllers object has a length property
     controllers.length = gamepads.length;
-    // now do the slightly deep copy of the set of controllers
-    copyControllers();
     for (var i = 0; i < gamepads.length; i++) {
         if (gamepads[i]) {
             if (gamepads[i].index in controllers) {

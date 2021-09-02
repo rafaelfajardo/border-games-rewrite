@@ -133,8 +133,9 @@ function draw(){
       //let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
       let pad0 = controllers[0]; // limit to first pad connected
       if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
-        console.log('pad0 is active');
+        //console.log('pad0 is active');
         updateStatus(pad0); // will need an updateStatus() function
+        cacheControllers();
       } else { // what to do if pad0 is null, which is to say there is no gamepad connected
         // use keyboard
         // or use touches
@@ -188,8 +189,8 @@ const innextID = /Vendor\: 0079 Product\: 0011/;
 function updateStatus(pad) {  // tested once per frame
 
     // list out the buttons
-    console.log('pad name is: ' + pad.id);
-    listButtons(pad);
+    //console.log('pad name is: ' + pad.id);
+    //listButtons(pad);
     /**
      *  This bit is specific to an NES style controller,
      *  usb gamepad (Vendor: 0810 Product: e501)
@@ -214,7 +215,7 @@ function updateStatus(pad) {  // tested once per frame
     //   	if (pad.buttons[1].value === 1.00){}// print('NES A button pressed'); } // NES A button
     //     // does not have buttons 2-7 inclusive
 
-    if (isButtonReleased(pad.index, BUTTON_SELECT)) {
+    if (isButtonReleased(0, BUTTON_SELECT)) {
         if (ctr0 % 2 === 0){
             btn1.changeAnimation('off');
             btn2.changeAnimation('select');
@@ -225,7 +226,8 @@ function updateStatus(pad) {  // tested once per frame
         ctr0 = ctr0 +1;
         print('NES Select pressed'); 
     } // NES Select button
-    if (isButtonReleased(pad.index, BUTTON_START)) {
+
+    if (isButtonReleased(0, BUTTON_START)) {
         if (ctr0 % 2 === 0){
             btn1.changeAnimation('off');
             btn2.changeAnimation('blink');
@@ -484,20 +486,29 @@ const BUTTON_DPAD_DOWN = 13;
  */
 function isButtonReleased(ctrlId, buttonId)
 {
-	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId]) {
-		let val = controllers[ctrlId].buttons[buttonId].value;
-		let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
+	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId] != undefined) {
+		let val =         controllers[ctrlId].buttons[buttonId].value;
+        let lastVal =     lastControllers[ctrlId].buttons[buttonId].value;
+        let pressed =     controllers[ctrlId].buttons[buttonId].pressed;
+        let lastPressed = lastControllers[ctrlId].buttons[buttonId].pressed;
 		// console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
 		// console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
 		// if the current val is 0, the button is no longer pressed, and if the last value is
 		// 1, then it was pressed during the last read--this lets us know that it was a released button
-		if (val === 0.0 && lastVal === 1.0) {
-			console.log('key released: ' + buttonId)
+		if ((val === 0.0 && lastVal > 0.0) ||
+            (!pressed && lastPressed)) {
 			return true
 		} else {
 			return false
 		}
-	}
+	} else { 
+        if (!lastControllers[ctrlId]) 
+            console.error('no matching last controller');
+
+        else if (!lastControllers[ctrlId].buttons[buttonId]) {
+            console.error ('no matching button Id' + buttonId + ' on controller ' + ctrlId)
+        }
+    }
 
 	return false
 }
@@ -543,12 +554,22 @@ function removeGamePad(gamepad) {
  * @returns
  */
 function copyPad(pad) {
+    
 	var p = {};
 	p.buttons = [];
-	for (var i = 0; i < pad.buttons.length; i++)
+	for (var i = 0; i <= 16; i++)
 	{
 		p.buttons.push({})
-		p.buttons[i].value = pad.buttons[i].value;
+    }
+
+    for (var i = 0; i <= 16; i++) {
+        // if (p.buttons[i] != undefined) {
+		//     p.buttons[i].value = (pad.buttons[i] != undefined ? pad.buttons[i].value : 0);
+        //     p.buttons[i].pressed = (pad.buttons[i] != undefined ? pad.buttons[i].pressed : false);
+        // }
+        p.buttons[i].value = (pad.buttons[i] != undefined) ? pad.buttons[i].value : 0;
+        p.buttons[i].pressed = (pad.buttons[i] != undefined) ? pad.buttons[i].pressed : false;
+
 	}
 	return p;
 }
@@ -557,7 +578,7 @@ function copyPad(pad) {
  * Copies our controllers to lastControllers by doing a slightly deep copy of
  * the button states so that we can look for button releases later
  */
-function copyControllers() {
+function cacheControllers() {
 	lastControllers = [];
 	lastControllers.length = controllers.length;
 	for (var i = 0; i < controllers.length; i++)
@@ -580,8 +601,7 @@ function scanGamePads() {
 
 	// make sure our controllers object has a length property
     controllers.length = gamepads.length;
-	// now do the slightly deep copy of the set of controllers
-	copyControllers();
+
 	for (var i = 0; i < gamepads.length; i++)
 	{
 		if (gamepads[i])

@@ -673,7 +673,7 @@ function preload() {
 // this is the input delay for reading input--during this delay, we stop reading input, after it's
 // elapsed, we'll start reading input again. The delay should only be set after some input has been
 // read
-const INPUT_DELAY = .5;
+let INPUT_DELAY = .25;
 let readInputAfter = 0;
 /**
  * SETUP function
@@ -768,12 +768,14 @@ function draw() {
             // statements to display the startup condition
             tierra.changeImage('asarco');
             tierra.depth = 100;
+            INPUT_DELAY = .1;
             //laMigra.visible = false;
             // statements that may alter gamestate label and condition
             break;
         case "play":
             tierra.changeImage('frontera');
             tierra.depth = 0;
+            INPUT_DELAY = .25;
             // statements that display gameplay
             break;
         case "lose":
@@ -836,6 +838,9 @@ function draw() {
             console.log('pad0 is active');
             // now update the game with the status of the game pad
             updateStatus(pad0); // will need an updateStatus() function
+
+            // now cache the last controller status
+            cacheControllers();
         } else { // what to do if pad0 is null, which is to say there is no gamepad connected
             // use keyboard
             // or use touches
@@ -1199,6 +1204,8 @@ function copyPad(pad) {
     for (var i = 0; i < pad.buttons.length; i++) {
         p.buttons.push({})
         p.buttons[i].value = pad.buttons[i].value;
+        p.buttons[i].pressed = pad.buttons[i].pressed;
+
     }
     return p;
 }
@@ -1207,7 +1214,7 @@ function copyPad(pad) {
  * Copies our controllers to lastControllers by doing a slightly deep copy of
  * the button states so that we can look for button releases later
  */
-function copyControllers() {
+function cacheControllers() {
     lastControllers = [];
     lastControllers.length = controllers.length;
     for (var i = 0; i < controllers.length; i++) {
@@ -1229,8 +1236,6 @@ function scanGamePads() {
 
     // make sure our controllers object has a length property
     controllers.length = gamepads.length;
-    // now do the slightly deep copy of the set of controllers
-    copyControllers();
     for (var i = 0; i < gamepads.length; i++) {
         if (gamepads[i]) {
             if (gamepads[i].index in controllers) {
