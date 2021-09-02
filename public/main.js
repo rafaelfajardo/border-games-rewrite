@@ -178,60 +178,66 @@ function mouseClicked(){
 }
 */
 
-function updateStatus(pad){  // tested once per frame
 
-  // list out the buttons
-  //console.log('pad name is: ' + pad.id);
-  listButtons(pad);
-  /**
-   *  This bit is specific to an NES style controller,
-   *  usb gamepad (Vendor: 0810 Product: e501)
-   *  axis default values are -0.00392 so can test for greater and less than that.
-   *  need a test to enclose it
-   */
+const nintendoId = /Vendor\: 0810 Product\: e501/;
+const suilyId = /Vender\: 0079 Product\: 0011/;
+const buffaloID = /Vendor\: 0583 Product\: 2060/;
+const exleneID = /Vendor\: 0079 Product\: 0011/;
+const innextID = /Vendor\: 0079 Product\: 0011/;
+  
+function updateStatus(pad) {  // tested once per frame
+
+    // list out the buttons
+    console.log('pad name is: ' + pad.id);
+    listButtons(pad);
+    /**
+     *  This bit is specific to an NES style controller,
+     *  usb gamepad (Vendor: 0810 Product: e501)
+     *  axis default values are -0.00392 so can test for greater and less than that.
+     *  need a test to enclose it
+     */
 
 
 
-  /*
-   * Regular expressions to search the ID string given to us by the manufacturer
-   * so that we can identify which controller is which and behave accordingly.
-   */
-  let nintendoId = /Vendor\: 0810 Product\: e501/;
-  let standardID = /Vendor\: 0583 Product\: 2060/;
-  let exleneID = /Vendor\: 0079 Product\: 0011/;
+    /*
+    * Regular expressions to search the ID string given to us by the manufacturer
+    * so that we can identify which controller is which and behave accordingly.
+    */
+  
 
-	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
-    	if (pad.axes[0] === -1.00000){}// print('NES d-pad left pressed'); } // NES d-pad left
-    	if (pad.axes[0] ===  1.00000){}//print('NES d-pad right pressed'); } // NES d-pad right
-    	if (pad.axes[1] === -1.00000){}//print('NES d-pad up pressed'); } // NES d-pad up
-    	if (pad.axes[1] ===  1.00000){}//print('NES d-pad down pressed'); } // NES d-pad down
-    	if (pad.buttons[0].value === 1.00){}//print('NES B button pressed'); } // NES B button
-    	if (pad.buttons[1].value === 1.00){}// print('NES A button pressed'); } // NES A button
-      // does not have buttons 2-7 inclusive
+	// if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
+    //   	if (pad.axes[0] === -1.00000){}// print('NES d-pad left pressed'); } // NES d-pad left
+    //   	if (pad.axes[0] ===  1.00000){}//print('NES d-pad right pressed'); } // NES d-pad right
+    //   	if (pad.axes[1] === -1.00000){}//print('NES d-pad up pressed'); } // NES d-pad up
+    //   	if (pad.axes[1] ===  1.00000){}//print('NES d-pad down pressed'); } // NES d-pad down
+    //   	if (pad.buttons[0].value === 1.00){}//print('NES B button pressed'); } // NES B button
+    //   	if (pad.buttons[1].value === 1.00){}// print('NES A button pressed'); } // NES A button
+    //     // does not have buttons 2-7 inclusive
 
-    	if (isButtonReleased(0, 8)) {
+    if (isButtonReleased(pad.index, BUTTON_SELECT)) {
         if (ctr0 % 2 === 0){
-          btn1.changeAnimation('off');
-          btn2.changeAnimation('select');
+            btn1.changeAnimation('off');
+            btn2.changeAnimation('select');
         } else if (ctr0 % 2 === 1) {
-          btn1.changeAnimation('select');
-          btn2.changeAnimation('off');
+            btn1.changeAnimation('select');
+            btn2.changeAnimation('off');
         }
         ctr0 = ctr0 +1;
-        print('NES Select pressed'); } // NES Select button
-      if (isButtonReleased(0, 9)) {
+        print('NES Select pressed'); 
+    } // NES Select button
+    if (isButtonReleased(pad.index, BUTTON_START)) {
         if (ctr0 % 2 === 0){
-          btn1.changeAnimation('off');
-          btn2.changeAnimation('blink');
-          window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+            btn1.changeAnimation('off');
+            btn2.changeAnimation('blink');
+            window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
         }
         else if (ctr0 % 2 === 1){
-          btn1.changeAnimation('blink');
-          btn2.changeAnimation('off');
-          window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+            btn1.changeAnimation('blink');
+            btn2.changeAnimation('off');
+            window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
         }
-        print('NES Start pressed'); } // NES Start button
-  }
+        print('NES Start pressed'); 
+    } // NES Start button
 
   /*
    *  This bit is specific to the Buffalo SNES style controller,
@@ -439,6 +445,31 @@ function listButtons(pad) {
         console.log('button[' + i + '] is NOT pressed');  
     }
   }
+}
+
+const BUTTON_B = 0;
+const BUTTON_A = 1;
+const BUTTON_Y = 2;
+const BUTTON_X = 3;
+
+const BUTTON_SELECT = 8;
+const BUTTON_START = 9;
+const BUTTON_DPAD_LEFT = 14;
+const BUTTON_DPAD_RIGHT = 15;
+const BUTTON_DPAD_UP = 12;
+const BUTTON_DPAD_DOWN = 13;
+
+/**
+ * Checks to see if a controller's button is currently pressed
+ * @param {Controller ID we're looking at} ctrlId 
+ * @param {ID for a given button} buttonId 
+ * @returns true if the button is currently pressed, false otherwise
+ */
+function isButtonPressed(ctrlId, buttonId) {
+  let val = controllers[ctrlId].buttons[buttonId].value;
+  let pressed = controllers[ctrlId].buttons[buttonId].pressed;
+
+  return (val > 0 || pressed == true);
 }
 
 /**
