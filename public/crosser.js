@@ -907,26 +907,26 @@ function updateStatus(pad) { // tested once per frame
 
     // if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
 
-    if (isButtonPressed(pad.index, BUTTON_DPAD_LEFT)) {	// check that we're in play state
+    if (isButtonPressed(pad.index, BUTTON_DPAD_LEFT) || pad.axes[0] === -1.0) {	// check that we're in play state
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
             addInput(inputQueue, 'left');
         }
     }
-    if (isButtonPressed(pad.index, BUTTON_DPAD_RIGHT)) {  // check that we're in play state
+    if (isButtonPressed(pad.index, BUTTON_DPAD_RIGHT) || pad.axes[0] === 1.0) {  // check that we're in play state
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
             addInput(inputQueue, 'right');
         }
     }
-    if (isButtonPressed(pad.index, BUTTON_DPAD_UP)) {
+    if (isButtonPressed(pad.index, BUTTON_DPAD_UP) || pad.axes[1] === -1.0) {
         // check that we're in play state
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
             addInput(inputQueue, 'up');
         }
     }
-    if (isButtonPressed(pad.index, BUTTON_DPAD_DOWN)) {
+    if (isButtonPressed(pad.index, BUTTON_DPAD_DOWN) || pad.axes[1] === 1.0) {
         // check that we're in play state
         if (gameState === 'play') {
             readInputAfter = currentTime + INPUT_DELAY;
