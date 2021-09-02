@@ -430,11 +430,14 @@ function listButtons(pad) {
       console.log('axis[' + i + '] is ' + pad.axes[i]);
   }
   //console.log('pad buttons are: ' + pad.buttons)
-  for (var i = 0; i < pad.buttons.length; i++) {
-    if (pad.buttons[i].value > 0 || pad.buttons[i].pressed == true)
-      console.log('button[' + i + '] is pressed');
-    else 
-      console.log('button[' + i + '] is NOT pressed');  
+  // max of 16 buttons
+  for (var i = 0; i <= 16; i++) {
+    if (pad.buttons[i]) {
+      if (pad.buttons[i].value > 0 || pad.buttons[i].pressed == true)
+        console.log('button[' + i + '] is pressed');
+      else 
+        console.log('button[' + i + '] is NOT pressed');  
+    }
   }
 }
 
