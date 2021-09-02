@@ -1742,11 +1742,14 @@ const BUTTON_DPAD_DOWN = 13;
  * @returns true if the button is currently pressed, false otherwise
  */
  function isButtonPressed(ctrlId, buttonId) {
-    let val = controllers[ctrlId].buttons[buttonId].value;
-    let pressed = controllers[ctrlId].buttons[buttonId].pressed;
-  
-    return (val > 0 || pressed == true);
-  }
+    if (controllers[ctrlId].buttons[buttonId]) {
+        let val = controllers[ctrlId].buttons[buttonId].value;
+        let pressed = controllers[ctrlId].buttons[buttonId].pressed;
+        return (val > 0 || pressed == true);
+    }
+    
+    return false;
+}
 
 
 /**

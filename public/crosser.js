@@ -1123,7 +1123,7 @@ const BUTTON_DPAD_DOWN = 13;
     }
     
     return false;
-  }
+}
   
 
 
