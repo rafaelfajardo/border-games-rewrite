@@ -180,6 +180,9 @@ function mouseClicked(){
 
 function updateStatus(pad){  // tested once per frame
 
+  // list out the buttons
+  console.log('pad name is: ' + pad.id)
+  listButtons(pad);
   /**
    *  This bit is specific to an NES style controller,
    *  usb gamepad (Vendor: 0810 Product: e501)
@@ -417,9 +420,19 @@ function keyReleased() {
 } // end keyReleased(). pad0 buttons[8] and buttons[9] will also use above
 
 
+function listButtons()
+
 // Code to deal with game pads
 let lastControllers = []
 let controllers = []
+
+function listButtons(pad) {
+  if (pad.buttons) {
+    for (var i; i < pad.buttons.length; i++) {
+      console.log('button[' + i + '].value = ' + pad.buttons[i].value);
+    }
+  }
+}
 
 /**
  * checks two things: controllers and lastControllers, if the button was
