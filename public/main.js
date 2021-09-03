@@ -127,14 +127,15 @@ function draw(){
     // add a delay to how frequently we poll input
     const currentTime = millis() / 1000;
     if (currentTime >= nextInputAfter) {
-      console.log('scanning input');
+      //console.log('scanning input');
       // experimental code for gamepad
       scanGamePads();
       //let pads = navigator.getGamepads(); // this samples the gamepad once per frame and is core HTML5/JavaScript
       let pad0 = controllers[0]; // limit to first pad connected
       if (pad0) { // this is an unfamiliar construction I think it test that pad0 is not null
-        console.log('pad0 is active');
+        //console.log('pad0 is active');
         updateStatus(pad0); // will need an updateStatus() function
+        cacheControllers();
       } else { // what to do if pad0 is null, which is to say there is no gamepad connected
         // use keyboard
         // or use touches
@@ -178,57 +179,67 @@ function mouseClicked(){
 }
 */
 
-function updateStatus(pad){  // tested once per frame
 
-  /**
-   *  This bit is specific to an NES style controller,
-   *  usb gamepad (Vendor: 0810 Product: e501)
-   *  axis default values are -0.00392 so can test for greater and less than that.
-   *  need a test to enclose it
-   */
+const nintendoId = /Vendor\: 0810 Product\: e501/;
+const suilyId = /Vender\: 0079 Product\: 0011/;
+const buffaloID = /Vendor\: 0583 Product\: 2060/;
+const exleneID = /Vendor\: 0079 Product\: 0011/;
+const innextID = /Vendor\: 0079 Product\: 0011/;
+  
+function updateStatus(pad) {  // tested once per frame
+
+    // list out the buttons
+    //console.log('pad name is: ' + pad.id);
+    //listButtons(pad);
+    /**
+     *  This bit is specific to an NES style controller,
+     *  usb gamepad (Vendor: 0810 Product: e501)
+     *  axis default values are -0.00392 so can test for greater and less than that.
+     *  need a test to enclose it
+     */
 
 
 
-  /*
-   * Regular expressions to search the ID string given to us by the manufacturer
-   * so that we can identify which controller is which and behave accordingly.
-   */
-  let nintendoId = /Vendor\: 0810 Product\: e501/;
-  let standardID = /Vendor\: 0583 Product\: 2060/;
-  let exleneID = /Vendor\: 0079 Product\: 0011/;
+    /*
+    * Regular expressions to search the ID string given to us by the manufacturer
+    * so that we can identify which controller is which and behave accordingly.
+    */
+  
 
-	if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
-    	if (pad.axes[0] === -1.00000){print('NES d-pad left pressed'); } // NES d-pad left
-    	if (pad.axes[0] ===  1.00000){print('NES d-pad right pressed'); } // NES d-pad right
-    	if (pad.axes[1] === -1.00000){print('NES d-pad up pressed'); } // NES d-pad up
-    	if (pad.axes[1] ===  1.00000){print('NES d-pad down pressed'); } // NES d-pad down
-    	if (pad.buttons[0].value === 1.00){ print('NES B button pressed'); } // NES B button
-    	if (pad.buttons[1].value === 1.00){ print('NES A button pressed'); } // NES A button
-      // does not have buttons 2-7 inclusive
+	// if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
+    //   	if (pad.axes[0] === -1.00000){}// print('NES d-pad left pressed'); } // NES d-pad left
+    //   	if (pad.axes[0] ===  1.00000){}//print('NES d-pad right pressed'); } // NES d-pad right
+    //   	if (pad.axes[1] === -1.00000){}//print('NES d-pad up pressed'); } // NES d-pad up
+    //   	if (pad.axes[1] ===  1.00000){}//print('NES d-pad down pressed'); } // NES d-pad down
+    //   	if (pad.buttons[0].value === 1.00){}//print('NES B button pressed'); } // NES B button
+    //   	if (pad.buttons[1].value === 1.00){}// print('NES A button pressed'); } // NES A button
+    //     // does not have buttons 2-7 inclusive
 
-    	if (isButtonReleased(0, 8)) {
+    if (isButtonReleased(0, BUTTON_SELECT)) {
         if (ctr0 % 2 === 0){
-          btn1.changeAnimation('off');
-          btn2.changeAnimation('select');
+            btn1.changeAnimation('off');
+            btn2.changeAnimation('select');
         } else if (ctr0 % 2 === 1) {
-          btn1.changeAnimation('select');
-          btn2.changeAnimation('off');
+            btn1.changeAnimation('select');
+            btn2.changeAnimation('off');
         }
         ctr0 = ctr0 +1;
-        print('NES Select pressed'); } // NES Select button
-      if (isButtonReleased(0, 9)) {
+        print('NES Select pressed'); 
+    } // NES Select button
+
+    if (isButtonReleased(0, BUTTON_START)) {
         if (ctr0 % 2 === 0){
-          btn1.changeAnimation('off');
-          btn2.changeAnimation('blink');
-          window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
+            btn1.changeAnimation('off');
+            btn2.changeAnimation('blink');
+            window.open(url0, "_self"); // loadJSON(url0, draw); // httpGet(url0);
         }
         else if (ctr0 % 2 === 1){
-          btn1.changeAnimation('blink');
-          btn2.changeAnimation('off');
-          window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
+            btn1.changeAnimation('blink');
+            btn2.changeAnimation('off');
+            window.open(url1, "_self"); // loadJSON(url1, draw); // httpGet(url1)
         }
-        print('NES Start pressed'); } // NES Start button
-  }
+        print('NES Start pressed'); 
+    } // NES Start button
 
   /*
    *  This bit is specific to the Buffalo SNES style controller,
@@ -421,6 +432,51 @@ function keyReleased() {
 let lastControllers = []
 let controllers = []
 
+function listButtons(pad) {
+  console.log('pad.axes.length is ' + pad.axes.length)
+  for (var i = 0; i < pad.axes.length; i++) {
+      console.log('axis[' + i + '] is ' + pad.axes[i]);
+  }
+  //console.log('pad buttons are: ' + pad.buttons)
+  // max of 16 buttons
+  for (var i = 0; i <= 16; i++) {
+    if (pad.buttons[i]) {
+      if (pad.buttons[i].value > 0 || pad.buttons[i].pressed == true)
+        console.log('button[' + i + '] is pressed');
+      else 
+        console.log('button[' + i + '] is NOT pressed');  
+    }
+  }
+}
+
+const BUTTON_B = 0;
+const BUTTON_A = 1;
+const BUTTON_Y = 2;
+const BUTTON_X = 3;
+
+const BUTTON_SELECT = 8;
+const BUTTON_START = 9;
+const BUTTON_DPAD_LEFT = 14;
+const BUTTON_DPAD_RIGHT = 15;
+const BUTTON_DPAD_UP = 12;
+const BUTTON_DPAD_DOWN = 13;
+
+/**
+ * Checks to see if a controller's button is currently pressed
+ * @param {Controller ID we're looking at} ctrlId 
+ * @param {ID for a given button} buttonId 
+ * @returns true if the button is currently pressed, false otherwise
+ */
+ function isButtonPressed(ctrlId, buttonId) {
+    if (controllers[ctrlId].buttons[buttonId]) {
+        let val = controllers[ctrlId].buttons[buttonId].value;
+        let pressed = controllers[ctrlId].buttons[buttonId].pressed;
+        return (val > 0 || pressed == true);
+    }
+    
+    return false;
+}
+
 /**
  * checks two things: controllers and lastControllers, if the button was
  * pressed in lastControllers, but not in controllers, we have a "release" event
@@ -430,20 +486,29 @@ let controllers = []
  */
 function isButtonReleased(ctrlId, buttonId)
 {
-	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId]) {
-		let val = controllers[ctrlId].buttons[buttonId].value;
-		let lastVal = lastControllers[ctrlId].buttons[buttonId].value;
+	if (lastControllers[ctrlId] && lastControllers[ctrlId].buttons[buttonId] != undefined) {
+		let val =         controllers[ctrlId].buttons[buttonId].value;
+        let lastVal =     lastControllers[ctrlId].buttons[buttonId].value;
+        let pressed =     controllers[ctrlId].buttons[buttonId].pressed;
+        let lastPressed = lastControllers[ctrlId].buttons[buttonId].pressed;
 		// console.log('controller ' + ctrlId + ', button ' + buttonId + ', value ' + val);
 		// console.log('lastController ' + ctrlId + ', button ' + buttonId + ', value ' + lastVal);
 		// if the current val is 0, the button is no longer pressed, and if the last value is
 		// 1, then it was pressed during the last read--this lets us know that it was a released button
-		if (val === 0.0 && lastVal === 1.0) {
-			console.log('key released: ' + buttonId)
+		if ((val === 0.0 && lastVal > 0.0) ||
+            (!pressed && lastPressed)) {
 			return true
 		} else {
 			return false
 		}
-	}
+	} else { 
+        if (!lastControllers[ctrlId]) 
+            console.error('no matching last controller');
+
+        else if (!lastControllers[ctrlId].buttons[buttonId]) {
+            console.error ('no matching button Id' + buttonId + ' on controller ' + ctrlId)
+        }
+    }
 
 	return false
 }
@@ -489,12 +554,22 @@ function removeGamePad(gamepad) {
  * @returns
  */
 function copyPad(pad) {
+    
 	var p = {};
 	p.buttons = [];
-	for (var i = 0; i < pad.buttons.length; i++)
+	for (var i = 0; i <= 16; i++)
 	{
 		p.buttons.push({})
-		p.buttons[i].value = pad.buttons[i].value;
+    }
+
+    for (var i = 0; i <= 16; i++) {
+        // if (p.buttons[i] != undefined) {
+		//     p.buttons[i].value = (pad.buttons[i] != undefined ? pad.buttons[i].value : 0);
+        //     p.buttons[i].pressed = (pad.buttons[i] != undefined ? pad.buttons[i].pressed : false);
+        // }
+        p.buttons[i].value = (pad.buttons[i] != undefined) ? pad.buttons[i].value : 0;
+        p.buttons[i].pressed = (pad.buttons[i] != undefined) ? pad.buttons[i].pressed : false;
+
 	}
 	return p;
 }
@@ -503,7 +578,7 @@ function copyPad(pad) {
  * Copies our controllers to lastControllers by doing a slightly deep copy of
  * the button states so that we can look for button releases later
  */
-function copyControllers() {
+function cacheControllers() {
 	lastControllers = [];
 	lastControllers.length = controllers.length;
 	for (var i = 0; i < controllers.length; i++)
@@ -526,8 +601,7 @@ function scanGamePads() {
 
 	// make sure our controllers object has a length property
     controllers.length = gamepads.length;
-	// now do the slightly deep copy of the set of controllers
-	copyControllers();
+
 	for (var i = 0; i < gamepads.length; i++)
 	{
 		if (gamepads[i])

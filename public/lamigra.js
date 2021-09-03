@@ -593,7 +593,7 @@ function updateRendering(queue, timing) {
     // this returns true if we have another frame, false otherwise
     if (!manuallyAnimate(sprite, sprite.animation.looping)) {
         nextIdx = getNextIndex(renderQueue, currentIndex);
-        console.log('next index is ' + nextIdx)
+        //console.log('next index is ' + nextIdx)
         updateSprite(sprite)
     }
 
@@ -1509,6 +1509,9 @@ function draw() {
             //console.log('pad0 is active');
             // now update the game with the status of the game pad
             updateStatus(pad0); // will need an updateStatus() function
+
+            // now cache the last controller status
+            cacheControllers();
         } else { // what to do if pad0 is null, which is to say there is no gamepad connected
             // use keyboard
             // or use touches
@@ -1653,6 +1656,14 @@ function keyTyped() { // tested once per frame, triggered on keystroke
 
 let aButtonReleased = true;
 
+
+// standard controller names
+const nintendoId = /Vendor\: 0810 Product\: e501/;
+const suilyId = /Vender\: 0079 Product\: 0011/;
+const buffaloID = /Vendor\: 0583 Product\: 2060/;
+const exleneID = /Vendor\: 0079 Product\: 0011/;
+const innextID = /Vendor\: 0079 Product\: 0011/;
+
 /**
  * Reads the current status of the game pad and processes input
  * @param {The gamepad that's being read} pad
@@ -1661,74 +1672,44 @@ function updateStatus(pad) {
     // get the current time
     const currentTime = millis() / 1000;
 
-    /*
-    * Regular expressions to search the ID string given to us by the manufacturer
-    * so that we can identify which controller is which and behave accordingly.
-    */
-    let nintendoId = /Vendor\: 0810 Product\: e501/; // this is our canonical NES controller/gamepad
-    let standardID = /Vendor\: 0583 Product\: 2060/; // this is the iBuffalo SNES controller/gamepad
+    if (isButtonPressed(pad.index, BUTTON_DPAD_LEFT) || pad.axes[0] === -1.0) {	// check that we're in play state
+        if (gameState === 'play') {
+            readInputAfter = currentTime + INPUT_DELAY;
+            addInput(inputQueue, 'left');
+        }
+    }
+    if (isButtonPressed(pad.index, BUTTON_DPAD_RIGHT) || pad.axes[0] === 1.0) {  // check that we're in play state
+        if (gameState === 'play') {
+            readInputAfter = currentTime + INPUT_DELAY;
+            addInput(inputQueue, 'right');
+        }
+    }
+    // accept any of the gamepad buttons
+    if (isButtonReleased(pad.index, BUTTON_A) ||
+        isButtonReleased(pad.index, BUTTON_B) ||
+        isButtonPressed(pad.index, BUTTON_X) ||
+        isButtonPressed(pad.index, BUTTON_Y)) {
+        // print('NES A button pressed');
+        if (gameState === 'play') {
+            readInputAfter = currentTime + INPUT_DELAY;
+            addInput(inputQueue, 'esposas');
+            // record that we've pressed it so that it must be released to press again
+            console.log('Button A, B, X, or Y released');
+        }
+    } // NES A button
+    // does not have buttons 2-7 inclusive
+    if (isButtonReleased(pad.index, BUTTON_SELECT)) {
+        print('NES Select pressed and released');
+        window.open(url, "_self");
+    }
 
-    if (pad.id.match(nintendoId)) { // this matches against the nintendo controller
-
-        if (pad.axes[0] === -1.00000) {	// check that we're in play state
-            if (gameState === 'play') {
-                readInputAfter = currentTime + INPUT_DELAY;
-                addInput(inputQueue, 'left');
-            }
-        }
-        if (pad.axes[0] === 1.00000) {  // check that we're in play state
-            if (gameState === 'play') {
-                readInputAfter = currentTime + INPUT_DELAY;
-                addInput(inputQueue, 'right');
-            }
-        }
-        if (pad.axes[1] === -1.00000) {
-            // check that we're in play state
-            if (gameState === 'play') {
-                // do nothing for up
-            }
-        }
-        if (pad.axes[1] === 1.00000) {
-            // check that we're in play state
-            if (gameState === 'play') {
-                // do nothing for down
-            }
-        }
-        if (pad.buttons[0].value === 1.00) {
-            print('NES B button pressed');
-            if (gameState === 'play') {
-                // commented out, but here's where we'd probably shoot
-                // readInputAfter = currentTime + INPUT_DELAY;
-            }
-        } // NES B button
-        if (pad.buttons[1].value === 1.00 && aButtonReleased) {
-            print('NES A button pressed');
-            if (gameState === 'play') {
-                readInputAfter = currentTime + INPUT_DELAY;
-                addInput(inputQueue, 'esposas');
-                // record that we've pressed it so that it must be released to press again
-                aButtonReleased = false;
-            }
-        } // NES A button
-        // does not have buttons 2-7 inclusive
-        if (isButtonReleased(0, 8)) {
-            print('NES Select pressed and released');
-            window.open(url, "_self");
-        }
-
-        if (isButtonReleased(0, 9)) {
-            print('NES Start pressed and released');
-            // now behave differently depending on where we are
-            if (gameState === 'startup') {
-                gameState = 'play';
-            } else {
-                window.open(url1, "_self");
-            }
-        }
-
-        if (isButtonReleased(0, 1)) {
-            console.log('NES A button released');
-            aButtonReleased = true;
+    if (isButtonReleased(pad.index, BUTTON_START)) {
+        print('NES Start pressed and released');
+        // now behave differently depending on where we are
+        if (gameState === 'startup') {
+            gameState = 'play';
+        } else {
+            window.open(url1, "_self");
         }
     }
 }
@@ -1737,6 +1718,36 @@ function updateStatus(pad) {
 // Code to deal with game pads
 let lastControllers = []
 let controllers = []
+
+// standard button names
+const BUTTON_B = 0;
+const BUTTON_A = 1;
+const BUTTON_Y = 2;
+const BUTTON_X = 3;
+
+const BUTTON_SELECT = 8;
+const BUTTON_START = 9;
+const BUTTON_DPAD_LEFT = 14;
+const BUTTON_DPAD_RIGHT = 15;
+const BUTTON_DPAD_UP = 12;
+const BUTTON_DPAD_DOWN = 13;
+
+/**
+ * Checks to see if a controller's button is currently pressed
+ * @param {Controller ID we're looking at} ctrlId 
+ * @param {ID for a given button} buttonId 
+ * @returns true if the button is currently pressed, false otherwise
+ */
+function isButtonPressed(ctrlId, buttonId) {
+    if (controllers[ctrlId].buttons[buttonId]) {
+        let val = controllers[ctrlId].buttons[buttonId].value;
+        let pressed = controllers[ctrlId].buttons[buttonId].pressed;
+        return (val > 0 || pressed == true);
+    }
+
+    return false;
+}
+
 
 /**
  * checks two things: controllers and lastControllers, if the button was
@@ -1810,6 +1821,7 @@ function copyPad(pad) {
     for (var i = 0; i < pad.buttons.length; i++) {
         p.buttons.push({})
         p.buttons[i].value = pad.buttons[i].value;
+        p.buttons[i].pressed = pad.buttons[i].pressed;
     }
     return p;
 }
@@ -1818,7 +1830,7 @@ function copyPad(pad) {
  * Copies our controllers to lastControllers by doing a slightly deep copy of
  * the button states so that we can look for button releases later
  */
-function copyControllers() {
+function cacheControllers() {
     lastControllers = [];
     lastControllers.length = controllers.length;
     for (var i = 0; i < controllers.length; i++) {
@@ -1840,8 +1852,6 @@ function scanGamePads() {
 
     // make sure our controllers object has a length property
     controllers.length = gamepads.length;
-    // now do the slightly deep copy of the set of controllers
-    copyControllers();
     for (var i = 0; i < gamepads.length; i++) {
         if (gamepads[i]) {
             if (gamepads[i].index in controllers) {
