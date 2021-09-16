@@ -496,4 +496,62 @@ I've continued to move cruft from the /public directory. Cruft is the term of ar
 Chris is going to try and figure out how to refine a couple of the animations in lamigra.js. The car doesn't show us all the frames. And neither do the cuffs. He got to a point last night where he broke something and so decided to step back and try again today. I'm going to see what I might be able to do that's useful.
 
 ======
+2021 09 12
+I have spun up my MinisForum cpu and have downloaded Node.js 14.17.6 LTS to its Windows 10 OS. I have installed Chrome. I'm going to leave it running as a testing device. As a reminder: "The version of Node.js I downloaded is 10.16.3 LTS from nodejs.org" for my develpment machine. I am installing it into C:\Program Files\nodejs\ It is also going to install Chocolatey which Chris had mentioned to me when we first tested on his windows machine a couple of weeks ago. Chocolatey is a Package Manager and may be a dependency for installation. Node.js depends on Python and Visual Studio Build Tools which require "about 3 Gb of free disk space". The MinisForum has extemely limited space available. Chocolatey created a log at C:\ProgramData\chocolatey\logs\chocolatey.log
+
+I want to install the live-server package on the Windows10 machine:
+"https://nodejs.dev/learn/where-does-npm-install-the-packages"
+"https://www.npmjs.com/package/live-server"
+"https://gist.github.com/donmccurdy/20fb112949324c92c5e8"
+"https://github.com/tapio/live-server"
+
+"https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"
+remembering how to load npm, instructions say to do it in Windows PowerShell rather than within the Node.js console.
+this has been done and npm version 7.23.0 has been loaded onto the MinisForum
+
+"https://docs.npmjs.com/downloading-and-installing-packages-locally"
+"https://docs.npmjs.com/downloading-and-installing-packages-globally"
+
+I've installed live-server package globally on MinisForum. A "moderate severity" warning message was returned suggesting I run 'npm audit' for details.
+
+loaded gitHub desktop for Windows on MinisForum.
+logged in and cloned repository into
+"C:\Users\Rafael Fajardo\Documents\GitHub\border-games-rewrite"
+it occupies ~550MB
+loaded Atom v1.58.0 for Windows
+my version of the MinisForum has nominally 32GB. It was filled up before Atom was loaded and so I have to free up some space for Atom. Or, I could not load Atom and not use this as a dev environment. I don't remember what else is loaded on this machine. There are a few 64GB MinisForum devices left in the market. There is also a setting, "Storage Sense" that claims it can free up space automatically in the background. I'm going to try it. Nothing changed, so there was no fat to trim. I'm going to see if I can delete some things manually without causing damage. I need a backup scheme for this device.
+
+There isn't anything I can delete.
+
+Tried running live-server and got an error.
+
+Options: WAMP server package from SourceForge; or, SimpleHTTPServer by Python. Python is already onboard. Python3.9.7 is installed
+
+The Suily branded controller is not working in Chrome on my remotely served games on the MinisForum device. Our OG NES controller does work.
+Suily NES controller works in Edge browser with remote served games. So does our OG NES controller.
+
+"https://docs.microsoft.com/en-us/deployedge/microsoft-edge-configure-kiosk-mode"
+"https://docs.microsoft.com/en-us/deployedge/microsoft-edge-kiosk-mode-transition-plan"
+"https://docs.microsoft.com/en-us/deployedge/microsoft-edge-configure-kiosk-mode#use-kiosk-mode-features"
+
+MinisForum has Edge v 93.0.961.44 installed
+in April of 2021 there is a scheduled deprecation of Edge legacy in favor of Edge on Chromium.
+
+"https://techcommunity.microsoft.com/t5/microsoft-365-blog/new-microsoft-edge-to-replace-microsoft-edge-legacy-with-april-s/ba-p/2114224"
+if the logos match up with the ones on this blog post, then I have already updated the version of Edge when I fired up the MinisForum this morning.
+
+There is a post detailing changes to Edge Kiosk mode:
+"https://blogs.windows.com/msedgedev/2021/02/05/what-you-need-to-know-about-kiosk-mode-when-support-for-microsoft-edge-legacy-ends/"
+
+Edge Legacy version 41.16299.1004.0 remains on the MinisForum and can be run side by side. The legacy kiosk mode may be viable.
+
+Updates to windows were downloaded upon startup yesterday and await a reboot to complete installation. This may hide/erase Edge Legacy.
+"https://docs.microsoft.com/en-us/previous-versions/windows/edge-legacy/microsoft-edge-kiosk-mode-deploy"
+
+I have the option to uninstall the updates to Windows10 20H2. I think the last time this device crashed was when I was going to allow updates.
+
+I uninstalled the pending updates. Hopefully it will open some space. This is a very slow process and it may end up breaking the device.
+
+
+======
 */
