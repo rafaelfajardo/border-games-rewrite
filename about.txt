@@ -532,6 +532,7 @@ Suily NES controller works in Edge browser with remote served games. So does our
 
 "https://docs.microsoft.com/en-us/deployedge/microsoft-edge-configure-kiosk-mode"
 "https://docs.microsoft.com/en-us/deployedge/microsoft-edge-kiosk-mode-transition-plan"
+"https://docs.microsoft.com/en-us/deployedge/microsoft-edge-configure-kiosk-mode#use-kiosk-mode-features"
 
 MinisForum has Edge v 93.0.961.44 installed
 in April of 2021 there is a scheduled deprecation of Edge legacy in favor of Edge on Chromium.
@@ -544,6 +545,12 @@ There is a post detailing changes to Edge Kiosk mode:
 
 Edge Legacy version 41.16299.1004.0 remains on the MinisForum and can be run side by side. The legacy kiosk mode may be viable.
 
+Updates to windows were downloaded upon startup yesterday and await a reboot to complete installation. This may hide/erase Edge Legacy.
+"https://docs.microsoft.com/en-us/previous-versions/windows/edge-legacy/microsoft-edge-kiosk-mode-deploy"
+
+I have the option to uninstall the updates to Windows10 20H2. I think the last time this device crashed was when I was going to allow updates.
+
+I uninstalled the pending updates. Hopefully it will open some space. This is a very slow process and it may end up breaking the device.
 
 
 ======
