@@ -145,7 +145,8 @@ ul {
 /* 16:9                                           */
 @media (width: 1280px) and (height: 720px){
   #envelope{
-    background: #4d4d4d;
+    /* background: #4d4d4d; */
+    background: #000000;
     position: fixed;
     top: 0;
     height: 720px;
