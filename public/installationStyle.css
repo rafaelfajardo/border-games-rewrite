@@ -1,5 +1,10 @@
+/*
+Creating conditional styles for specific display resolutions
+*/
+
 body {
-  /*background-color: #4d4d4d;*/
+  /*background-color: #4d4d4d;*/ /* a dark grey */
+  background-color: #00ff00; /* pure green is visible if not a specified resolution */
 }
 h1 {
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
@@ -49,41 +54,12 @@ ul {
   line-height: 1.2;
   color: #cccccc;
 }
-/*
-  input[type=submit]{
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      padding: 16px 32px;
-      text-decoration: none;
-      margin: 4px 2px;
-      cursor: pointer;
-    }
-    */
-/*
-/* Minimum aspect ratio */
-/* @media (min-aspect-ratio: 16/9) { */
-/*  div { */
-/*    background: #4d4d4d; */ /* dark grey */
-/*  }
-}  */
-
-/* Maximum aspect ratio */
-/* @media (max-aspect-ratio: 4/3) { */
-/*  div { */
-/*    background: #777; */ /* middle grey */
-/*  }
-}  */
-
-/* Exact aspect ratio, put it at the bottom to avoid override*/
-/* @media (aspect-ratio: 1/1) { */
-/*  div { */
-/*    background: #f00; */  /* red */
-/*  }
-} */
 
 
-/* can try 4:3 800 x 600 with just 2 columns */
+/* ********************************************** */
+/*                                                */
+/* 800 x 600  viewport, 2 columns                 */
+/* 4:3                                            */
 @media (width: 800px) and (height: 600px){
   #envelope{
     background: #444;
@@ -96,6 +72,7 @@ ul {
     margin: 0px;
     border: 0px;
     color: #cccccc;
+    overflow: clip;
   }
   #left-column{
     position: fixed;
@@ -116,12 +93,15 @@ ul {
     padding: 0px;
     margin: 0;
     border: 0px solid #FF0000;
-    align-self: center;
-    align-content: center;
+    /* align-self: center; */
+    /* align-content: center; */
   }
 }
 
-/* trying 16:9 960 x 540 with just 2 columns */
+/* ********************************************** */
+/*                                                */
+/* 969 x 540  viewport, 2 columns                 */
+/* 16:9                                           */
 @media (width: 960px) and (height: 540px) {
   #envelope{
     background: #777;
@@ -159,6 +139,10 @@ ul {
   }
 }
 
+/* ********************************************** */
+/*                                                */
+/* 1280 x 720 viewport, 2 columns                 */
+/* 16:9                                           */
 @media (width: 1280px) and (height: 720px){
   #envelope{
     background: #4d4d4d;
@@ -170,6 +154,7 @@ ul {
     padding: 0;
     margin: 0px;
     border: 0px;
+    overflow: clip;
   }
   #left-column{
     position: fixed;
@@ -211,3 +196,40 @@ img.bottom{
   left: 20px;
   top: 540px;
 }
+
+/* ****************************************************** */
+/*                                                        */
+/* deprecated attempts at conditional aspect ratio ranges */
+/*                                                        */
+/*
+/* Minimum aspect ratio */
+/* @media (min-aspect-ratio: 16/9) { */
+/*  div { */
+/*    background: #4d4d4d; */ /* dark grey */
+/*  }
+}  */
+
+/* Maximum aspect ratio */
+/* @media (max-aspect-ratio: 4/3) { */
+/*  div { */
+/*    background: #777; */ /* middle grey */
+/*  }
+}  */
+
+/* Exact aspect ratio, put it at the bottom to avoid override*/
+/* @media (aspect-ratio: 1/1) { */
+/*  div { */
+/*    background: #f00; */  /* red */
+/*  }
+} */
+/*
+  input[type=submit]{
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-decoration: none;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+    */
