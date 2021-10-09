@@ -80,20 +80,20 @@ ul {
     top: 0;
     height: 600px;
     left: 0;
-    width: 288px;
+    width: 200px;
     padding: 10px;
     margin: 0px;
-    border: 0px solid #00FF00;
+    border: 1px solid #00FF00;
   }
   #canvas-column{
     position: fixed;
     top: 0;
     height: 600px;
     left: 288px;
-    width: 512px;
+    width: 600px;
     padding: 0px;
     margin: 0;
-    border: 0px solid #FF0000;
+    border: 1px solid #FF0000;
     /* align-self: center; */
     /* align-content: center; */
   }
