@@ -62,7 +62,8 @@ ul {
 /* 4:3                                            */
 @media (width: 800px) and (height: 600px){
   #envelope{
-    background: #444;
+    /* background: #444; */
+    background: #000000;
     position: fixed;
     top: 0;
     height: 600px;
@@ -145,8 +146,8 @@ ul {
 /* 16:9                                           */
 @media (width: 1280px) and (height: 720px){
   #envelope{
-    /* background: #4d4d4d; */
-    background: #000000;
+    background: #4d4d4d;
+    /* background: #000000; */
     position: fixed;
     top: 0;
     height: 720px;
@@ -171,13 +172,16 @@ ul {
     position: fixed;
     top: 0;
     height: 720;
-    left: 300px;
+    left: 330px;
     width: 600px;
-    padding: 10px;
-    margin: 0px;
-    border: 0px;
-    align-self: center;
-    align-content: center;
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    /* margin: 0px; */
+    border: 1px solid #FFFFFF;
+    /* transform: scale(1.2); */
+    /* align-self: center; */
+    /* align-content: center; */
   }
 }
   /*
