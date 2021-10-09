@@ -58,7 +58,7 @@ ul {
 
 /* ********************************************** */
 /*                                                */
-/* 800 x 600  viewport, 2 columns                 */
+/* 800 x 600  viewport                            */
 /* 4:3                                            */
 @media (width: 800px) and (height: 600px){
   #envelope{
@@ -73,36 +73,38 @@ ul {
     margin: 0px;
     border: 0px;
     color: #cccccc;
-    overflow: clip;
+    overflow: clip; /* clips overflow and prevents scroll bars */
   }
   #left-column{
     position: fixed;
     top: 0;
     height: 600px;
     left: 0;
-    width: 200px;
+    width: 00px; /* zero out the width of the column to make it disappear */
     padding: 0px; /* padding unnecessary on a 16x9 screen with 4x3 viewport */
     margin: 0px;
-    border: 1px solid #00FF00;
+    border: 0px solid #00FF00; /* border useful for troubleshooting */
+    overflow: clip; /* clip any of the contents that don't fit the div */
   }
   #canvas-column{
     position: fixed;
     top: 20px;
     height: 548px;
-    left: 200px;
-    width: 598px;
+    left: 140px;
+    width: 520px;
+    object-fit: contain; /* should scale object to div maintainin aspect ratio. doesn't work with canvas */
     padding: 0px;
     margin: 0;
-    border: 1px solid #FF0000;
+    border: 0px solid #FF0000; /* border useful for troubleshooting */
     /* align-self: center; */
     /* align-content: center; */
   }
 }
 
 /* ********************************************** */
-/*                                                */
-/* 969 x 540  viewport, 2 columns                 */
-/* 16:9                                           */
+/* NOT RECOMMENDED                                */
+/* 960 x 540  viewport, 2 columns                 */
+/* 16:9, will clip La Migra  4 pixels vert        */
 @media (width: 960px) and (height: 540px) {
   #envelope{
     background: #777;
