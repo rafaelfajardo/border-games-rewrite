@@ -168,7 +168,7 @@ ul {
     width: 290px;
     padding-left: 20px;
     margin: 0px;
-    border: 1px solid #FF0000;
+    border: 0px solid #FF0000;
   }
   #canvas-column{
     position: fixed;
