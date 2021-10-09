@@ -165,24 +165,24 @@ ul {
     top: 0;
     height: 720px;
     left: 0;
-    width: 300px;
+    width: 290px;
     padding: 20px;
     margin: 0px;
     border: 0px;
   }
   #canvas-column{
     position: fixed;
-    top: 0;
-    height: 720;
-    left: 330px;
-    width: 600px;
+    top: 84px;
+    height: 550px;
+    left: 400px; /* scaling alters origin of div so weird left position */
+    width: 512px;
     padding: 0px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: auto; /* part of horizontal alignment strategy */
+    margin-right: auto; /* part of horizontal alignment strategy */
     /* margin: 0px; */
     border: 1px solid #FFFFFF;
-    /* transform: scale(1.2); */
-    /* align-self: center; */
+    transform: scale(1.3); /* effects the scale of the div and contents */
+    /* align-self: center; */ /* horizontal align center is working in html or with margin left and right */
     /* align-content: center; */
   }
 }
