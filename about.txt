@@ -554,4 +554,19 @@ I uninstalled the pending updates. Hopefully it will open some space. This is a 
 
 
 ======
+2022 09 12
+In response to a request from Anderson Ranch Art Center for my upcoming Visiting Artist gig, I explored spinning up the Minisforum computer. The Kiosk enabled Chrome browser is loaded on it and is set to look for localhost:8080.
+
+I have spent the last two days updating the operating system to the latest Windows 10 specs. It required connecting an external hard drive so that there would be sufficient space to shuffle in the changes. I have also tested system running crosser and la migra from the remote server Sudor.org/betatest/. I have allowed the deletion of the older versions of the OS on this device to free up space.
+
+I have revisited spinning up a local server and re-read the above entry from one year ago. I have come to understand that the Python error from last year is because the server module was renamed in version 3+ to "http.server"  and so LiveHTTPServer returns an error on newer versions of Python.
+
+I opened Windows PowerShell on the Minisforum and changed directories to the cloned GitHub repository C: RafaelFajardo\Documents\GitHub\...\public and invoked python to confirm version number and then invoked http.server. The default port is 8000. I have to either learn to invoke port 8080 or change the homepage port on the Kiosk enabled Chrome browser.
+
+In the last year I also investigated the use of another, newer, Minisforum for a permanent installation of Migraciones. I relied on the wisdom and experience of Tom Sepe from his Show Machine Setup instructions on https://tomsepe.com/sepeblog/2020/11/08/show-machine-setup-for-permanent-and-temporary-art-installations-windows-10/. This will be helpful if I wish to turn this, older, Minisforum CPU into a dedicated locally served device for Crosser & La Migra.
+
+ToDo if so: autoboot into powershell, create script to invoke python server at appropriate directory and port, autostartup Chrome in Kiosk mode with fullscreen and no browser UI, test to ensure SNES gamepad works.
+
+======
+
 */
