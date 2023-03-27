@@ -568,5 +568,22 @@ In the last year I also investigated the use of another, newer, Minisforum for a
 ToDo if so: autoboot into powershell, create script to invoke python server at appropriate directory and port, autostartup Chrome in Kiosk mode with fullscreen and no browser UI, test to ensure SNES gamepad works.
 
 ======
+2023 03 27
+Last week I was informed that ReVisión: Art In The Americas will travel too Minneapolis Institute for/of Art (MIA). I have to author the technical specifications for exhibition there. It should, also, travel to two other locations and so getting it right is important.
+
+Crosser and La Migra will also be shown at SUMA from June to September of this year. I will install this version personally. They will both, likely, need the same specifications.
+
+I have fired up both the MinisForum device and a Raspberry Pi to test the technical specifications.
+
+I have left a note on the MinisForum with the command line directions for launching the built-in python3 localhost server:
+$ directory/public/ python -m http.server
+
+need to remember how to set the port and the directory for local host.
+need to remember the version(s) of browser that support kiosk  mode.
+need to remember how to set autoboot or chron jobs from Migraciones
+need to set new CSS standards for correct display resolutions
+
+
+=======
 
 */
