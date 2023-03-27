@@ -588,13 +588,24 @@ I have Chrome browser running in Kiosk mode on the MinisForum. It no longer find
 as a reminder:
 How do I put Chrome in kiosk mode?
 
-Chrome Kiosk Mode
+Chrome Kiosk Mode (from TechShift.net)
 Open up Chrome’s settings.
 Under “Users” click “Add new user.”
 Give the new profile a name and picture.
 Right-click the newly-created shortcut and select “Properties.”
 In the “Target” field, add “–kiosk” (no quotes) to the end.
 Click “Apply.”
+
+Chrome Kiosk Mode (from SuiteBriar.com blog)
+On Chrome For Windows
+Most Chrome users should have a Chrome shortcut on their desktop, but if you do not have one already then you will need to create one.
+
+Next right-click on your Chrome shortcut and select "Properties".
+
+After doing so you will need to click the "Shortcut" tab as well as the kiosk command at the end of the Target field.
+
+You will have the option to add a specific URL to be launched in Kiosk Mode and will become the only app or site available while in Kiosk Mode.
+
 
 =======
 
