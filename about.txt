@@ -583,6 +583,18 @@ need to remember the version(s) of browser that support kiosk  mode.
 need to remember how to set autoboot or chron jobs from Migraciones
 need to set new CSS standards for correct display resolutions
 
+I have Chrome browser running in Kiosk mode on the MinisForum. It no longer finds the localhost server. I may have set the port differently last year than I did today. I need to see if I can disable the Kiosk mode and edit the parameters for localhost. Also, as mentioned above, I need to set the correct, matching, port.
+
+as a reminder:
+How do I put Chrome in kiosk mode?
+
+Chrome Kiosk Mode
+Open up Chrome’s settings.
+Under “Users” click “Add new user.”
+Give the new profile a name and picture.
+Right-click the newly-created shortcut and select “Properties.”
+In the “Target” field, add “–kiosk” (no quotes) to the end.
+Click “Apply.”
 
 =======
 
