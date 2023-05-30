@@ -56,9 +56,9 @@ let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
 */
 // url targets using relative paths
-let url = 'index.html';
-let url0 = '_crosser.html';
-let url1 = '_lamigra.html';
+let url = '_lamigra.html'; //'index.html'; // index for both games on one screen
+let url0 = '_lamigra.html'; //'_crosser.html'; // crosser for both games on one screen 
+let url1 = '_lamigra.html'; // lamigra for diptych one game per screen
 //
 // declare a variable to contain our font
 let arcadeFont;
@@ -212,7 +212,7 @@ function dequeueInput(inputQueue) {
 let spriteId = 0;
 /*****************************************************************
  * Remove an item from the rendering queue so that we no longer process it
- * @param {The item in the queue to be removed, based on its spriteId} item 
+ * @param {The item in the queue to be removed, based on its spriteId} item
  */
 function removeFromRenderQueue(item) {
     // find the index in the queue where this sprite is
@@ -463,13 +463,13 @@ function checkForCaughtPeanut(cuffs) {
 }
 
 /*****************************************************************
- * This function checks if a peanut can be deported. It's used by passing it to 
+ * This function checks if a peanut can be deported. It's used by passing it to
  * a call to overlap, which takes a function as the second argument. If overlap returns
  * true, then the given function is called (this one, for example). We check if
  * one of these is a peanut and one is the deportation center. We then deport if we can!
- * @param {First sprite involved} sprite1 
- * @param {Second sprite involved} sprite2 
- * @returns 
+ * @param {First sprite involved} sprite1
+ * @param {Second sprite involved} sprite2
+ * @returns
  */
 function checkPeanutDeportation(sprite1, sprite2) {
     // see if either is a peanut, if so, we'll assign the name peanut to it
@@ -1734,8 +1734,8 @@ const BUTTON_DPAD_DOWN = 13;
 
 /**
  * Checks to see if a controller's button is currently pressed
- * @param {Controller ID we're looking at} ctrlId 
- * @param {ID for a given button} buttonId 
+ * @param {Controller ID we're looking at} ctrlId
+ * @param {ID for a given button} buttonId
  * @returns true if the button is currently pressed, false otherwise
  */
 function isButtonPressed(ctrlId, buttonId) {
