@@ -61,9 +61,9 @@ let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
 */
 // url targets using relative paths
-let url = '_crosser.html' //'index.html'; // index for both games in one screen
+let url = '_crosser.html'; //'index.html'; // index for both games in one screen
 let url0 = '_crosser.html';
-let url1 = '_crosser.html' //'_lamigra.html'; // lamigra for both games in one screen
+let url1 = '_crosser.html'; //'_lamigra.html'; // lamigra for both games in one screen
 
 //
 // declare a variable to contain our font
