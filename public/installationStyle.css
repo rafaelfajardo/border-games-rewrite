@@ -86,7 +86,7 @@ ul {
     width: 620px;
     padding: 10px;
     margin: 0;
-    border: 0px solid #FF0000;
+    border: 1px solid #FF0000;
     align-items: center;
   }
   #right-column{
