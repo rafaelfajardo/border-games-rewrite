@@ -61,9 +61,9 @@ let url0 = "http://localhost:8080/_crosser.html";
 let url1 = "http://localhost:8080/_lamigra.html";
 */
 // url targets using relative paths
-let url = 'index.html';
+let url = '_crosser.html' //'index.html'; // index for both games in one screen
 let url0 = '_crosser.html';
-let url1 = '_lamigra.html';
+let url1 = '_crosser.html' //'_lamigra.html'; // lamigra for both games in one screen
 
 //
 // declare a variable to contain our font
@@ -667,7 +667,7 @@ function preload() {
     renderQueue.push(carlosmoreno); // add carlos to the queue, here we add the sprite
 
     // preload our font into arcadeFont
-    arcadeFont = loadFont('assets/04b30.otf'); // this is a freeware font from http://www.04.jp.org/ 
+    arcadeFont = loadFont('assets/04b30.otf'); // this is a freeware font from http://www.04.jp.org/
 } // end preload
 
 // this is the input delay for reading input--during this delay, we stop reading input, after it's
@@ -1116,8 +1116,8 @@ const BUTTON_DPAD_DOWN = 13;
 
 /**
  * Checks to see if a controller's button is currently pressed
- * @param {Controller ID we're looking at} ctrlId 
- * @param {ID for a given button} buttonId 
+ * @param {Controller ID we're looking at} ctrlId
+ * @param {ID for a given button} buttonId
  * @returns true if the button is currently pressed, false otherwise
  */
  function isButtonPressed(ctrlId, buttonId) {
@@ -1126,10 +1126,10 @@ const BUTTON_DPAD_DOWN = 13;
         let pressed = controllers[ctrlId].buttons[buttonId].pressed;
         return (val > 0 || pressed == true);
     }
-    
+
     return false;
 }
-  
+
 
 
 /**
