@@ -613,4 +613,16 @@ Created diptych installation branch to enable single game per screen setup. Inde
 
 It has been requested that I remove the credits from the screen for SUMA. I should keep the "how to play" instructions, though.
 
+Bilingual English and Spanish instructions might be good.
+
+Figure out how to auto scale to fit the game in CSS.
+
+REMINDER: opened /public in terminal. MacOS Catalina offers error message because it now uses a different "shell". I started the project in an earlier version of MacOS which used Bash shell terminal. The new MacOS Catalina and later use ZSH (z shell?) for the default terminal. I chose not to change any settings, and so my admin level user account in MacOS kept the bash terminal as a legacy choice.
+
+REMINDER: typed live-server at the $ command line and it automatically launched a new browser window with index.html as the default page. live-server should be the NPM Node.js server I installed in 2020 for this development environment.
+
+======
+
+======
+
 */
