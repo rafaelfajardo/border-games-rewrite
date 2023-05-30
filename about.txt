@@ -607,6 +607,10 @@ After doing so you will need to click the "Shortcut" tab as well as the kiosk co
 You will have the option to add a specific URL to be launched in Kiosk Mode and will become the only app or site available while in Kiosk Mode.
 
 
-=======
+======
+2023 05 30
+Created diptych installation branch to enable single game per screen setup. Index will still serve main giving option for either. Once a game has been chosen, then only that game will work in that browser window.
+
+It has been requested that I remove the credits from the screen for SUMA. I should keep the "how to play" instructions, though.
 
 */
