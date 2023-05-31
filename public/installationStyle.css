@@ -1,5 +1,5 @@
 body {
-  background-color: #4d4d4d;
+  background-color: #4d4d4d; /* grey */
 }
 h1 {
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
@@ -49,7 +49,7 @@ ul {
   line-height: 1.4;
   color: #cccccc;
 }
-  input[type=submit]{
+  input[type=submit]{ /* this is vestigial, when we were figuring out UI */
       background-color: #4CAF50;
       border: none;
       color: white;
@@ -58,7 +58,7 @@ ul {
       margin: 4px 2px;
       cursor: pointer;
     }
-  #envelope{
+  #envelope{ /* this is intended to contain the other divs */
     position: fixed;
     top: 0;
     height: 640px;
@@ -68,7 +68,7 @@ ul {
     margin: 0;
     border: 0;
   }
-  #left-column{
+  #left-column{ /* this is intended to hold intro and instructions */
     position: fixed;
     top: 0;
     height: 640px;
@@ -78,18 +78,19 @@ ul {
     margin: 0;
     border: 0px solid #00FF00;
   }
-  #canvas-column{
-    position: fixed;
+  #canvas-column{ /* this is the container for the JavaScript*/
+    position: fixed; /* comment */
     top: 0;
-    height: 640px;
+    /* height: 640px; */
     left: 320px;
-    width: 620px;
+    /* width: 620px; */
     padding: 10px;
     margin: 0;
     border: 1px solid #FF0000;
     align-items: center;
+    scale: 1; /* may be better as transform: scale(1); */
   }
-  #right-column{
+  #right-column{ /* this is intended to hold the credits */
     position: fixed;
     top: 0;
     height: 640px;
@@ -99,7 +100,7 @@ ul {
     margin: 0;
     border: 0px solid #0000FF;
   }
-img.bottom{
+img.bottom{ /* this is meant to position the SWEAT logo at lower right */
   position: absolute;
   left: 1200px;
   top: 700px;
