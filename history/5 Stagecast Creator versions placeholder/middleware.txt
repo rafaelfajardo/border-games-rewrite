@@ -1,0 +1,7 @@
+For exhibition purposes I started using a gamepad-to-keyboard mapper. 
+The most recent one was ControllerMate (https://www.orderedbytes.com/controllermate/) for the show at the Institute for Contemporary Art in San Jose, CA. 
+They had me ship to them two Mac Mini's loaded with the Stagecast generated game executables and browser plug-in, iCab Browser set to boot into kiosk mode, and ControllerMate as middle-ware.
+ContollerMate allowed for mapping of SNES, and even NES style, wired, USB controllers.
+
+Prior to this particular version I had used Carvware's GamePad Companion (https://apps.apple.com/us/app/gamepad-companion/id428799479?mt=12) and USB Overdrive (https://www.usboverdrive.com)
+
